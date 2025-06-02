@@ -3,7 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:virtual_lab/Utils/properties.dart';
-import 'package:virtual_lab/Utils/routes.dart';
+import 'package:virtual_lab/Utils/go_routes.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

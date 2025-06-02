@@ -34,7 +34,7 @@ class _MyTextState extends State<MyText> {
       style: TextStyle(
         fontFamily: 'Poppins',
         color: widget.color,
-        fontSize: widget.size ?? 24.sp,
+        fontSize: widget.size ?? 18.sp,
         fontWeight: widget.fontWeight,
         height: widget.textHeight,
         overflow: widget.overflow,

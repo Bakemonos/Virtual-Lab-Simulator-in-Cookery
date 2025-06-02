@@ -7,11 +7,13 @@ class MyButton extends StatelessWidget {
   final String text;
   final double? textSize;
   final Color? borderColor;
+  final Function() onTap;
   const MyButton({
     super.key,
     required this.text,
-    this.textSize,
+    required this.onTap,
     this.borderColor = greenDark,
+    this.textSize,
   });
 
   @override
@@ -19,7 +21,7 @@ class MyButton extends StatelessWidget {
     return Expanded(
       child: SizedBox(
         child: ElevatedButton(
-          onPressed: () {},
+          onPressed: onTap,
           style: ElevatedButton.styleFrom(
             elevation: 0,
             padding: EdgeInsets.zero,

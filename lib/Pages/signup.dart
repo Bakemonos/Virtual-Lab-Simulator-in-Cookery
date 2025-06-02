@@ -7,8 +7,8 @@ import 'package:virtual_lab/Components/custom_text_field.dart';
 import 'package:virtual_lab/Utils/properties.dart';
 import 'package:virtual_lab/Utils/routes.dart';
 
-class MyLoginPage extends StatelessWidget {
-  const MyLoginPage({super.key});
+class MySignUpPage extends StatelessWidget {
+  const MySignUpPage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -16,7 +16,7 @@ class MyLoginPage extends StatelessWidget {
       resizeToAvoidBottomInset: false,
       body: Center(
         child: SizedBox(
-          height: 270.h,
+          height: 320.h,
           child: Stack(
             children: [
               Align(
@@ -43,7 +43,7 @@ class MyLoginPage extends StatelessWidget {
                         padding: EdgeInsets.only(
                           left: 24.w,
                           right: 24.w,
-                          top: 40.h,
+                          top: 35.h,
                           bottom: 8.h,
                         ),
                         child: Column(
@@ -52,15 +52,17 @@ class MyLoginPage extends StatelessWidget {
                             _repeatedTextInput(label: 'User name'),
                             SizedBox(height: 8.h),
                             _repeatedTextInput(label: 'Password'),
+                            SizedBox(height: 8.h),
+                            _repeatedTextInput(label: 'Confirm Password'),
                             SizedBox(height: 16.h),
                             Row(
                               spacing: 16.w,
                               children: [
-                                MyButton(text: 'LOGIN', onTap: () {}),
                                 MyButton(
-                                  text: 'SIGN UP',
-                                  onTap: () => context.push(Routes.signUp),
+                                  text: 'LOGIN',
+                                  onTap: () => context.push(Routes.signIn),
                                 ),
+                                MyButton(text: 'CONFIRM', onTap: () {}),
                               ],
                             ),
                           ],
@@ -96,7 +98,7 @@ class MyLoginPage extends StatelessWidget {
                       vertical: 6.h,
                     ),
                     child: MyText(
-                      text: 'LOGIN',
+                      text: 'SIGN UP',
                       color: textLight,
                       fontWeight: FontWeight.w700,
                       size: 28.sp,
@@ -119,7 +121,7 @@ class MyLoginPage extends StatelessWidget {
       spacing: 24.w,
       children: [
         SizedBox(
-          width: 130.w,
+          width: 180.w,
           child: MyText(text: label, fontWeight: FontWeight.w600),
         ),
         Expanded(child: MyTextfield(controller: controller)),
