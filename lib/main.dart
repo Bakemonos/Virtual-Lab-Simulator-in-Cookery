@@ -8,12 +8,14 @@ import 'package:virtual_lab/Utils/routes.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  SystemChrome.setPreferredOrientations([
-    DeviceOrientation.landscapeRight,
+  await SystemChrome.setPreferredOrientations([
     DeviceOrientation.landscapeLeft,
-  ]).then((_) {
-    runApp(const ProviderScope(child: MyApp()));
-  });
+    DeviceOrientation.landscapeRight,
+  ]);
+
+  await SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
+
+  runApp(const ProviderScope(child: MyApp()));
 }
 
 class MyApp extends ConsumerWidget {
@@ -24,8 +26,9 @@ class MyApp extends ConsumerWidget {
     final myRoutes = ref.watch(myRoutesProvider);
 
     return ScreenUtilInit(
-      designSize: const Size(360, 800),
-      child: SafeArea(
+      designSize: const Size(800, 360),
+      child: GestureDetector(
+        onTap: () => FocusScope.of(context).unfocus(),
         child: MaterialApp.router(
           debugShowCheckedModeBanner: false,
           theme: ThemeData(

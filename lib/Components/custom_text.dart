@@ -13,10 +13,10 @@ class MyText extends StatefulWidget {
   const MyText({
     super.key,
     required this.text,
-    this.color = darkBrown,
+    this.color = lightBrown,
     this.size,
     this.textHeight,
-    this.fontWeight = FontWeight.w400,
+    this.fontWeight = FontWeight.w600,
     this.textAlign = TextAlign.left,
     this.overflow,
   });
@@ -34,7 +34,7 @@ class _MyTextState extends State<MyText> {
       style: TextStyle(
         fontFamily: 'Poppins',
         color: widget.color,
-        fontSize: widget.size ?? 14.sp,
+        fontSize: widget.size ?? 24.sp,
         fontWeight: widget.fontWeight,
         height: widget.textHeight,
         overflow: widget.overflow,
