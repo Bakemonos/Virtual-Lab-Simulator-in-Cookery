@@ -35,6 +35,7 @@ class MySignUpPage extends StatelessWidget {
                       bottom: 20.sp,
                     ),
                     child: Container(
+                      height: 270.h,
                       decoration: BoxDecoration(
                         color: foregroundColor,
                         borderRadius: BorderRadius.circular(16.r),
@@ -42,18 +43,51 @@ class MySignUpPage extends StatelessWidget {
                       child: Padding(
                         padding: EdgeInsets.only(
                           left: 24.w,
-                          right: 24.w,
-                          top: 35.h,
+                          right: 14.w,
+                          top: 36.h,
                           bottom: 8.h,
                         ),
                         child: Column(
-                          mainAxisSize: MainAxisSize.min,
                           children: [
-                            _repeatedTextInput(label: 'User name'),
-                            SizedBox(height: 8.h),
-                            _repeatedTextInput(label: 'Password'),
-                            SizedBox(height: 8.h),
-                            _repeatedTextInput(label: 'Confirm Password'),
+                            SizedBox(
+                              height: 160.h,
+                              child: ScrollbarTheme(
+                                data: ScrollbarThemeData(
+                                  thumbColor: WidgetStateProperty.all(
+                                    darkBrown,
+                                  ),
+                                ),
+                                child: Scrollbar(
+                                  thumbVisibility: true,
+                                  thickness: 4.w,
+                                  radius: Radius.circular(10.r),
+                                  child: SingleChildScrollView(
+                                    child: Padding(
+                                      padding: EdgeInsets.only(right: 10.w),
+                                      child: Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          _repeatedTextInput(label: 'Email'),
+                                          SizedBox(height: 8.h),
+                                          _repeatedTextInput(
+                                            label: 'First Name',
+                                          ),
+                                          SizedBox(height: 8.h),
+                                          _repeatedTextInput(
+                                            label: 'Last Name',
+                                          ),
+                                          SizedBox(height: 8.h),
+                                          _repeatedTextInput(label: 'LRN'),
+                                          SizedBox(height: 8.h),
+                                          _repeatedTextInput(label: 'Password'),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+
                             SizedBox(height: 16.h),
                             Row(
                               spacing: 16.w,
@@ -62,7 +96,7 @@ class MySignUpPage extends StatelessWidget {
                                   text: 'LOGIN',
                                   onTap: () => context.push(Routes.signIn),
                                 ),
-                                MyButton(text: 'CONFIRM', onTap: () {}),
+                                MyButton(text: 'SIGN UP', onTap: () {}),
                               ],
                             ),
                           ],

@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:get/get.dart';
 import 'package:virtual_lab/Utils/bindings.dart';
 import 'package:virtual_lab/Utils/go_routes.dart';
+import 'package:virtual_lab/Utils/properties.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -17,31 +18,27 @@ void main() async {
 
   await SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
 
-  runApp(const MyApp());
+  runApp(const ProviderScope(child: MyApp()));
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends ConsumerWidget {
   const MyApp({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final myRoutes = ref.watch(myRoutesProvider);
+
     return ScreenUtilInit(
       designSize: const Size(800, 360),
       child: GestureDetector(
         onTap: () => FocusScope.of(context).unfocus(),
-        child: GetMaterialApp(
+        child: MaterialApp.router(
           debugShowCheckedModeBanner: false,
-          title: 'Virtual Lab',
           theme: ThemeData(
             fontFamily: 'Poppins',
-            scaffoldBackgroundColor: Colors.white,
-            // colorScheme: ColorScheme.fromSwatch().copyWith(
-            //   primary: Colors.blue,
-            //   secondary: Colors.deepPurple,
-            // ),
+            scaffoldBackgroundColor: backgroundColor,
           ),
-          initialRoute: '/',
-          getPages: appRoutes,
+          routerConfig: myRoutes,
         ),
       ),
     );

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
-class MySvgPicture extends StatefulWidget {
+class MySvgPicture extends StatelessWidget {
   final String path;
   final Color? iconColor;
   final double? iconSize;
@@ -17,18 +17,13 @@ class MySvgPicture extends StatefulWidget {
   });
 
   @override
-  State<MySvgPicture> createState() => _MySvgPictureState();
-}
-
-class _MySvgPictureState extends State<MySvgPicture> {
-  @override
   Widget build(BuildContext context) {
     return SvgPicture.asset(
-      widget.path,
-      fit: widget.fit!,
-      color: widget.iconColor,
-      width: widget.iconSize,
-      colorBlendMode: widget.blendMode ?? BlendMode.srcIn,
+      path,
+      fit: fit!,
+      color: iconColor,
+      width: iconSize,
+      colorBlendMode: blendMode ?? BlendMode.srcIn,
     );
   }
 }

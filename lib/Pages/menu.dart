@@ -3,12 +3,11 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:virtual_lab/Components/custom_button.dart';
 import 'package:virtual_lab/Components/custom_text.dart';
-import 'package:virtual_lab/Components/custom_text_field.dart';
 import 'package:virtual_lab/Utils/properties.dart';
 import 'package:virtual_lab/Utils/routes.dart';
 
-class MyLoginPage extends StatelessWidget {
-  const MyLoginPage({super.key});
+class MyMenuPage extends StatelessWidget {
+  const MyMenuPage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -22,7 +21,7 @@ class MyLoginPage extends StatelessWidget {
               Align(
                 alignment: Alignment.bottomCenter,
                 child: Container(
-                  width: 500.w,
+                  width: 360.w,
                   decoration: BoxDecoration(
                     color: lightBrown,
                     borderRadius: BorderRadius.circular(30.r),
@@ -49,26 +48,34 @@ class MyLoginPage extends StatelessWidget {
                         child: Column(
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            _repeatedTextInput(label: 'Email'),
-                            SizedBox(height: 8.h),
-                            _repeatedTextInput(label: 'Password'),
-                            SizedBox(height: 16.h),
-                            Row(
-                              spacing: 16.w,
-                              children: [
-                                MyButton(
-                                  text: 'LOGIN',
-                                  onTap: () {
-                                    context.go(Routes.menu);
-                                  },
-                                ),
-                                MyButton(
-                                  text: 'SIGN UP',
-                                  onTap: () {
-                                    context.go(Routes.signUp);
-                                  },
-                                ),
-                              ],
+                            SizedBox(
+                              height: 48.h,
+                              child: MyButton(
+                                text: 'Play',
+                                onTap: () {
+                                  context.push(Routes.foodChoices);
+                                },
+                              ),
+                            ),
+                            SizedBox(height: 12.h),
+                            SizedBox(
+                              height: 48.h,
+                              child: MyButton(
+                                text: 'Settings',
+                                onTap: () {
+                                  context.push(Routes.settings);
+                                },
+                              ),
+                            ),
+                            SizedBox(height: 12.h),
+                            SizedBox(
+                              height: 48.h,
+                              child: MyButton(
+                                text: 'Quit',
+                                borderColor: redDark,
+                                gradientColor: [redLighter, redLight],
+                                onTap: () {},
+                              ),
                             ),
                           ],
                         ),
@@ -103,7 +110,7 @@ class MyLoginPage extends StatelessWidget {
                       vertical: 6.h,
                     ),
                     child: MyText(
-                      text: 'LOGIN',
+                      text: 'MENU',
                       color: textLight,
                       fontWeight: FontWeight.w700,
                       size: 28.sp,
@@ -115,22 +122,6 @@ class MyLoginPage extends StatelessWidget {
           ),
         ),
       ),
-    );
-  }
-
-  Widget _repeatedTextInput({
-    required String label,
-    TextEditingController? controller,
-  }) {
-    return Row(
-      spacing: 24.w,
-      children: [
-        SizedBox(
-          width: 130.w,
-          child: MyText(text: label, fontWeight: FontWeight.w600),
-        ),
-        Expanded(child: MyTextfield(controller: controller)),
-      ],
     );
   }
 }
