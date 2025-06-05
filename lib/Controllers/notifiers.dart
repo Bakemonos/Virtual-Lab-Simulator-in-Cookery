@@ -1,14 +1,9 @@
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:virtual_lab/Models/notifier_model.dart';
+import 'package:get/get.dart';
 
-class AppController extends StateNotifier<AppState> {
-  AppController() : super(AppState(name: ''));
+class AppController extends GetxController {
+  static AppController get instance => Get.find();
 
-  void setName(String newName) {
-    state = state.copyWith(name: newName);
-  }
+  //?Initialize
+
+  //?Methods
 }
-
-final appProvider = StateNotifierProvider<AppController, AppState>((ref) {
-  return AppController();
-});

@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:virtual_lab/Utils/properties.dart';
+import 'package:get/get.dart';
+import 'package:virtual_lab/Utils/bindings.dart';
 import 'package:virtual_lab/Utils/go_routes.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  await GeneralBindings().dependencies();
 
   await SystemChrome.setPreferredOrientations([
     DeviceOrientation.landscapeLeft,
@@ -15,33 +17,31 @@ void main() async {
 
   await SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
 
-  runApp(const ProviderScope(child: MyApp()));
+  runApp(const MyApp());
 }
 
-class MyApp extends ConsumerWidget {
+class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final myRoutes = ref.watch(myRoutesProvider);
-
+  Widget build(BuildContext context) {
     return ScreenUtilInit(
       designSize: const Size(800, 360),
       child: GestureDetector(
         onTap: () => FocusScope.of(context).unfocus(),
-        child: MaterialApp.router(
+        child: GetMaterialApp(
           debugShowCheckedModeBanner: false,
+          title: 'Virtual Lab',
           theme: ThemeData(
             fontFamily: 'Poppins',
-            // primaryColor: primaryColor,
-            scaffoldBackgroundColor: backgroundColor,
-            // colorScheme: const ColorScheme.light().copyWith(
-            //   primary: textLight,
-            //   secondary: textSub,
-            //   tertiary: textColor,
+            scaffoldBackgroundColor: Colors.white,
+            // colorScheme: ColorScheme.fromSwatch().copyWith(
+            //   primary: Colors.blue,
+            //   secondary: Colors.deepPurple,
             // ),
           ),
-          routerConfig: myRoutes,
+          initialRoute: '/',
+          getPages: appRoutes,
         ),
       ),
     );

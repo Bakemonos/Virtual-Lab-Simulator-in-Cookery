@@ -14,3 +14,6 @@ const greenDark = Color(0xFF2B6E0F);
 
 //? ICONS / IMAGES
 const String characterIcon = "assets/navigationIcon/character.svg";
+
+//? SOUND EFFECTS
+const String clickEffect1 = "effects/click_effect1.wav";

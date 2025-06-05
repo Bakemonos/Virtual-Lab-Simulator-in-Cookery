@@ -12,6 +12,12 @@ class MyLoginPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // final player = AudioPlayer();
+
+    // void playClickSound() async {
+    //   await player.play(AssetSource(clickEffect1));
+    // }
+
     return Scaffold(
       resizeToAvoidBottomInset: false,
       body: Center(
@@ -59,7 +65,10 @@ class MyLoginPage extends StatelessWidget {
                                 MyButton(text: 'LOGIN', onTap: () {}),
                                 MyButton(
                                   text: 'SIGN UP',
-                                  onTap: () => context.push(Routes.signUp),
+                                  onTap: () async {
+                                    // playClickSound();
+                                    context.push(Routes.signUp);
+                                  },
                                 ),
                               ],
                             ),
