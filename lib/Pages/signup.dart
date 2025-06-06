@@ -155,10 +155,12 @@ class MySignUpPage extends StatelessWidget {
       spacing: 24.w,
       children: [
         SizedBox(
-          width: 180.w,
+          width: 120.w,
           child: MyText(text: label, fontWeight: FontWeight.w600),
         ),
-        Expanded(child: MyTextfield(controller: controller)),
+        Expanded(
+          child: MyTextfield(controller: controller, hint: 'Enter $label'),
+        ),
       ],
     );
   }

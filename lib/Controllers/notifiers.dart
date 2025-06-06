@@ -1,17 +1,15 @@
 import 'package:audioplayers/audioplayers.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:virtual_lab/Components/custom_svg.dart';
 import 'package:virtual_lab/Utils/properties.dart';
 
 class AppController extends GetxController {
   static AppController get instance => Get.find();
 
   //?Initialize
-
   final player = AudioPlayer();
-
-  void playClickSound() async {
-    await player.play(AssetSource(clickEffect1));
-  }
 
   final soundToggle = true.obs;
   final musicToggle = true.obs;
@@ -22,6 +20,37 @@ class AppController extends GetxController {
   // final hasErrorStores = false.obs;
 
   //?Methods
+
+  void playClickSound() async {
+    await player.play(AssetSource(clickEffect1));
+  }
+
+  Widget floatingButton({
+    required BuildContext context,
+    required Function() onTap,
+    String? icon,
+    bool? isLeft = true,
+  }) {
+    return Positioned(
+      top: 14.h,
+      left: isLeft! ? 14.w : null,
+      right: isLeft ? null : 14.w,
+      child: GestureDetector(
+        onTap: () {
+          playClickSound();
+          onTap();
+        },
+        child: SizedBox(
+          height: 48.h,
+          child: AspectRatio(
+            aspectRatio: 1,
+            child: MySvgPicture(path: icon ?? menu),
+          ),
+        ),
+      ),
+    );
+  }
+
   // void getStoresStream() {
   //   try {
   //     isLoadingStores.value = true;

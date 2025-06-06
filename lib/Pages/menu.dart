@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:virtual_lab/Components/custom_button.dart';
 import 'package:virtual_lab/Components/custom_text.dart';
+import 'package:virtual_lab/Pages/food_choices.dart';
 import 'package:virtual_lab/Utils/properties.dart';
 import 'package:virtual_lab/Utils/routes.dart';
 
@@ -53,7 +54,10 @@ class MyMenuPage extends StatelessWidget {
                               child: MyButton(
                                 text: 'Play',
                                 onTap: () {
-                                  context.push(Routes.foodChoices);
+                                  context.push(
+                                    Routes.foodChoices,
+                                    extra: PageCache.foodChoicesPage,
+                                  );
                                 },
                               ),
                             ),
@@ -124,4 +128,8 @@ class MyMenuPage extends StatelessWidget {
       ),
     );
   }
+}
+
+class PageCache {
+  static final foodChoicesPage = MyFoodChoicesPage();
 }

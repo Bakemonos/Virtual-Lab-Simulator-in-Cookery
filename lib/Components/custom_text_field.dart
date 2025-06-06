@@ -45,7 +45,7 @@ class _MyTextfieldState extends State<MyTextfield> {
     var hintStyle = TextStyle(
       fontFamily: 'Poppins',
       fontSize: 16.sp,
-      color: darkBrown,
+      color: lightBrown,
       fontWeight: FontWeight.w400,
     );
 

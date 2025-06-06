@@ -6,7 +6,9 @@ import 'package:virtual_lab/Components/custom_button.dart';
 import 'package:virtual_lab/Components/custom_svg.dart';
 import 'package:virtual_lab/Components/custom_text.dart';
 import 'package:virtual_lab/Controllers/notifiers.dart';
+import 'package:virtual_lab/Pages/menu.dart';
 import 'package:virtual_lab/Utils/properties.dart';
+import 'package:virtual_lab/Utils/routes.dart';
 
 class MySettingsPage extends StatelessWidget {
   const MySettingsPage({super.key});
@@ -52,9 +54,7 @@ class MySettingsPage extends StatelessWidget {
                         ),
                         child: ScrollbarTheme(
                           data: ScrollbarThemeData(
-                            thumbColor: WidgetStateProperty.all(
-                              darkBrown,
-                            ), // updated here
+                            thumbColor: WidgetStateProperty.all(darkBrown),
                           ),
                           child: Scrollbar(
                             thumbVisibility: true,
@@ -120,7 +120,12 @@ class MySettingsPage extends StatelessWidget {
                                       height: 48.h,
                                       child: MyButton(
                                         text: 'Continue',
-                                        onTap: () {},
+                                        onTap: () {
+                                          context.push(
+                                            Routes.foodChoices,
+                                            extra: PageCache.foodChoicesPage,
+                                          );
+                                        },
                                       ),
                                     ),
                                     SizedBox(height: 12.h),
@@ -128,7 +133,9 @@ class MySettingsPage extends StatelessWidget {
                                       height: 48.h,
                                       child: MyButton(
                                         text: 'About Game',
-                                        onTap: () {},
+                                        onTap: () {
+                                          context.push(Routes.aboutGame);
+                                        },
                                       ),
                                     ),
                                     SizedBox(height: 12.h),
@@ -138,7 +145,9 @@ class MySettingsPage extends StatelessWidget {
                                         text: 'Back to Menu',
                                         borderColor: redDark,
                                         gradientColor: [redLighter, redLight],
-                                        onTap: () => context.pop(),
+                                        onTap: () {
+                                          context.push(Routes.menu);
+                                        },
                                       ),
                                     ),
                                     SizedBox(height: 12.h),

@@ -30,6 +30,7 @@ class MyApp extends ConsumerWidget {
 
     return ScreenUtilInit(
       designSize: const Size(800, 360),
+      minTextAdapt: true,
       child: GestureDetector(
         onTap: () => FocusScope.of(context).unfocus(),
         child: MaterialApp.router(
