@@ -4,7 +4,9 @@ import 'package:go_router/go_router.dart';
 import 'package:virtual_lab/Components/custom_svg.dart';
 import 'package:virtual_lab/Controllers/notifiers.dart';
 import 'package:virtual_lab/Models/ingredients.dart';
+import 'package:virtual_lab/Pages/menu.dart';
 import 'package:virtual_lab/Utils/properties.dart';
+import 'package:virtual_lab/Utils/routes.dart';
 
 class MyPlayUIPage extends StatelessWidget {
   const MyPlayUIPage({super.key});
@@ -124,7 +126,10 @@ class MyPlayUIPage extends StatelessWidget {
             context: context,
             icon: home,
             onTap: () {
-              context.pop();
+              context.push(
+                Routes.foodChoices,
+                extra: PageCache.foodChoicesPage,
+              );
             },
           ),
         ],

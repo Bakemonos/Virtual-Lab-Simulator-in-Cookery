@@ -1,5 +1,14 @@
 import 'dart:ui';
 
+import 'package:cloudinary_url_gen/cloudinary.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+
+//? API ACCESS
+final cloudName = dotenv.env['CLOUD_NAME'];
+final apiKey = dotenv.env['API_KEY'];
+final apiSecret = dotenv.env['API_SECRET'];
+final cloudinary = Cloudinary.fromCloudName(cloudName: cloudName!);
+
 //? COLORS
 const textLight = Color(0xFFEFEFF8);
 const backgroundColor = Color(0xFFFFD795);

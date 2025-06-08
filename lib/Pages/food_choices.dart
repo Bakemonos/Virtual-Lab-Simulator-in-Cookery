@@ -29,12 +29,6 @@ class _MyFoodChoicesPageState extends State<MyFoodChoicesPage> {
   @override
   Widget build(BuildContext context) {
     final List<bool> unlocked = [true, false, false];
-    final List<String> path = [appetizer, desserts, soups];
-    final List<String> label = [
-      'Appetizer, Sandwich, salad',
-      'Desserts',
-      'Soup, Sauce',
-    ];
 
     return Scaffold(
       resizeToAvoidBottomInset: false,
@@ -66,8 +60,8 @@ class _MyFoodChoicesPageState extends State<MyFoodChoicesPage> {
                               child: foodChoices(
                                 onTap: playFunction(index),
                                 unlocked: unlocked[index],
-                                path: path[index],
-                                label: label[index],
+                                path: controller.foodType[index],
+                                label: controller.label[index],
                               ),
                             );
                           }),
@@ -116,7 +110,7 @@ class _MyFoodChoicesPageState extends State<MyFoodChoicesPage> {
           controller.floatingButton(
             context: context,
             onTap: () {
-              context.pop();
+              context.go(Routes.menu);
             },
           ),
           controller.floatingButton(
@@ -176,10 +170,34 @@ class _MyFoodChoicesPageState extends State<MyFoodChoicesPage> {
                       child: Padding(
                         padding: EdgeInsets.all(16.w),
                         child: Center(
-                          child: MySvgPicture(
-                            path: path,
-                            iconSize: double.infinity,
+                          child: FutureBuilder(
+                            future: Future.delayed(
+                              const Duration(seconds: 1),
+                              () => true,
+                            ),
+                            builder: (context, snapshot) {
+                              if (snapshot.connectionState ==
+                                  ConnectionState.done) {
+                                return MySvgPicture(
+                                  path: path,
+                                  iconSize: double.infinity,
+                                );
+                              } else {
+                                return Center(
+                                  child: CircularProgressIndicator(),
+                                );
+                              }
+                            },
                           ),
+
+                          // CachedNetworkImage(
+                          //   imageUrl: path,
+                          //   placeholder:
+                          //       (context, url) => CircularProgressIndicator(),
+                          //   errorWidget:
+                          //       (context, url, error) => Icon(Icons.error),
+                          //   fit: BoxFit.cover,
+                          // ),
                         ),
                       ),
                     ),

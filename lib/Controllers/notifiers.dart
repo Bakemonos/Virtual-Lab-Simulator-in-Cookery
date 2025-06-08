@@ -19,6 +19,16 @@ class AppController extends GetxController {
   // final isLoadingStores = false.obs;
   // final hasErrorStores = false.obs;
 
+  //? COLLECTION
+
+  final List<String> foodType = [appetizer, desserts, soups];
+
+  final List<String> label = [
+    'Appetizer, Sandwich, salad',
+    'Desserts',
+    'Soup, Sauce',
+  ];
+
   //?Methods
 
   void playClickSound() async {
