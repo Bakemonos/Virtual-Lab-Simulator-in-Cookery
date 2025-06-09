@@ -1,8 +1,8 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:virtual_lab/Components/custom_button.dart';
-import 'package:virtual_lab/Components/custom_svg_picture.dart';
 import 'package:virtual_lab/Components/custom_text.dart';
 import 'package:virtual_lab/Controllers/notifiers.dart';
 import 'package:virtual_lab/Utils/properties.dart';
@@ -170,34 +170,36 @@ class _MyFoodChoicesPageState extends State<MyFoodChoicesPage> {
                       child: Padding(
                         padding: EdgeInsets.all(16.w),
                         child: Center(
-                          child: FutureBuilder(
-                            future: Future.delayed(
-                              const Duration(seconds: 1),
-                              () => true,
-                            ),
-                            builder: (context, snapshot) {
-                              if (snapshot.connectionState ==
-                                  ConnectionState.done) {
-                                return MySvgPicture(
-                                  path: path,
-                                  iconSize: double.infinity,
-                                );
-                              } else {
-                                return Center(
-                                  child: CircularProgressIndicator(),
-                                );
-                              }
-                            },
-                          ),
-
-                          // CachedNetworkImage(
-                          //   imageUrl: path,
-                          //   placeholder:
-                          //       (context, url) => CircularProgressIndicator(),
-                          //   errorWidget:
-                          //       (context, url, error) => Icon(Icons.error),
-                          //   fit: BoxFit.cover,
+                          child: 
+                          
+                          // FutureBuilder(
+                          //   future: Future.delayed(
+                          //     const Duration(seconds: 1),
+                          //     () => true,
+                          //   ),
+                          //   builder: (context, snapshot) {
+                          //     if (snapshot.connectionState ==
+                          //         ConnectionState.done) {
+                          //       return MySvgPicture(
+                          //         path: path,
+                          //         iconSize: double.infinity,
+                          //       );
+                          //     } else {
+                          //       return Center(
+                          //         child: CircularProgressIndicator(),
+                          //       );
+                          //     }
+                          //   },
                           // ),
+
+                          CachedNetworkImage(
+                            imageUrl: path,
+                            placeholder:
+                                (context, url) => CircularProgressIndicator(),
+                            errorWidget:
+                                (context, url, error) => Icon(Icons.error),
+                            fit: BoxFit.cover,
+                          ),
                         ),
                       ),
                     ),

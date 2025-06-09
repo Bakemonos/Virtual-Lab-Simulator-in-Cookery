@@ -39,7 +39,6 @@ flutter:
   assets:
     - assets/effects/
     - assets/icons/
-    - assets/images/
     - assets/fonts/
     - assets/ingredients/
     - .env

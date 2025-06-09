@@ -21,7 +21,13 @@ class AppController extends GetxController {
 
   //? COLLECTION
 
-  final List<String> foodType = [appetizer, desserts, soups];
+  final List<String> foodType = [
+    'https://res.cloudinary.com/dhceioavi/image/upload/v1749359823/appetizer_mgjyom.png',
+    'https://res.cloudinary.com/dhceioavi/image/upload/v1749359824/dessert_jlfn7h.png',
+    'https://res.cloudinary.com/dhceioavi/image/upload/v1749359823/soup_mbvceo.png',
+  ];
+
+  
 
   final List<String> label = [
     'Appetizer, Sandwich, salad',
