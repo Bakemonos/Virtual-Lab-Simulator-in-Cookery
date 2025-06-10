@@ -1,7 +1,11 @@
+
+
 import 'package:flutter/material.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:virtual_lab/Components/custom_svg.dart';
+import 'package:virtual_lab/Components/shimmer.dart';
 import 'package:virtual_lab/Controllers/notifiers.dart';
 import 'package:virtual_lab/Models/ingredients.dart';
 import 'package:virtual_lab/Pages/menu.dart';
@@ -53,7 +57,7 @@ class MyPlayUIPage extends StatelessWidget {
                 itemCount: ingredients.length,
                 itemBuilder: (context, index) {
                   var data = ingredients[index];
-
+                  
                   return Container(
                     alignment: Alignment.center,
                     decoration: BoxDecoration(
@@ -62,7 +66,12 @@ class MyPlayUIPage extends StatelessWidget {
                     ),
                     child: Padding(
                       padding: EdgeInsets.all(4.w),
-                      child: MySvgPicture(path: data.path),
+                      child: CachedNetworkImage(
+                        imageUrl: data.path,
+                        placeholder: (context, url) => ShimmerSkeletonLoader(),
+                        errorWidget: (context, url, error) => Icon(Icons.error),
+                        fit: BoxFit.contain,
+                      ),
                     ),
                   );
                 },
@@ -99,6 +108,7 @@ class MyPlayUIPage extends StatelessWidget {
                           separatorBuilder: (_, __) => SizedBox(height: 12.h),
                           itemBuilder: (context, index) {
                             var data = ingredients[index];
+
                             return AspectRatio(
                               aspectRatio: 1,
                               child: Container(
@@ -108,7 +118,12 @@ class MyPlayUIPage extends StatelessWidget {
                                 ),
                                 child: Padding(
                                   padding: EdgeInsets.all(4.w),
-                                  child: MySvgPicture(path: data.path),
+                                  child: CachedNetworkImage(
+                                    imageUrl: data.path,
+                                    placeholder: (context, url) => ShimmerSkeletonLoader(),
+                                    errorWidget: (context, url, error) => Icon(Icons.error),
+                                    fit: BoxFit.contain,
+                                  ),
                                 ),
                               ),
                             );
@@ -121,7 +136,6 @@ class MyPlayUIPage extends StatelessWidget {
               ),
             ),
           ),
-
           controller.floatingButton(
             context: context,
             icon: home,

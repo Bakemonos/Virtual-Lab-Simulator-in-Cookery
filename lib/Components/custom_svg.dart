@@ -28,7 +28,6 @@ class _MySvgPictureState extends State<MySvgPicture> {
       fit: widget.fit!,
       color: widget.iconColor,
       width: widget.iconSize,
-      colorBlendMode: widget.blendMode ?? BlendMode.srcIn,
     );
   }
 }

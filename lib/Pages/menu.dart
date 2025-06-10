@@ -16,7 +16,7 @@ class MyMenuPage extends StatelessWidget {
       resizeToAvoidBottomInset: false,
       body: Center(
         child: SizedBox(
-          height: 270.h,
+          height: 330.h,
           child: Stack(
             children: [
               Align(
@@ -58,6 +58,15 @@ class MyMenuPage extends StatelessWidget {
                                     Routes.foodChoices,
                                     extra: PageCache.foodChoicesPage,
                                   );
+                                },
+                              ),
+                            ),
+                            SizedBox(height: 12.h),
+                            SizedBox(
+                              height: 48.h,
+                              child: MyButton(
+                                text: 'Achievement',
+                                onTap: () {
                                 },
                               ),
                             ),

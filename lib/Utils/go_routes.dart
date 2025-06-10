@@ -5,7 +5,7 @@ import 'package:virtual_lab/Pages/about_game.dart';
 import 'package:virtual_lab/Pages/food_choices.dart';
 import 'package:virtual_lab/Pages/login.dart';
 import 'package:virtual_lab/Pages/menu.dart';
-import 'package:virtual_lab/Pages/play_UI.dart';
+import 'package:virtual_lab/Pages/play_ui.dart';
 import 'package:virtual_lab/Pages/settings.dart';
 import 'package:virtual_lab/Pages/signup.dart';
 import 'package:virtual_lab/Utils/routes.dart';

@@ -23,7 +23,6 @@ class MySvgPicture extends StatelessWidget {
       fit: fit!,
       color: iconColor,
       width: iconSize,
-      colorBlendMode: blendMode ?? BlendMode.srcIn,
     );
   }
 }
