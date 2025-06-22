@@ -16,13 +16,14 @@ class MyMenuPage extends StatelessWidget {
       resizeToAvoidBottomInset: false,
       body: Center(
         child: SizedBox(
-          height: 330.h,
+          height: 350.h,
           child: Stack(
             children: [
               Align(
                 alignment: Alignment.bottomCenter,
                 child: Container(
                   width: 360.w,
+                  margin: EdgeInsets.only(top: 24.h),
                   decoration: BoxDecoration(
                     color: lightBrown,
                     borderRadius: BorderRadius.circular(30.r),
@@ -47,7 +48,6 @@ class MyMenuPage extends StatelessWidget {
                           bottom: 8.h,
                         ),
                         child: Column(
-                          mainAxisSize: MainAxisSize.min,
                           children: [
                             SizedBox(
                               height: 48.h,
@@ -66,8 +66,7 @@ class MyMenuPage extends StatelessWidget {
                               height: 48.h,
                               child: MyButton(
                                 text: 'Achievement',
-                                onTap: () {
-                                },
+                                onTap: () {},
                               ),
                             ),
                             SizedBox(height: 12.h),

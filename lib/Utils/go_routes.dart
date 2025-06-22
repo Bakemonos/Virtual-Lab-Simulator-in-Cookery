@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:riverpod/riverpod.dart';
+import 'package:virtual_lab/Pages/ForgotPassword/enter_email.dart';
 import 'package:virtual_lab/Pages/about_game.dart';
 import 'package:virtual_lab/Pages/food_choices.dart';
 import 'package:virtual_lab/Pages/login.dart';
@@ -22,6 +23,12 @@ final myRoutesProvider = Provider<GoRouter>((ref) {
         path: Routes.signUp,
         builder: (context, state) => const MySignUpPage(),
       ),
+
+      GoRoute(
+        path: Routes.forgotEnterEmail,
+        builder: (context, state) => const MyForgotEnterEmail(),
+      ),
+
       GoRoute(
         path: Routes.menu,
         builder: (context, state) => const MyMenuPage(),

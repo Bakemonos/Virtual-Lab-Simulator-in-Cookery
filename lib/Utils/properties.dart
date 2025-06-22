@@ -38,7 +38,9 @@ const String menu = "assets/icons/menu.svg";
 const String home = "assets/icons/home.svg";
 const String setting = "assets/icons/setting.svg";
 const String plate = "assets/icons/plate.svg";
-const String board = "assets/icons/board.svg";
+const String board1 = "assets/icons/board1.svg";
+const String board2 = "assets/icons/board2.svg";
+const String bag = "assets/icons/bag.svg";
 
 //? INGREDIENTS
 const String beacon = "assets/ingredients/beacon.svg";

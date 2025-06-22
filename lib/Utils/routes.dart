@@ -6,4 +6,5 @@ class Routes {
   static String foodChoices = '/food_choices';
   static String aboutGame = '/about_game';
   static String playUI = '/play_ui';
+  static String forgotEnterEmail = '/forgot_enter_email';
 }

@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:virtual_lab/Components/custom_svg.dart';
+import 'package:virtual_lab/Components/custom_text.dart';
+import 'package:virtual_lab/Components/custom_text_field.dart';
 import 'package:virtual_lab/Utils/properties.dart';
 
 class AppController extends GetxController {
@@ -26,8 +28,6 @@ class AppController extends GetxController {
     'https://res.cloudinary.com/dhceioavi/image/upload/v1749359824/dessert_jlfn7h.png',
     'https://res.cloudinary.com/dhceioavi/image/upload/v1749359823/soup_mbvceo.png',
   ];
-
-  
 
   final List<String> label = [
     'Appetizer, Sandwich, salad',
@@ -67,6 +67,23 @@ class AppController extends GetxController {
     );
   }
 
+  Widget repeatedTextInput({
+    required String label,
+    TextEditingController? controller,
+  }) {
+    return Row(
+      spacing: 24.w,
+      children: [
+        SizedBox(
+          width: 100.w,
+          child: MyText(text: label, fontWeight: FontWeight.w600),
+        ),
+        Expanded(
+          child: MyTextfield(controller: controller, hint: 'Enter $label'),
+        ),
+      ],
+    );
+  }
   // void getStoresStream() {
   //   try {
   //     isLoadingStores.value = true;

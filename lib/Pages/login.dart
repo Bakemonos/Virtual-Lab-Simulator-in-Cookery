@@ -3,7 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:virtual_lab/Components/custom_button.dart';
 import 'package:virtual_lab/Components/custom_text.dart';
-import 'package:virtual_lab/Components/custom_text_field.dart';
+import 'package:virtual_lab/Controllers/notifiers.dart';
 import 'package:virtual_lab/Utils/properties.dart';
 import 'package:virtual_lab/Utils/routes.dart';
 
@@ -12,17 +12,20 @@ class MyLoginPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final controller = AppController.instance;
+
     return Scaffold(
       resizeToAvoidBottomInset: false,
       body: Center(
         child: SizedBox(
-          height: 270.h,
+          height: 300.h,
           child: Stack(
             children: [
               Align(
                 alignment: Alignment.bottomCenter,
                 child: Container(
                   width: 500.w,
+                  margin: EdgeInsets.only(top: 24.h),
                   decoration: BoxDecoration(
                     color: lightBrown,
                     borderRadius: BorderRadius.circular(30.r),
@@ -47,11 +50,21 @@ class MyLoginPage extends StatelessWidget {
                           bottom: 8.h,
                         ),
                         child: Column(
-                          mainAxisSize: MainAxisSize.min,
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            _repeatedTextInput(label: 'Email'),
+                            controller.repeatedTextInput(label: 'Email'),
                             SizedBox(height: 8.h),
-                            _repeatedTextInput(label: 'Password'),
+                            controller.repeatedTextInput(label: 'Password'),
+                            SizedBox(height: 6.h),
+                            InkWell(
+                              onTap:
+                                  () => context.push(Routes.forgotEnterEmail),
+                              child: MyText(
+                                text: 'Forgot password',
+                                size: 11.sp,
+                                decoration: TextDecoration.underline,
+                              ),
+                            ),
                             SizedBox(height: 16.h),
                             Row(
                               spacing: 16.w,
@@ -96,7 +109,6 @@ class MyLoginPage extends StatelessWidget {
                       ),
                     ],
                   ),
-
                   child: Padding(
                     padding: EdgeInsets.symmetric(
                       horizontal: 40.w,
@@ -115,24 +127,6 @@ class MyLoginPage extends StatelessWidget {
           ),
         ),
       ),
-    );
-  }
-
-  Widget _repeatedTextInput({
-    required String label,
-    TextEditingController? controller,
-  }) {
-    return Row(
-      spacing: 24.w,
-      children: [
-        SizedBox(
-          width: 100.w,
-          child: MyText(text: label, fontWeight: FontWeight.w600),
-        ),
-        Expanded(
-          child: MyTextfield(controller: controller, hint: 'Enter $label'),
-        ),
-      ],
     );
   }
 }

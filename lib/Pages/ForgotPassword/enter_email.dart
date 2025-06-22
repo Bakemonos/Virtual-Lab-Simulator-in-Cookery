@@ -5,20 +5,18 @@ import 'package:virtual_lab/Components/custom_button.dart';
 import 'package:virtual_lab/Components/custom_text.dart';
 import 'package:virtual_lab/Controllers/notifiers.dart';
 import 'package:virtual_lab/Utils/properties.dart';
-import 'package:virtual_lab/Utils/routes.dart';
 
-class MySignUpPage extends StatelessWidget {
-  const MySignUpPage({super.key});
+class MyForgotEnterEmail extends StatelessWidget {
+  const MyForgotEnterEmail({super.key});
 
   @override
   Widget build(BuildContext context) {
     final controller = AppController.instance;
-
     return Scaffold(
       resizeToAvoidBottomInset: false,
       body: Center(
         child: SizedBox(
-          height: 320.h,
+          height: 220.h,
           child: Stack(
             children: [
               Align(
@@ -37,7 +35,6 @@ class MySignUpPage extends StatelessWidget {
                       bottom: 20.sp,
                     ),
                     child: Container(
-                      height: 270.h,
                       decoration: BoxDecoration(
                         color: foregroundColor,
                         borderRadius: BorderRadius.circular(16.r),
@@ -45,66 +42,31 @@ class MySignUpPage extends StatelessWidget {
                       child: Padding(
                         padding: EdgeInsets.only(
                           left: 24.w,
-                          right: 14.w,
-                          top: 36.h,
+                          right: 24.w,
+                          top: 40.h,
                           bottom: 8.h,
                         ),
                         child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisSize: MainAxisSize.min,
                           children: [
-                            SizedBox(
-                              height: 160.h,
-                              child: ScrollbarTheme(
-                                data: ScrollbarThemeData(
-                                  thumbColor: WidgetStateProperty.all(
-                                    darkBrown,
-                                  ),
-                                ),
-                                child: Scrollbar(
-                                  thumbVisibility: true,
-                                  thickness: 4.w,
-                                  radius: Radius.circular(10.r),
-                                  child: SingleChildScrollView(
-                                    child: Padding(
-                                      padding: EdgeInsets.only(right: 10.w),
-                                      child: Column(
-                                        mainAxisSize: MainAxisSize.min,
-                                        children: [
-                                          controller.repeatedTextInput(
-                                            label: 'Email',
-                                          ),
-                                          SizedBox(height: 8.h),
-                                          controller.repeatedTextInput(
-                                            label: 'First Name',
-                                          ),
-                                          SizedBox(height: 8.h),
-                                          controller.repeatedTextInput(
-                                            label: 'Last Name',
-                                          ),
-                                          SizedBox(height: 8.h),
-                                          controller.repeatedTextInput(
-                                            label: 'LRN',
-                                          ),
-                                          SizedBox(height: 8.h),
-                                          controller.repeatedTextInput(
-                                            label: 'Password',
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ),
-
+                            controller.repeatedTextInput(label: 'Email'),
                             SizedBox(height: 16.h),
                             Row(
                               spacing: 16.w,
                               children: [
                                 MyButton(
-                                  text: 'LOGIN',
-                                  onTap: () => context.push(Routes.signIn),
+                                  text: 'Cancel',
+                                  onTap: () {
+                                    context.pop();
+                                  },
                                 ),
-                                MyButton(text: 'SIGN UP', onTap: () {}),
+                                MyButton(
+                                  text: 'Submit',
+                                  onTap: () {
+                                    // context.go(Routes.signUp);
+                                  },
+                                ),
                               ],
                             ),
                           ],
@@ -133,14 +95,13 @@ class MySignUpPage extends StatelessWidget {
                       ),
                     ],
                   ),
-
                   child: Padding(
                     padding: EdgeInsets.symmetric(
                       horizontal: 40.w,
                       vertical: 6.h,
                     ),
                     child: MyText(
-                      text: 'SIGN UP',
+                      text: 'ENTER EMAIL',
                       color: textLight,
                       fontWeight: FontWeight.w700,
                       size: 28.sp,
