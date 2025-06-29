@@ -17,8 +17,8 @@ class MyLoginPage extends StatelessWidget {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       body: Center(
-        child: SizedBox(
-          height: 300.h,
+        child: Padding(
+          padding: EdgeInsets.symmetric(vertical: 8.h),
           child: Stack(
             children: [
               Align(
@@ -34,7 +34,7 @@ class MyLoginPage extends StatelessWidget {
                     padding: EdgeInsets.only(
                       left: 16.w,
                       right: 16.w,
-                      top: 12.w,
+                      top: 8.w,
                       bottom: 20.sp,
                     ),
                     child: Container(
@@ -46,10 +46,11 @@ class MyLoginPage extends StatelessWidget {
                         padding: EdgeInsets.only(
                           left: 24.w,
                           right: 24.w,
-                          top: 40.h,
-                          bottom: 8.h,
+                          top: 24.h,
+                          bottom: 16.h,
                         ),
                         child: Column(
+                          mainAxisAlignment: MainAxisAlignment.end,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             controller.repeatedTextInput(label: 'Email'),
@@ -61,11 +62,12 @@ class MyLoginPage extends StatelessWidget {
                                   () => context.push(Routes.forgotEnterEmail),
                               child: MyText(
                                 text: 'Forgot password',
-                                size: 11.sp,
+                                size: 14.sp,
+                                fontWeight: FontWeight.w500,
                                 decoration: TextDecoration.underline,
                               ),
                             ),
-                            SizedBox(height: 16.h),
+                            SizedBox(height: 8.h),
                             Row(
                               spacing: 16.w,
                               children: [

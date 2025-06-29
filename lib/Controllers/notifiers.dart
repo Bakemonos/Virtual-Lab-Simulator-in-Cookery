@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -16,12 +18,45 @@ class AppController extends GetxController {
   final soundToggle = true.obs;
   final musicToggle = true.obs;
 
-  // //? STORES
-  // final stores = <MdlStores>[].obs;
-  // final isLoadingStores = false.obs;
-  // final hasErrorStores = false.obs;
+  var seconds = 60.obs;
+  Timer? _timer;
 
-  //? COLLECTION
+  void startTimer() {
+    _timer?.cancel();
+    _timer = Timer.periodic(Duration(seconds: 1), (timer) {
+      if (seconds > 0) {
+        seconds.value--;
+      } else {
+        timer.cancel();
+      }
+    });
+  }
+
+  void stopTimer() {
+    _timer?.cancel();
+  }
+
+  void resetTimer([int startFrom = 60]) {
+    seconds.value = startFrom;
+    stopTimer();
+  }
+
+  @override
+  void onClose() {
+    _timer?.cancel();
+    super.onClose();
+  }
+
+  var isSelectedList = <RxBool>[].obs;
+  late List<RxBool> selectedList;
+
+  void initializeSelection(int itemCount) {
+    isSelectedList.value = List.generate(itemCount, (_) => false.obs);
+  }
+
+  void toggleSelection(int index) {
+    isSelectedList[index].value = !isSelectedList[index].value;
+  }
 
   final List<String> foodType = [
     'https://res.cloudinary.com/dhceioavi/image/upload/v1749359823/appetizer_mgjyom.png',
@@ -71,16 +106,12 @@ class AppController extends GetxController {
     required String label,
     TextEditingController? controller,
   }) {
-    return Row(
-      spacing: 24.w,
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      spacing: 4.h,
       children: [
-        SizedBox(
-          width: 100.w,
-          child: MyText(text: label, fontWeight: FontWeight.w600),
-        ),
-        Expanded(
-          child: MyTextfield(controller: controller, hint: 'Enter $label'),
-        ),
+        MyText(text: label, fontWeight: FontWeight.w600),
+        MyTextfield(controller: controller, hint: 'Enter $label'),
       ],
     );
   }

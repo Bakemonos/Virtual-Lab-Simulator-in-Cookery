@@ -7,8 +7,8 @@ import 'package:virtual_lab/Controllers/notifiers.dart';
 import 'package:virtual_lab/Utils/properties.dart';
 import 'package:virtual_lab/Utils/routes.dart';
 
-class MyForgotEnterEmailPage extends StatelessWidget {
-  const MyForgotEnterEmailPage({super.key});
+class MyForgotChangePasswordPage extends StatelessWidget {
+  const MyForgotChangePasswordPage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -17,7 +17,7 @@ class MyForgotEnterEmailPage extends StatelessWidget {
       resizeToAvoidBottomInset: false,
       body: Center(
         child: SizedBox(
-          height: 250.h,
+          height: 320.h,
           child: Stack(
             children: [
               Align(
@@ -32,7 +32,7 @@ class MyForgotEnterEmailPage extends StatelessWidget {
                     padding: EdgeInsets.only(
                       left: 16.w,
                       right: 16.w,
-                      top: 16.w,
+                      top: 12.w,
                       bottom: 20.sp,
                     ),
                     child: Container(
@@ -44,29 +44,32 @@ class MyForgotEnterEmailPage extends StatelessWidget {
                         padding: EdgeInsets.only(
                           left: 24.w,
                           right: 24.w,
-                          top: 40.h,
+                          top: 24.h,
                           bottom: 8.h,
                         ),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            controller.repeatedTextInput(label: 'Email'),
-                            SizedBox(height: 24.h),
+                            controller.repeatedTextInput(label: 'Password'),
+                            SizedBox(height: 12.h),
+                            controller.repeatedTextInput(
+                              label: 'Change Password',
+                            ),
+                            SizedBox(height: 16.h),
                             Row(
                               spacing: 16.w,
                               children: [
                                 MyButton(
                                   text: 'Cancel',
                                   onTap: () {
-                                    context.pop();
+                                    context.go(Routes.signIn);
                                   },
                                 ),
                                 MyButton(
                                   text: 'Submit',
                                   onTap: () {
-                                    //TODO SUBMIT EMAIL
-                                    context.go(Routes.forgotChangePassword);
+                                    //TODO CHANGE PASSWORD
                                   },
                                 ),
                               ],
@@ -78,7 +81,7 @@ class MyForgotEnterEmailPage extends StatelessWidget {
                   ),
                 ),
               ),
-              MyHeader(text: 'ENTER EMAIL'),
+              MyHeader(text: 'CHANGE PASSWORD'),
             ],
           ),
         ),

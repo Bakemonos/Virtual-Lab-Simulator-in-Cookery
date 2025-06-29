@@ -41,6 +41,7 @@ const String plate = "assets/icons/plate.svg";
 const String board1 = "assets/icons/board1.svg";
 const String board2 = "assets/icons/board2.svg";
 const String bag = "assets/icons/bag.svg";
+const String burger = "assets/icons/burger.svg";
 
 //? INGREDIENTS
 const String beacon = "assets/ingredients/beacon.svg";

@@ -7,4 +7,9 @@ class Routes {
   static String aboutGame = '/about_game';
   static String playUI = '/play_ui';
   static String forgotEnterEmail = '/forgot_enter_email';
+  static String forgotChangePassword = '/forgot_change_password';
+  static String achievementOption = '/achievement_option';
+  static String sliderOption = '/slider_achievement';
+  static String ingredientsSelection = '/ingredient_selection';
+  static String information = '/information';
 }

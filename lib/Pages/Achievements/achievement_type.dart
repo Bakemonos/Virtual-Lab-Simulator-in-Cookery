@@ -10,14 +10,14 @@ import 'package:virtual_lab/Controllers/notifiers.dart';
 import 'package:virtual_lab/Utils/properties.dart';
 import 'package:virtual_lab/Utils/routes.dart';
 
-class MyFoodChoicesPage extends StatefulWidget {
-  const MyFoodChoicesPage({super.key});
+class MyAchievementTypePage extends StatefulWidget {
+  const MyAchievementTypePage({super.key});
 
   @override
-  State<MyFoodChoicesPage> createState() => _MyFoodChoicesPageState();
+  State<MyAchievementTypePage> createState() => _MyAchievementTypePageState();
 }
 
-class _MyFoodChoicesPageState extends State<MyFoodChoicesPage> {
+class _MyAchievementTypePageState extends State<MyAchievementTypePage> {
   final controller = AppController.instance;
 
   @override
@@ -63,7 +63,7 @@ class _MyFoodChoicesPageState extends State<MyFoodChoicesPage> {
                       ),
                     ),
                   ),
-                  MyHeader(text: 'CHOICES'),
+                  MyHeader(text: 'ACHIEVEMENT TYPE'),
                 ],
               ),
             ),
@@ -72,14 +72,6 @@ class _MyFoodChoicesPageState extends State<MyFoodChoicesPage> {
             context: context,
             onTap: () {
               context.go(Routes.menu);
-            },
-          ),
-          controller.floatingButton(
-            context: context,
-            icon: setting,
-            isLeft: false,
-            onTap: () {
-              context.push(Routes.settings);
             },
           ),
         ],
@@ -95,8 +87,7 @@ class _MyFoodChoicesPageState extends State<MyFoodChoicesPage> {
         return () {};
       default:
         return () {
-          context.push(Routes.ingredientsSelection);
-          // context.push(Routes.playUI);
+          context.push(Routes.sliderOption);
         };
     }
   }
@@ -162,12 +153,7 @@ class _MyFoodChoicesPageState extends State<MyFoodChoicesPage> {
               padding: EdgeInsets.symmetric(horizontal: 12.w),
               child: SizedBox(
                 height: 48.h,
-                child: MyButton(
-                  borderColor: unlocked ? null : redDark,
-                  gradientColor: unlocked ? null : [redLighter, redLighter],
-                  text: unlocked ? 'Play' : 'Locked',
-                  onTap: unlocked ? onTap : () {},
-                ),
+                child: MyButton(text: 'View', onTap: unlocked ? onTap : () {}),
               ),
             ),
           ),

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:virtual_lab/Components/custom_button.dart';
-import 'package:virtual_lab/Components/custom_text.dart';
+import 'package:virtual_lab/Components/custom_header.dart';
 import 'package:virtual_lab/Pages/food_choices.dart';
 import 'package:virtual_lab/Utils/properties.dart';
 import 'package:virtual_lab/Utils/routes.dart';
@@ -15,8 +15,8 @@ class MyMenuPage extends StatelessWidget {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       body: Center(
-        child: SizedBox(
-          height: 350.h,
+        child: Padding(
+          padding: EdgeInsetsGeometry.symmetric(vertical: 8.h),
           child: Stack(
             children: [
               Align(
@@ -32,8 +32,8 @@ class MyMenuPage extends StatelessWidget {
                     padding: EdgeInsets.only(
                       left: 16.w,
                       right: 16.w,
-                      top: 12.w,
                       bottom: 20.sp,
+                      top: 12.w,
                     ),
                     child: Container(
                       decoration: BoxDecoration(
@@ -66,7 +66,9 @@ class MyMenuPage extends StatelessWidget {
                               height: 48.h,
                               child: MyButton(
                                 text: 'Achievement',
-                                onTap: () {},
+                                onTap: () {
+                                  context.go(Routes.achievementOption);
+                                },
                               ),
                             ),
                             SizedBox(height: 12.h),
@@ -96,40 +98,7 @@ class MyMenuPage extends StatelessWidget {
                   ),
                 ),
               ),
-              Align(
-                alignment: Alignment.topCenter,
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: lightBrown,
-                    borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(16.r),
-                      topRight: Radius.circular(16.r),
-                      bottomLeft: Radius.circular(8.r),
-                      bottomRight: Radius.circular(8.r),
-                    ),
-                    boxShadow: [
-                      BoxShadow(
-                        color: darkBrown,
-                        offset: Offset(0, 4),
-                        spreadRadius: 0.7,
-                      ),
-                    ],
-                  ),
-
-                  child: Padding(
-                    padding: EdgeInsets.symmetric(
-                      horizontal: 40.w,
-                      vertical: 6.h,
-                    ),
-                    child: MyText(
-                      text: 'MENU',
-                      color: textLight,
-                      fontWeight: FontWeight.w700,
-                      size: 28.sp,
-                    ),
-                  ),
-                ),
-              ),
+              MyHeader(text: 'MENU'),
             ],
           ),
         ),
