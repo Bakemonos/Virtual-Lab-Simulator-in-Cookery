@@ -4,25 +4,25 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:virtual_lab/Components/custom_button.dart';
 import 'package:virtual_lab/Components/custom_header.dart';
+import 'package:virtual_lab/Components/custom_svg.dart';
 import 'package:virtual_lab/Components/custom_text.dart';
 import 'package:virtual_lab/Components/shimmer.dart';
 import 'package:virtual_lab/Controllers/notifiers.dart';
 import 'package:virtual_lab/Utils/properties.dart';
 import 'package:virtual_lab/Utils/routes.dart';
 
-class MyAchievementTypePage extends StatefulWidget {
-  const MyAchievementTypePage({super.key});
+class MyViewAchievementPage extends StatefulWidget {
+  const MyViewAchievementPage({super.key});
 
   @override
-  State<MyAchievementTypePage> createState() => _MyAchievementTypePageState();
+  State<MyViewAchievementPage> createState() => _MyViewAchievementPageState();
 }
 
-class _MyAchievementTypePageState extends State<MyAchievementTypePage> {
+class _MyViewAchievementPageState extends State<MyViewAchievementPage> {
   final controller = AppController.instance;
 
   @override
   Widget build(BuildContext context) {
-    final List<bool> unlocked = [true, false, false];
 
     return Scaffold(
       resizeToAvoidBottomInset: false,
@@ -37,7 +37,6 @@ class _MyAchievementTypePageState extends State<MyAchievementTypePage> {
                     alignment: Alignment.bottomCenter,
                     child: Container(
                       margin: EdgeInsets.only(top: 24.h),
-                      height: 340.h,
                       decoration: BoxDecoration(
                         color: lightBrown,
                         borderRadius: BorderRadius.circular(30.r),
@@ -46,24 +45,49 @@ class _MyAchievementTypePageState extends State<MyAchievementTypePage> {
                         padding: EdgeInsets.fromLTRB(24.w, 34.h, 24.w, 8.h),
                         child: Row(
                           mainAxisSize: MainAxisSize.min,
-                          children: List.generate(3, (index) {
-                            return Padding(
-                              padding: EdgeInsets.only(
-                                right: index != 2 ? 24.w : 0,
+                          children: [
+                            Container(
+                              width: 80.w,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(8.r),
+                                color: backgroundColor
                               ),
-                              child: foodChoices(
-                                onTap: playFunction(index),
-                                unlocked: unlocked[index],
-                                path: controller.foodType[index],
-                                label: controller.label[index],
+                              child: AspectRatio(
+                                aspectRatio: 1,
+                                child: Padding(
+                                  padding: EdgeInsets.all(8.w),
+                                  child: Column(
+                                    children: [
+                                      MySvgPicture(path: burger),
+                                      MyText(text: 'BURGER', size: 16.sp)
+                                      
+                                    ],
+                                  ),
+                                ),
                               ),
-                            );
-                          }),
+                            ),
+                            Divider(
+                              indent: 2.w,
+                              height: double.infinity,
+                              color: backgroundColor,
+                            ),
+                            SingleChildScrollView(
+                              child: Column(
+                                children: [
+                                  MyText(text: ' Student Info'),
+                                  MyText(text: 'Student Name: Juan Dela Cruz\nID Number: 20231234\nSubmission Date: June 10, 2025'),
+                                  SizedBox(height: 8.h),
+                                  MyText(text: ' Dish Information'),
+                                  MyText(text: 'Dish Name: Burger\nIngredients Used: Bun, Patty, Lettuce, Tomato, Cheese\nCooking Method: Grilled\nPreparation Time: 25 minutes')
+                                ],  
+                              ),
+                            )
+                          ],
                         ),
                       ),
                     ),
                   ),
-                  MyHeader(text: 'ACHIEVEMENT TYPE'),
+                  MyHeader(text: 'EVALUATED'),
                 ],
               ),
             ),
@@ -71,7 +95,7 @@ class _MyAchievementTypePageState extends State<MyAchievementTypePage> {
           controller.floatingButton(
             context: context,
             onTap: () {
-              context.go(Routes.menu);
+              context.go(Routes.sliderOption);
             },
           ),
         ],

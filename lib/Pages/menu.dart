@@ -16,7 +16,7 @@ class MyMenuPage extends StatelessWidget {
       resizeToAvoidBottomInset: false,
       body: Center(
         child: Padding(
-          padding: EdgeInsetsGeometry.symmetric(vertical: 8.h),
+          padding: EdgeInsets.symmetric(vertical: 8.h),
           child: Stack(
             children: [
               Align(

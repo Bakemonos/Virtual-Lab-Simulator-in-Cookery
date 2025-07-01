@@ -66,6 +66,7 @@ class _MySliderOptionPageState extends State<MySliderOptionPage> {
                       child: GestureDetector(
                         onTap: () {
                           setState(() {
+                            context.go(Routes.viewAchievement);
                             selectedClass = item['foodName'];
                           });
                         },

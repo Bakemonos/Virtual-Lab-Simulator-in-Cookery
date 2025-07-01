@@ -30,7 +30,7 @@ class _MyFoodChoicesPageState extends State<MyFoodChoicesPage> {
         children: [
           Center(
             child: Padding(
-              padding: EdgeInsetsGeometry.symmetric(vertical: 8.h),
+              padding: EdgeInsets.symmetric(vertical: 8.h),
               child: Stack(
                 children: [
                   Align(

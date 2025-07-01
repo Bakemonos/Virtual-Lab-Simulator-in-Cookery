@@ -10,6 +10,7 @@ class Routes {
   static String forgotChangePassword = '/forgot_change_password';
   static String achievementOption = '/achievement_option';
   static String sliderOption = '/slider_achievement';
+  static String viewAchievement = '/view_achievement';
   static String ingredientsSelection = '/ingredient_selection';
   static String information = '/information';
 }

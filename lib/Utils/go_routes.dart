@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:riverpod/riverpod.dart';
 import 'package:virtual_lab/Pages/Achievements/achievement_type.dart';
 import 'package:virtual_lab/Pages/Achievements/slide_option.dart';
+import 'package:virtual_lab/Pages/Achievements/view_achievement.dart';
 import 'package:virtual_lab/Pages/ChooseIngredients/ingredientsSelector.dart';
 import 'package:virtual_lab/Pages/ForgotPassword/change_password.dart';
 import 'package:virtual_lab/Pages/ForgotPassword/enter_email.dart';
@@ -47,6 +48,10 @@ final myRoutesProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: Routes.sliderOption,
         builder: (context, state) => const MySliderOptionPage(),
+      ),
+      GoRoute(
+        path: Routes.viewAchievement,
+        builder: (context, state) => const MyViewAchievementPage(),
       ),
 
       //? MAIN MENU
