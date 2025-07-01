@@ -7,6 +7,7 @@ import 'package:virtual_lab/Components/custom_header.dart';
 import 'package:virtual_lab/Components/custom_text.dart';
 import 'package:virtual_lab/Components/shimmer.dart';
 import 'package:virtual_lab/Controllers/notifiers.dart';
+import 'package:virtual_lab/Models/food_type_model.dart';
 import 'package:virtual_lab/Utils/properties.dart';
 import 'package:virtual_lab/Utils/routes.dart';
 
@@ -47,6 +48,7 @@ class _MyAchievementTypePageState extends State<MyAchievementTypePage> {
                         child: Row(
                           mainAxisSize: MainAxisSize.min,
                           children: List.generate(3, (index) {
+                            var data = foodType[index];
                             return Padding(
                               padding: EdgeInsets.only(
                                 right: index != 2 ? 24.w : 0,
@@ -54,8 +56,8 @@ class _MyAchievementTypePageState extends State<MyAchievementTypePage> {
                               child: foodChoices(
                                 onTap: playFunction(index),
                                 unlocked: unlocked[index],
-                                path: controller.foodType[index],
-                                label: controller.label[index],
+                                path: data.path,
+                                label: data.name,
                               ),
                             );
                           }),

@@ -8,7 +8,7 @@ import 'package:virtual_lab/Components/custom_header.dart';
 import 'package:virtual_lab/Components/custom_text.dart';
 import 'package:virtual_lab/Components/shimmer.dart';
 import 'package:virtual_lab/Controllers/notifiers.dart';
-import 'package:virtual_lab/Models/ingredients.dart';
+import 'package:virtual_lab/Models/ingredients_model.dart';
 import 'package:virtual_lab/Utils/helper.dart';
 import 'package:virtual_lab/Utils/properties.dart';
 import 'package:virtual_lab/Utils/routes.dart';
@@ -29,8 +29,6 @@ class _MyIngredientsSelectionPageState
   @override
   void initState() {
     super.initState();
-
-    // Initialize selection list
     controller.selectedList = List.generate(
       ingredients.length,
       (_) => false.obs,
@@ -52,110 +50,118 @@ class _MyIngredientsSelectionPageState
                   Align(
                     alignment: Alignment.bottomCenter,
                     child: Container(
+                      width: 500.w,
                       margin: EdgeInsets.only(top: 24.h),
-                      height: 340.h,
                       decoration: BoxDecoration(
                         color: lightBrown,
                         borderRadius: BorderRadius.circular(30.r),
                       ),
                       child: Padding(
-                        padding: EdgeInsets.fromLTRB(16.w, 34.h, 16.w, 8.h),
+                        padding: EdgeInsets.fromLTRB(16.w, 34.h, 16.w, 16.h),
                         child: Column(
+                          spacing: 8.h,
                           children: [
+                            Align(
+                              alignment: Alignment.centerRight,
+                              child: MyText(
+                                text:
+                                    '${controller.selectedList.where((item) => item.value).length} / ${controller.ingredientLimit.value}',
+                                color: textLight,
+                                size: 14.sp,
+                              ),
+                            ),
                             Expanded(
-                              child: SizedBox(
-                                width: 400.w,
-                                child: GridView.builder(
-                                  padding: EdgeInsets.all(8.w),
-                                  gridDelegate:
-                                      const SliverGridDelegateWithFixedCrossAxisCount(
-                                        crossAxisCount: 6,
-                                        crossAxisSpacing: 8,
-                                        mainAxisSpacing: 8,
-                                        childAspectRatio: 1,
-                                      ),
-                                  itemCount: ingredients.length,
-                                  itemBuilder: (context, index) {
-                                    var data = ingredients[index];
-                                    var isSelected =
-                                        controller.selectedList[index];
-                                    return InkWell(
-                                      onTap: () {
+                              child: GridView.builder(
+                                padding: EdgeInsets.all(8.w),
+                                gridDelegate:
+                                    const SliverGridDelegateWithFixedCrossAxisCount(
+                                      crossAxisCount: 6,
+                                      crossAxisSpacing: 8,
+                                      mainAxisSpacing: 8,
+                                      childAspectRatio: 1,
+                                    ),
+                                itemCount: ingredients.length,
+                                itemBuilder: (context, index) {
+                                  var data = ingredients[index];
+                                  var isSelected =
+                                      controller.selectedList[index];
+                                  return InkWell(
+                                    onTap: () {
+                                      setState(() {
+                                        final selectedCount =
+                                            controller.selectedList
+                                                .where((item) => item.value)
+                                                .length;
+
+                                        if (!isSelected.value &&
+                                            selectedCount >=
+                                                controller
+                                                    .ingredientLimit
+                                                    .value) {
+                                          debugPrint(
+                                            'Limit Reached'
+                                            'You can only select up to 10 ingredients.',
+                                          );
+                                          return;
+                                        }
+
                                         setState(() {
                                           isSelected.value = !isSelected.value;
                                         });
-                                      },
-                                      child: Container(
-                                        alignment: Alignment.center,
-                                        decoration: BoxDecoration(
-                                          color:
-                                              isSelected.value
-                                                  ? lightGridColor
-                                                  : lightGridColor.withValues(
-                                                    alpha: 0.5,
-                                                  ),
-                                          borderRadius: BorderRadius.circular(
-                                            8.r,
-                                          ),
-                                        ),
-                                        child: Padding(
-                                          padding: EdgeInsets.all(4.w),
-                                          child: CachedNetworkImage(
-                                            imageUrl: data.path,
-                                            placeholder:
-                                                (context, url) =>
-                                                    ShimmerSkeletonLoader(),
-                                            errorWidget:
-                                                (context, url, error) =>
-                                                    Icon(Icons.error),
-                                            fit: BoxFit.contain,
-                                          ),
+                                      });
+                                    },
+                                    child: Container(
+                                      alignment: Alignment.center,
+                                      decoration: BoxDecoration(
+                                        color:
+                                            isSelected.value
+                                                ? lightGridColor
+                                                : lightGridColor.withValues(
+                                                  alpha: 0.5,
+                                                ),
+                                        borderRadius: BorderRadius.circular(
+                                          8.r,
                                         ),
                                       ),
-                                    );
-                                  },
-                                ),
+                                      child: Padding(
+                                        padding: EdgeInsets.all(8.w),
+                                        child: CachedNetworkImage(
+                                          imageUrl: data.path,
+                                          placeholder:
+                                              (context, url) =>
+                                                  ShimmerSkeletonLoader(),
+                                          errorWidget:
+                                              (context, url, error) =>
+                                                  Icon(Icons.error),
+                                          fit: BoxFit.contain,
+                                        ),
+                                      ),
+                                    ),
+                                  );
+                                },
                               ),
                             ),
                             Obx(
                               () => SizedBox(
-                                width: 300.w,
                                 height: 48.h,
-                                child: MyButton(
-                                  text:
-                                      controller.seconds.value == 0
-                                          ? 'CONFIRM'
-                                          : helper.formatSecondsToMMSS(
-                                            controller.seconds.value,
-                                          ),
-                                  onTap:
-                                      controller.seconds.value == 0
-                                          ? () {
-                                            setState(() {
-                                              //   final selected =
-                                              //       List.generate(
-                                              //             ingredients.length,
-                                              //             (i) =>
-                                              //                 controller
-                                              //                         .selectedList[i]
-                                              //                         .value
-                                              //                     ? ingredients[i]
-                                              //                     : null,
-                                              //           )
-                                              //           .whereType<
-                                              //             Map<String, dynamic>
-                                              //           >()
-                                              //           .toList();
-                                              //   debugPrint(
-                                              //     'Selected: ${selected.length}',
-                                              //   );
-
+                                child: Padding(
+                                  padding: EdgeInsetsGeometry.symmetric(
+                                    horizontal: 60.w,
+                                  ),
+                                  child: MyButton(
+                                    text:
+                                        controller.seconds.value == 0
+                                            ? 'CONFIRM'
+                                            : helper.formatSecondsToMMSS(
+                                              controller.seconds.value,
+                                            ),
+                                    onTap:
+                                        controller.seconds.value == 0
+                                            ? () {
                                               context.go(Routes.playUI);
-                                            });
-                                          }
-                                          : () {
-                                            ;
-                                          },
+                                            }
+                                            : () {},
+                                  ),
                                 ),
                               ),
                             ),

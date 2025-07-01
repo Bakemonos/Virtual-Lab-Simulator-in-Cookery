@@ -23,7 +23,6 @@ class _MyViewAchievementPageState extends State<MyViewAchievementPage> {
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       resizeToAvoidBottomInset: false,
       body: Stack(
@@ -42,46 +41,89 @@ class _MyViewAchievementPageState extends State<MyViewAchievementPage> {
                         borderRadius: BorderRadius.circular(30.r),
                       ),
                       child: Padding(
-                        padding: EdgeInsets.fromLTRB(24.w, 34.h, 24.w, 8.h),
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 24.w,
+                          vertical: 48.h,
+                        ),
                         child: Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            Container(
-                              width: 80.w,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(8.r),
-                                color: backgroundColor
-                              ),
-                              child: AspectRatio(
-                                aspectRatio: 1,
+                            AspectRatio(
+                              aspectRatio: 1,
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(8.r),
+                                  color: backgroundColor,
+                                ),
                                 child: Padding(
                                   padding: EdgeInsets.all(8.w),
                                   child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    spacing: 4.h,
                                     children: [
-                                      MySvgPicture(path: burger),
-                                      MyText(text: 'BURGER', size: 16.sp)
-                                      
+                                      MySvgPicture(
+                                        path: burger,
+                                        iconSize: 100.w,
+                                      ),
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.end,
+                                        children: [
+                                          Icon(
+                                            Icons.star,
+                                            color: darkBrown,
+                                            size: 32.w,
+                                          ),
+                                          Icon(
+                                            Icons.star,
+                                            color: darkBrown,
+                                            size: 40.w,
+                                          ),
+                                          Icon(
+                                            Icons.star,
+                                            color: darkBrown,
+                                            size: 32.w,
+                                          ),
+                                        ],
+                                      ),
+                                      MyText(
+                                        text: 'BURGER',
+                                        size: 24.sp,
+                                        color: darkBrown,
+                                      ),
                                     ],
                                   ),
                                 ),
                               ),
                             ),
-                            Divider(
-                              indent: 2.w,
-                              height: double.infinity,
-                              color: backgroundColor,
+                            Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 16.w),
+                              child: Container(
+                                width: 3.w,
+                                height: double.infinity,
+                                decoration: BoxDecoration(
+                                  color: backgroundColor,
+                                  borderRadius: BorderRadius.circular(8.r),
+                                ),
+                              ),
                             ),
                             SingleChildScrollView(
-                              child: Column(
-                                children: [
-                                  MyText(text: ' Student Info'),
-                                  MyText(text: 'Student Name: Juan Dela Cruz\nID Number: 20231234\nSubmission Date: June 10, 2025'),
-                                  SizedBox(height: 8.h),
-                                  MyText(text: ' Dish Information'),
-                                  MyText(text: 'Dish Name: Burger\nIngredients Used: Bun, Patty, Lettuce, Tomato, Cheese\nCooking Method: Grilled\nPreparation Time: 25 minutes')
-                                ],  
+                              child: SizedBox(
+                                width: 300.w,
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    MyText(
+                                      text:
+                                          'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industrys standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum',
+                                      color: textLight,
+                                    ),
+                                  ],
+                                ),
                               ),
-                            )
+                            ),
                           ],
                         ),
                       ),

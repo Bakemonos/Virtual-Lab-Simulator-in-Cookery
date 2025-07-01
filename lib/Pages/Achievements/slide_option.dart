@@ -105,11 +105,40 @@ class _MySliderOptionPageState extends State<MySliderOptionPage> {
                                       padding: EdgeInsets.all(4.w),
                                       child: Column(
                                         spacing: 8.h,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
                                         children: [
-                                          MyText(text: 'BURGER', size: 18.sp),
                                           MySvgPicture(
                                             path: burger,
                                             iconSize: 80.w,
+                                          ),
+                                          Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.end,
+                                            children: [
+                                              Icon(
+                                                Icons.star,
+                                                color: darkBrown,
+                                                size: 28.w,
+                                              ),
+                                              Icon(
+                                                Icons.star,
+                                                color: darkBrown,
+                                                size: 36.w,
+                                              ),
+                                              Icon(
+                                                Icons.star,
+                                                color: darkBrown,
+                                                size: 28.w,
+                                              ),
+                                            ],
+                                          ),
+                                          MyText(
+                                            text: 'BURGER',
+                                            size: 20.sp,
+                                            color: darkBrown,
                                           ),
                                         ],
                                       ),

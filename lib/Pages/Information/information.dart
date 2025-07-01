@@ -6,7 +6,6 @@ import 'package:virtual_lab/Components/custom_header.dart';
 import 'package:virtual_lab/Components/custom_text.dart';
 import 'package:virtual_lab/Controllers/notifiers.dart';
 import 'package:virtual_lab/Utils/properties.dart';
-import 'package:virtual_lab/Utils/properties.dart' as Routes;
 
 class MyInformationPage extends StatelessWidget {
   const MyInformationPage({super.key});

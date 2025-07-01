@@ -4,9 +4,11 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:virtual_lab/Components/custom_button.dart';
 import 'package:virtual_lab/Components/custom_header.dart';
+import 'package:virtual_lab/Components/custom_svg_picture.dart';
 import 'package:virtual_lab/Components/custom_text.dart';
 import 'package:virtual_lab/Components/shimmer.dart';
 import 'package:virtual_lab/Controllers/notifiers.dart';
+import 'package:virtual_lab/Models/food_type_model.dart';
 import 'package:virtual_lab/Utils/properties.dart';
 import 'package:virtual_lab/Utils/routes.dart';
 
@@ -43,10 +45,11 @@ class _MyFoodChoicesPageState extends State<MyFoodChoicesPage> {
                         borderRadius: BorderRadius.circular(30.r),
                       ),
                       child: Padding(
-                        padding: EdgeInsets.fromLTRB(24.w, 34.h, 24.w, 8.h),
+                        padding: EdgeInsets.fromLTRB(24.w, 40.h, 24.w, 8.h),
                         child: Row(
                           mainAxisSize: MainAxisSize.min,
                           children: List.generate(3, (index) {
+                            var data = foodType[index];
                             return Padding(
                               padding: EdgeInsets.only(
                                 right: index != 2 ? 24.w : 0,
@@ -54,8 +57,8 @@ class _MyFoodChoicesPageState extends State<MyFoodChoicesPage> {
                               child: foodChoices(
                                 onTap: playFunction(index),
                                 unlocked: unlocked[index],
-                                path: controller.foodType[index],
-                                label: controller.label[index],
+                                path: data.path,
+                                label: data.name,
                               ),
                             );
                           }),
@@ -122,28 +125,63 @@ class _MyFoodChoicesPageState extends State<MyFoodChoicesPage> {
               child: Padding(
                 padding: EdgeInsets.all(10.w),
                 child: Column(
+                  spacing: 8.h,
                   children: [
-                    Container(
-                      height: 120.h,
-                      decoration: BoxDecoration(
-                        color: darkBrown,
-                        borderRadius: BorderRadius.circular(8.r),
-                      ),
-                      child: Padding(
-                        padding: EdgeInsets.all(16.w),
-                        child: Center(
-                          child: CachedNetworkImage(
-                            imageUrl: path,
-                            placeholder:
-                                (context, url) => ShimmerSkeletonLoader(),
-                            errorWidget:
-                                (context, url, error) => Icon(Icons.error),
-                            fit: BoxFit.cover,
+                    AspectRatio(
+                      aspectRatio: 1,
+                      child: Stack(
+                        children: [
+                          Container(
+                            decoration: BoxDecoration(
+                              color: darkBrown,
+                              borderRadius: BorderRadius.circular(8.r),
+                            ),
+                            child: Padding(
+                              padding: EdgeInsets.all(16.w),
+                              child: Center(
+                                child: CachedNetworkImage(
+                                  imageUrl: path,
+                                  placeholder:
+                                      (context, url) => ShimmerSkeletonLoader(),
+                                  errorWidget:
+                                      (context, url, error) =>
+                                          Icon(Icons.error),
+                                  fit: BoxFit.cover,
+                                ),
+                              ),
+                            ),
                           ),
-                        ),
+
+                          Align(
+                            alignment: Alignment.topRight,
+                            child: Padding(
+                              padding: EdgeInsets.all(8.w),
+                              child: SizedBox(
+                                width: 24.w,
+                                child: AspectRatio(
+                                  aspectRatio: 1,
+                                  child: IconButton(
+                                    style: ButtonStyle(
+                                      backgroundColor: WidgetStatePropertyAll(
+                                        backgroundColor,
+                                      ),
+                                    ),
+                                    onPressed: () {},
+                                    icon: Center(
+                                      child: MySvgPicture(
+                                        path: information,
+                                        iconColor: darkBrown,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                     ),
-                    SizedBox(height: 8.h),
+
                     MyText(
                       text: label,
                       fontWeight: FontWeight.w500,

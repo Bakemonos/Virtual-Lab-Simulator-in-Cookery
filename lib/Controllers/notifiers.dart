@@ -15,11 +15,23 @@ class AppController extends GetxController {
   //?Initialize
   final player = AudioPlayer();
 
+  @override
+  void onClose() {
+    _timer?.cancel();
+    super.onClose();
+  }
+
+  //? RX VARIABLE
+  var isSelectedList = <RxBool>[].obs;
+  late List<RxBool> selectedList;
   final soundToggle = true.obs;
   final musicToggle = true.obs;
-
   var seconds = 60.obs;
   Timer? _timer;
+
+  final ingredientLimit = 10.obs;
+
+  //? METHODS
 
   void startTimer() {
     _timer?.cancel();
@@ -41,15 +53,6 @@ class AppController extends GetxController {
     stopTimer();
   }
 
-  @override
-  void onClose() {
-    _timer?.cancel();
-    super.onClose();
-  }
-
-  var isSelectedList = <RxBool>[].obs;
-  late List<RxBool> selectedList;
-
   void initializeSelection(int itemCount) {
     isSelectedList.value = List.generate(itemCount, (_) => false.obs);
   }
@@ -57,20 +60,6 @@ class AppController extends GetxController {
   void toggleSelection(int index) {
     isSelectedList[index].value = !isSelectedList[index].value;
   }
-
-  final List<String> foodType = [
-    'https://res.cloudinary.com/dhceioavi/image/upload/v1749359823/appetizer_mgjyom.png',
-    'https://res.cloudinary.com/dhceioavi/image/upload/v1749359824/dessert_jlfn7h.png',
-    'https://res.cloudinary.com/dhceioavi/image/upload/v1749359823/soup_mbvceo.png',
-  ];
-
-  final List<String> label = [
-    'Appetizer, Sandwich, salad',
-    'Desserts',
-    'Soup, Sauce',
-  ];
-
-  //?Methods
 
   void playClickSound() async {
     await player.play(AssetSource(clickEffect1));
@@ -115,28 +104,4 @@ class AppController extends GetxController {
       ],
     );
   }
-  // void getStoresStream() {
-  //   try {
-  //     isLoadingStores.value = true;
-  //     hasErrorStores.value = false;
-
-  //     stores.bindStream(
-  //       firestore.collection('stores').snapshots().map((query) {
-  //         final results =
-  //             query.docs.map((doc) {
-  //               final data = doc.data();
-  //               data['id'] = doc.id;
-  //               return MdlStores.fromMap(data);
-  //             }).toList();
-
-  //         isLoadingStores.value = false;
-  //         return results;
-  //       }),
-  //     );
-  //   } catch (e) {
-  //     debugPrint('\nSTORE ERROR : $e\n');
-  //     hasErrorStores.value = true;
-  //     isLoadingStores.value = false;
-  //   }
-  // }
 }
