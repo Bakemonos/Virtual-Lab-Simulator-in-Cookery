@@ -181,7 +181,6 @@ class _MyFoodChoicesPageState extends State<MyFoodChoicesPage> {
                         ],
                       ),
                     ),
-
                     MyText(
                       text: label,
                       fontWeight: FontWeight.w500,
