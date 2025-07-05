@@ -57,7 +57,7 @@ class _MyAchievementTypePageState extends State<MyAchievementTypePage> {
                                 onTap: playFunction(index),
                                 unlocked: unlocked[index],
                                 path: data.path,
-                                label: data.name,
+                                label: data.label,
                               ),
                             );
                           }),

@@ -55,10 +55,11 @@ class _MyFoodChoicesPageState extends State<MyFoodChoicesPage> {
                                 right: index != 2 ? 24.w : 0,
                               ),
                               child: foodChoices(
+                                instructionFunction: () => instruction(data),
                                 onTap: playFunction(index),
                                 unlocked: unlocked[index],
                                 path: data.path,
-                                label: data.name,
+                                label: data.label,
                               ),
                             );
                           }),
@@ -99,9 +100,135 @@ class _MyFoodChoicesPageState extends State<MyFoodChoicesPage> {
       default:
         return () {
           context.push(Routes.ingredientsSelection);
-          // context.push(Routes.playUI);
         };
     }
+  }
+
+  void instruction(FoodTypeModel data) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          contentPadding: EdgeInsets.zero,
+          content: Container(
+            width: 360.w,
+            decoration: BoxDecoration(
+              color: backgroundColor,
+              borderRadius: BorderRadius.circular(16.r),
+            ),
+            child: Padding(
+              padding: EdgeInsets.all(16.w),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                spacing: 16.h,
+                children: [
+                  Row(
+                    spacing: 14.w,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Image.asset(logo, width: 32.w),
+                      MyText(text: 'Instruction'),
+                      const Spacer(),
+                      IconButton(
+                        style: ButtonStyle(
+                          shape: WidgetStatePropertyAll(
+                            BeveledRectangleBorder(
+                              borderRadius: BorderRadiusGeometry.circular(4.r),
+                            ),
+                          ),
+                        ),
+                        onPressed: () => context.pop(),
+                        icon: Container(
+                          width: 32.w,
+                          height: 32.h,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(4.r),
+                            color: lightButtonBackground.withValues(alpha: 0.3),
+                          ),
+                          child: Center(
+                            child: MySvgPicture(
+                              path: close,
+                              iconColor: darkBrown,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  Expanded(
+                    child: SingleChildScrollView(
+                      physics: AlwaysScrollableScrollPhysics(),
+                      child: Column(
+                        spacing: 12.h,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            spacing: 12.w,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              SizedBox(
+                                width: 100.w,
+                                child: CachedNetworkImage(
+                                  imageUrl: data.path,
+                                  placeholder:
+                                      (context, url) => ShimmerSkeletonLoader(),
+                                  errorWidget:
+                                      (context, url, error) =>
+                                          Icon(Icons.error),
+                                  fit: BoxFit.cover,
+                                ),
+                              ),
+                              Expanded(
+                                child: MyText(
+                                  text: 'Prepare, Present ${data.title}',
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                            ],
+                          ),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            spacing: 12.h,
+                            children: [
+                              ...data.instructions.map(
+                                (ins) => Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    MyText(
+                                      text: ins.name,
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                    ...ins.list.asMap().entries.map(
+                                      (entry) => Padding(
+                                        padding: EdgeInsets.only(left: 12.w),
+                                        child: MyText(
+                                          text:
+                                              '${entry.key + 1}. ${entry.value}',
+                                          fontWeight: FontWeight.w400,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              MyText(
+                                text: data.description,
+                                fontWeight: FontWeight.w400,
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  MyText(text: 'Have Fun!', fontWeight: FontWeight.w500),
+                ],
+              ),
+            ),
+          ),
+        );
+      },
+    );
   }
 
   Widget foodChoices({
@@ -109,6 +236,7 @@ class _MyFoodChoicesPageState extends State<MyFoodChoicesPage> {
     required String label,
     required bool unlocked,
     required Function() onTap,
+    required Function() instructionFunction,
   }) {
     return SizedBox(
       width: 180.w,
@@ -151,7 +279,6 @@ class _MyFoodChoicesPageState extends State<MyFoodChoicesPage> {
                               ),
                             ),
                           ),
-
                           Align(
                             alignment: Alignment.topRight,
                             child: Padding(
@@ -161,12 +288,12 @@ class _MyFoodChoicesPageState extends State<MyFoodChoicesPage> {
                                 child: AspectRatio(
                                   aspectRatio: 1,
                                   child: IconButton(
+                                    onPressed: instructionFunction,
                                     style: ButtonStyle(
                                       backgroundColor: WidgetStatePropertyAll(
                                         backgroundColor,
                                       ),
                                     ),
-                                    onPressed: () {},
                                     icon: Center(
                                       child: MySvgPicture(
                                         path: information,
@@ -192,7 +319,6 @@ class _MyFoodChoicesPageState extends State<MyFoodChoicesPage> {
               ),
             ),
           ),
-
           Align(
             alignment: Alignment.bottomCenter,
             child: Padding(

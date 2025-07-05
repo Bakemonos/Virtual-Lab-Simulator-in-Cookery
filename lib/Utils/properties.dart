@@ -28,8 +28,12 @@ const redDark = Color(0xFFA74223);
 const lightGridColor = Color(0xFFDAB66F);
 const darkGridColor = Color(0xFFAD886E);
 
+const lightButtonBackground = Color(0xFF603721);
+
 //? SOUND EFFECTS
 const String clickEffect1 = "effects/click_effect1.wav";
+//? LOGO
+const String logo = "assets/logo/logo.png";
 
 //? ICONS / IMAGES
 const String characterIcon = "assets/icons/character.svg";
@@ -42,30 +46,7 @@ const String board1 = "assets/icons/board1.svg";
 const String board2 = "assets/icons/board2.svg";
 const String bag = "assets/icons/bag.svg";
 const String burger = "assets/icons/burger.svg";
-
-//? INGREDIENTS
-const String beacon = "assets/ingredients/beacon.svg";
-const String bellPepper = "assets/ingredients/bell_pepper.svg";
-const String burgerBottom = "assets/ingredients/burger_bottom.svg";
-const String burgerTop = "assets/ingredients/burger_top.svg";
-const String cabbage = "assets/ingredients/cabbage.svg";
-const String cheese = "assets/ingredients/cheese.svg";
-const String cucumber = "assets/ingredients/cucumber.svg";
-const String egg = "assets/ingredients/egg.svg";
-const String herbs = "assets/ingredients/herbs.svg";
-const String jalapeno = "assets/ingredients/jalapeño.svg";
-const String ketchup = "assets/ingredients/ketchup.svg";
-const String meltCheese = "assets/ingredients/melt_cheese.svg";
-const String mushrom = "assets/ingredients/mushrom.svg";
-const String mustard = "assets/ingredients/mustard.svg";
-const String onion = "assets/ingredients/onion.svg";
-const String patties = "assets/ingredients/patties.svg";
-const String pepperoni = "assets/ingredients/pepperoni.svg";
-const String tomato = "assets/ingredients/tomato.svg";
-
-const String appetizer = "assets/icons/appetizers.svg";
-const String desserts = "assets/icons/desserts.svg";
-const String soups = "assets/icons/soups.svg";
+const String close = "assets/icons/close.svg";
 
 //? ON
 const String soundOn = "assets/icons/sound_on.svg";

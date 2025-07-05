@@ -1,24 +1,83 @@
 class FoodTypeModel {
   final String name;
+  final String label;
   final String path;
+  final String title;
+  final List<FoodDisciptionModel> instructions;
+  final String description;
 
-  FoodTypeModel({required this.name, required this.path});
+  FoodTypeModel({
+    required this.name,
+    required this.label,
+    required this.path,
+    required this.title,
+    required this.instructions,
+    required this.description,
+  });
+}
+
+class FoodDisciptionModel {
+  final String name;
+  final List<String> list;
+
+  FoodDisciptionModel({required this.name, required this.list});
 }
 
 List<FoodTypeModel> foodType = [
   FoodTypeModel(
-    name: 'Soup, Sauce',
+    title: 'Hot Meal',
+    name: 'Soup\'s',
+    label: 'Soup, Sauce',
+    description: 'Create name for Soup, Main Dish and Sauce',
     path:
         'https://res.cloudinary.com/dgvi2di6t/image/upload/v1751199001/soup_ovutke.png',
+    instructions: [
+      FoodDisciptionModel(
+        name: 'Soup',
+        list: ['Thick or Clear Soup appropriate to the main dish'],
+      ),
+      FoodDisciptionModel(
+        name: 'Main Dish',
+        list: ['Protein Dish', 'Protein Dish', 'Starch or Cereal Dish'],
+      ),
+      FoodDisciptionModel(
+        name: 'Sauce',
+        list: ['Sauce appropriate to the main dish'],
+      ),
+    ],
   ),
   FoodTypeModel(
-    name: 'Appetizer, Sandwich, salad',
+    title: 'Cold Meal',
+    name: 'Appetizer\'s',
+    label: 'Appetizer, Sandwich, salad',
+    description:
+        'Create name for your Appetizers, Sandwich and Salad & Salad Dressing',
     path:
         'https://res.cloudinary.com/dgvi2di6t/image/upload/v1751199001/appetizer_jhtehu.png',
+    instructions: [
+      FoodDisciptionModel(
+        name: 'Appetizer',
+        list: ['appetizers attractively. It should be 4 pieces of 3 kinds.'],
+      ),
+      FoodDisciptionModel(name: 'Sandwich', list: ['sandwich attractively.']),
+      FoodDisciptionModel(
+        name: 'Salad and Salad Dress',
+        list: ['Salad with dressing'],
+      ),
+    ],
   ),
   FoodTypeModel(
+    title: 'Desserts',
     name: 'Desserts',
+    label: 'Desserts',
+    description: 'Create name for desserts',
     path:
         'https://res.cloudinary.com/dgvi2di6t/image/upload/v1751199000/dessert_yzcyrl.png',
+    instructions: [
+      FoodDisciptionModel(
+        name: 'Desserts',
+        list: ['Hot Dessert', 'Cold Dessert'],
+      ),
+    ],
   ),
 ];
