@@ -24,40 +24,46 @@ class MyButton extends StatelessWidget {
   Widget build(BuildContext context) {
     final controller = AppController.instance;
 
-    return Expanded(
-      child: ElevatedButton(
-        onPressed: () {
+    return ElevatedButton(
+      onPressed: () {
+        try {
           controller.playClickSound();
-          onTap();
-        },
-        style: ElevatedButton.styleFrom(
-          elevation: 0,
-          padding: EdgeInsets.zero,
-          backgroundColor: Colors.transparent,
-          shadowColor: Colors.transparent,
-          shape: RoundedRectangleBorder(
-            side: BorderSide(width: 1.w, color: borderColor ?? greenDark),
-            borderRadius: BorderRadius.circular(24.r),
-          ),
+        } catch (e) {
+          debugPrint('Sound error: $e');
+        }
+        onTap();
+      },
+      style: ElevatedButton.styleFrom(
+        elevation: 0,
+        padding: EdgeInsets.zero,
+        backgroundColor: Colors.transparent,
+        shadowColor: Colors.transparent,
+        shape: RoundedRectangleBorder(
+          side: BorderSide(width: 1.w, color: borderColor ?? greenDark),
+          borderRadius: BorderRadius.circular(24.r),
         ),
-        child: Ink(
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              colors: gradientColor ?? [greenLighter, greenLight],
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-            ),
-            borderRadius: BorderRadius.circular(24.r),
-          ),
-          child: Container(
-            alignment: Alignment.center,
-            constraints: BoxConstraints(minWidth: 100.w, minHeight: 48.h),
-            child: MyText(
-              text: text,
-              size: textSize ?? 18.sp,
-              fontWeight: FontWeight.w600,
-              color: textLight,
-            ),
+      ),
+      child: Ink(
+        decoration: BoxDecoration(
+          gradient:
+              gradientColor != null
+                  ? LinearGradient(
+                    colors: gradientColor!,
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                  )
+                  : null,
+          color: gradientColor == null ? greenLight : null,
+          borderRadius: BorderRadius.circular(24.r),
+        ),
+        child: Container(
+          alignment: Alignment.center,
+          constraints: BoxConstraints(minWidth: 100.w, minHeight: 48.h),
+          child: MyText(
+            text: text,
+            size: textSize ?? 18.sp,
+            fontWeight: FontWeight.w600,
+            color: textLight,
           ),
         ),
       ),

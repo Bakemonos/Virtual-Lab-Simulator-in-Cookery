@@ -32,6 +32,7 @@ const lightButtonBackground = Color(0xFF603721);
 
 //? SOUND EFFECTS
 const String clickEffect1 = "effects/click_effect1.wav";
+
 //? LOGO
 const String logo = "assets/logo/logo.png";
 
@@ -47,6 +48,7 @@ const String board2 = "assets/icons/board2.svg";
 const String bag = "assets/icons/bag.svg";
 const String burger = "assets/icons/burger.svg";
 const String close = "assets/icons/close.svg";
+const String back = "assets/icons/back.svg";
 
 //? ON
 const String soundOn = "assets/icons/sound_on.svg";
@@ -55,3 +57,6 @@ const String musicOn = "assets/icons/music_on.svg";
 //? OFF
 const String soundOff = "assets/icons/sound_off.svg";
 const String musicOff = "assets/icons/music_off.svg";
+
+const String kitchenTools =
+    'https://res.cloudinary.com/dgvi2di6t/image/upload/v1751804841/cutting_board_wuvnzl.png';

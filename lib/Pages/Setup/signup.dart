@@ -50,6 +50,7 @@ class MySignUpPage extends StatelessWidget {
                           bottom: 8.h,
                         ),
                         child: Column(
+                          spacing: 16.h,
                           children: [
                             SizedBox(
                               height: 160.h,
@@ -95,16 +96,21 @@ class MySignUpPage extends StatelessWidget {
                                 ),
                               ),
                             ),
-
-                            SizedBox(height: 16.h),
                             Row(
                               spacing: 16.w,
                               children: [
-                                MyButton(
-                                  text: 'LOGIN',
-                                  onTap: () => context.push(Routes.signIn),
+                                Expanded(
+                                  child: MyButton(
+                                    text: 'LOGIN',
+                                    onTap: () => context.push(Routes.signIn),
+                                  ),
                                 ),
-                                MyButton(text: 'SIGN UP', onTap: () {}),
+                                Expanded(
+                                  child: MyButton(
+                                    text: 'SIGN UP',
+                                    onTap: () {},
+                                  ),
+                                ),
                               ],
                             ),
                           ],

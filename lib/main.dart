@@ -1,4 +1,5 @@
 import 'package:cloudinary_flutter/cloudinary_object.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -11,6 +12,11 @@ import 'package:virtual_lab/Utils/properties.dart';
 late CloudinaryObject cloudinary;
 
 void main() async {
+  FlutterError.onError = (FlutterErrorDetails details) {
+    FlutterError.presentError(details);
+    if (kReleaseMode) {}
+  };
+
   WidgetsFlutterBinding.ensureInitialized();
 
   await GeneralBindings().dependencies();

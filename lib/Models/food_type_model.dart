@@ -3,7 +3,7 @@ class FoodTypeModel {
   final String label;
   final String path;
   final String title;
-  final List<FoodDisciptionModel> instructions;
+  final List<FoodDesciptionModel> instructions;
   final String description;
 
   FoodTypeModel({
@@ -16,11 +16,11 @@ class FoodTypeModel {
   });
 }
 
-class FoodDisciptionModel {
+class FoodDesciptionModel {
   final String name;
   final List<String> list;
 
-  FoodDisciptionModel({required this.name, required this.list});
+  FoodDesciptionModel({required this.name, required this.list});
 }
 
 List<FoodTypeModel> foodType = [
@@ -32,15 +32,15 @@ List<FoodTypeModel> foodType = [
     path:
         'https://res.cloudinary.com/dgvi2di6t/image/upload/v1751199001/soup_ovutke.png',
     instructions: [
-      FoodDisciptionModel(
+      FoodDesciptionModel(
         name: 'Soup',
         list: ['Thick or Clear Soup appropriate to the main dish'],
       ),
-      FoodDisciptionModel(
+      FoodDesciptionModel(
         name: 'Main Dish',
         list: ['Protein Dish', 'Protein Dish', 'Starch or Cereal Dish'],
       ),
-      FoodDisciptionModel(
+      FoodDesciptionModel(
         name: 'Sauce',
         list: ['Sauce appropriate to the main dish'],
       ),
@@ -55,12 +55,12 @@ List<FoodTypeModel> foodType = [
     path:
         'https://res.cloudinary.com/dgvi2di6t/image/upload/v1751199001/appetizer_jhtehu.png',
     instructions: [
-      FoodDisciptionModel(
+      FoodDesciptionModel(
         name: 'Appetizer',
         list: ['appetizers attractively. It should be 4 pieces of 3 kinds.'],
       ),
-      FoodDisciptionModel(name: 'Sandwich', list: ['sandwich attractively.']),
-      FoodDisciptionModel(
+      FoodDesciptionModel(name: 'Sandwich', list: ['sandwich attractively.']),
+      FoodDesciptionModel(
         name: 'Salad and Salad Dress',
         list: ['Salad with dressing'],
       ),
@@ -74,7 +74,7 @@ List<FoodTypeModel> foodType = [
     path:
         'https://res.cloudinary.com/dgvi2di6t/image/upload/v1751199000/dessert_yzcyrl.png',
     instructions: [
-      FoodDisciptionModel(
+      FoodDesciptionModel(
         name: 'Desserts',
         list: ['Hot Dessert', 'Cold Dessert'],
       ),

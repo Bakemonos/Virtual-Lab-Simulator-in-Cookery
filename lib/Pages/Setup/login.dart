@@ -71,17 +71,21 @@ class MyLoginPage extends StatelessWidget {
                             Row(
                               spacing: 16.w,
                               children: [
-                                MyButton(
-                                  text: 'LOGIN',
-                                  onTap: () {
-                                    context.go(Routes.menu);
-                                  },
+                                Expanded(
+                                  child: MyButton(
+                                    text: 'LOGIN',
+                                    onTap: () {
+                                      context.go(Routes.menu);
+                                    },
+                                  ),
                                 ),
-                                MyButton(
-                                  text: 'SIGN UP',
-                                  onTap: () {
-                                    context.go(Routes.signUp);
-                                  },
+                                Expanded(
+                                  child: MyButton(
+                                    text: 'SIGN UP',
+                                    onTap: () {
+                                      context.go(Routes.signUp);
+                                    },
+                                  ),
                                 ),
                               ],
                             ),

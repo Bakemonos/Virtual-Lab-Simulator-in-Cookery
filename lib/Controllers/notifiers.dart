@@ -30,8 +30,13 @@ class AppController extends GetxController {
   Timer? _timer;
 
   final ingredientLimit = 10.obs;
+  final bagToggle = false.obs;
 
   //? METHODS
+
+  void bagOntap() {
+    bagToggle.value = !bagToggle.value;
+  }
 
   void startTimer() {
     _timer?.cancel();
