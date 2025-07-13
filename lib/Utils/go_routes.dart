@@ -12,7 +12,7 @@ import 'package:virtual_lab/Pages/aboutGame.dart';
 import 'package:virtual_lab/Pages/foodChoices.dart';
 import 'package:virtual_lab/Pages/Setup/login.dart';
 import 'package:virtual_lab/Pages/menu.dart';
-import 'package:virtual_lab/Pages/play_ui.dart';
+import 'package:virtual_lab/Pages/playUI.dart';
 import 'package:virtual_lab/Pages/settings.dart';
 import 'package:virtual_lab/Pages/Setup/signup.dart';
 import 'package:virtual_lab/Utils/routes.dart';
