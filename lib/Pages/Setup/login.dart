@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
 import 'package:go_router/go_router.dart';
 import 'package:virtual_lab/Components/customButton.dart';
 import 'package:virtual_lab/Components/customHeader.dart';
-import 'package:virtual_lab/Controllers/notifiers.dart';
+import 'package:virtual_lab/Controllers/controller.dart';
 import 'package:virtual_lab/Utils/properties.dart';
 import 'package:virtual_lab/Components/customText.dart';
 import 'package:virtual_lab/Utils/routes.dart';
@@ -62,8 +63,8 @@ class MyLoginPage extends StatelessWidget {
                                 label: 'Email',
                               ),
                               controller.repeatedTextInput(
+                                obscureText: true,
                                 controller: controller.passwordController,
-
                                 label: 'Password',
                               ),
                               InkWell(
@@ -80,21 +81,30 @@ class MyLoginPage extends StatelessWidget {
                                 spacing: 16.w,
                                 children: [
                                   Expanded(
-                                    child: MyButton(
-                                      text: 'LOGIN',
-                                      onTap: () {
-                                        final form = signInFormKey.currentState;
-                                        if (form != null && form.validate()) {
-                                          controller.signin(context);
-                                        }
-                                      },
+                                    child: Obx(
+                                      () => MyButton(
+                                        loading: controller.loader.value,
+                                        text: 'LOGIN',
+                                        onTap:
+                                            controller.loader.value
+                                                ? () {}
+                                                : () {
+                                                  final form =
+                                                      signInFormKey
+                                                          .currentState;
+                                                  if (form != null &&
+                                                      form.validate()) {
+                                                    controller.signin(context);
+                                                  }
+                                                },
+                                      ),
                                     ),
                                   ),
                                   Expanded(
                                     child: MyButton(
                                       text: 'SIGN UP',
                                       onTap: () {
-                                        context.go(Routes.signUp);
+                                        context.push(Routes.signUp);
                                       },
                                     ),
                                   ),

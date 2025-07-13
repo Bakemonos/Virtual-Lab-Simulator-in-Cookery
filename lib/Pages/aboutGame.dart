@@ -1,18 +1,35 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import 'package:virtual_lab/Components/customHeader.dart';
-import 'package:virtual_lab/Controllers/notifiers.dart';
+import 'package:virtual_lab/Controllers/controller.dart';
 import 'package:virtual_lab/Utils/properties.dart';
 import 'package:virtual_lab/Components/customText.dart';
 
-class MyAboutGamePage extends StatelessWidget {
+class MyAboutGamePage extends StatefulWidget {
   const MyAboutGamePage({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    final controller = AppController.instance;
+  State<MyAboutGamePage> createState() => _MyAboutGamePageState();
+}
 
+class _MyAboutGamePageState extends State<MyAboutGamePage> {
+  final controller = AppController.instance;
+
+  @override
+  void initState() {
+    // PackageInfo.fromPlatform().then((PackageInfo packageInfo) {
+    //   controller.appName.value = packageInfo.appName;
+    //   controller.packageName.value = packageInfo.packageName;
+    //   controller.version.value = packageInfo.version;
+    //   controller.buildNumber.value = packageInfo.buildNumber;
+    // });
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       body: Stack(
         children: [
@@ -77,7 +94,7 @@ class MyAboutGamePage extends StatelessWidget {
                                         ),
                                         MyText(
                                           text:
-                                              'Version: 1.0.0\nLast Updated: May 2025\nBuild: 2025-05-25\nDevelopers: Rico Jay & Carlo\nSupport: support@cookingmaster.com',
+                                              'Version: ${controller.version}\nBuild: ${controller.buildNumber}\nLast Updated: May 2025\nDevelopers: Rico Jay & Carlo\nSupport: support@cookingmaster.com',
                                           textAlign: TextAlign.center,
                                           fontWeight: FontWeight.w500,
                                           textHeight: 2,

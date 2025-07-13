@@ -4,17 +4,21 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:go_router/go_router.dart';
+import 'package:virtual_lab/Components/customDialog.dart';
+import 'package:virtual_lab/Components/customDropdown.dart';
 import 'package:virtual_lab/Components/customSvg.dart';
 import 'package:virtual_lab/Components/customText.dart';
 import 'package:virtual_lab/Components/customTextField.dart';
 import 'package:virtual_lab/Models/userModel.dart';
 import 'package:virtual_lab/Services/services.dart';
+import 'package:virtual_lab/Utils/helper.dart';
 import 'package:virtual_lab/Utils/properties.dart';
 import 'package:virtual_lab/Utils/routes.dart';
 
 class AppController extends GetxController {
   static AppController get instance => Get.find();
   static ApiServices get db => Get.find();
+  static Helper get helper => Get.find();
 
   //?Initialize
   final player = AudioPlayer();
@@ -26,6 +30,8 @@ class AppController extends GetxController {
   }
 
   //? VARIABLE
+  final gender = ''.obs;
+  final gradeLevel = ''.obs;
 
   //? RX VARIABLE
   var isSelectedList = <RxBool>[].obs;
@@ -38,6 +44,11 @@ class AppController extends GetxController {
 
   final ingredientLimit = 10.obs;
   final bagToggle = false.obs;
+
+  final appName = ''.obs;
+  final packageName = ''.obs;
+  final version = ''.obs;
+  final buildNumber = ''.obs;
 
   //? USER DATA
   Rx<UserModel> userData =
@@ -58,8 +69,6 @@ class AppController extends GetxController {
   final firstnameController = TextEditingController();
   final lastnameController = TextEditingController();
   final lrnController = TextEditingController();
-  final genderController = TextEditingController();
-  final gradeLevelController = TextEditingController();
   final passwordController = TextEditingController();
 
   void resetSignup() {
@@ -67,6 +76,8 @@ class AppController extends GetxController {
     firstnameController.clear();
     lastnameController.clear();
     emailController.clear();
+    gender.value = '';
+    gradeLevel.value = '';
     passwordController.clear();
   }
 
@@ -142,48 +153,114 @@ class AppController extends GetxController {
   Widget repeatedTextInput({
     required String label,
     TextEditingController? controller,
+    bool? obscureText = false,
   }) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       spacing: 4.h,
       children: [
         MyText(text: label, fontWeight: FontWeight.w600),
-        MyTextfield(controller: controller, hint: 'Enter $label'),
+        MyTextfield(
+          obscureText: obscureText,
+          controller: controller,
+          hint: 'Enter $label',
+        ),
+      ],
+    );
+  }
+
+  Widget repeatedDropdown({
+    required String label,
+    required List<String> items,
+    required String hint,
+    String? selectedValue,
+    void Function(String?)? onChanged,
+  }) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      spacing: 4.h,
+      children: [
+        MyText(text: label, fontWeight: FontWeight.w600),
+        MyDropDown(
+          items: items,
+          hintText: hint,
+          value: selectedValue,
+          onChanged: onChanged,
+        ),
+      ],
+    );
+  }
+
+  Widget repeatedInformation({required String label, required String value}) {
+    return Row(
+      spacing: 4.h,
+      children: [
+        MyText(text: '$label :', fontWeight: FontWeight.w600),
+        MyText(text: value, fontWeight: FontWeight.w400),
       ],
     );
   }
 
   //? SERVICES
+
+  //? SIGN UP
   Future<void> signup(BuildContext context) async {
+    loader.value = true;
     try {
       final data = {
-        'lrn': lastnameController.text,
+        'lrn': lrnController.text,
         'firstName': firstnameController.text,
         'lastName': lastnameController.text,
         'email': emailController.text,
-        'gender': genderController.text,
-        'gradeLevel': gradeLevelController.text,
+        'gender': gender.value,
+        'gradeLevel': gradeLevel.value,
         'password': passwordController.text,
         'status': 'pending',
       };
 
+      debugPrint('\nData : $data\n');
+
       final response = await db.post('student/create', data);
 
       if (response.success!) {
+        loader.value = false;
         debugPrint('SUCCESS : ${response.message}');
-        userData.value = UserModel.fromJson(response.data);
-        if (context.mounted) context.go(Routes.signIn);
+
+        if (context.mounted) {
+          showSuccessDialog(
+            context: context,
+            title: 'Account Created!',
+            message: 'Your account has been successfully created.',
+            onConfirm: () {
+              context.go(Routes.signIn);
+            },
+          );
+        }
+
         resetSignup();
       } else {
         debugPrint('FAILED : ${response.message}');
       }
     } catch (e) {
+      loader.value = false;
+      final errorMessage = helper.getErrorMessage(e);
+      if (context.mounted) {
+        showSuccessDialog(
+          context: context,
+          title: 'Sign up Failed!',
+          message: errorMessage,
+          onConfirm: () {
+            context.pop();
+          },
+        );
+      }
       debugPrint('Error: $e');
     }
   }
 
-  //? SERVICES
+  //? SIGN IN
   Future<void> signin(BuildContext context) async {
+    loader.value = true;
     try {
       final data = {
         'email': emailController.text,
@@ -193,14 +270,36 @@ class AppController extends GetxController {
       final response = await db.post('auth/loginStudent', data);
 
       if (response.success!) {
+        loader.value = false;
         debugPrint('SUCCESS : ${response.message}');
-        userData.value = UserModel.fromJson(response.data);
-        if (context.mounted) context.go(Routes.menu);
+
+        if (context.mounted) {
+          showSuccessDialog(
+            context: context,
+            title: 'Login Successful!',
+            message: response.message.toString(),
+            onConfirm: () {
+              userData.value = UserModel.fromJson(response.data);
+              context.go(Routes.menu);
+            },
+          );
+        }
+
         resetSignin();
-      } else {
-        debugPrint('FAILED : ${response.message}');
       }
     } catch (e) {
+      loader.value = false;
+      final errorMessage = helper.getErrorMessage(e);
+      if (context.mounted) {
+        showSuccessDialog(
+          context: context,
+          title: 'Login Failed!',
+          message: errorMessage,
+          onConfirm: () {
+            context.pop();
+          },
+        );
+      }
       debugPrint('Error: $e');
     }
   }

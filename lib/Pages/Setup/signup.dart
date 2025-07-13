@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/state_manager.dart';
 import 'package:go_router/go_router.dart';
 import 'package:virtual_lab/Components/customButton.dart';
 import 'package:virtual_lab/Components/customHeader.dart';
-import 'package:virtual_lab/Controllers/notifiers.dart';
+import 'package:virtual_lab/Controllers/controller.dart';
 import 'package:virtual_lab/Utils/properties.dart';
-import 'package:virtual_lab/Utils/routes.dart';
 
 class MySignUpPage extends StatelessWidget {
   const MySignUpPage({super.key});
@@ -90,7 +90,41 @@ class MySignUpPage extends StatelessWidget {
                                                 controller.emailController,
                                             label: 'Email',
                                           ),
+                                          Obx(
+                                            () => controller.repeatedDropdown(
+                                              selectedValue:
+                                                  controller.gender.value,
+                                              label: 'Gender',
+                                              hint: 'Select Gender',
+                                              items: [
+                                                'Male',
+                                                'Female',
+                                                'Rather not say',
+                                              ],
+                                              onChanged: (value) {
+                                                controller.gender.value =
+                                                    value!;
+                                              },
+                                            ),
+                                          ),
+                                          Obx(
+                                            () => controller.repeatedDropdown(
+                                              selectedValue:
+                                                  controller.gradeLevel.value,
+                                              label: 'Grade Level',
+                                              hint: 'Select Grade Level',
+                                              items: [
+                                                'Junior High School',
+                                                'Senior High School',
+                                              ],
+                                              onChanged: (value) {
+                                                controller.gradeLevel.value =
+                                                    value!;
+                                              },
+                                            ),
+                                          ),
                                           controller.repeatedTextInput(
+                                            obscureText: true,
                                             controller:
                                                 controller.passwordController,
                                             label: 'Password',
@@ -108,7 +142,7 @@ class MySignUpPage extends StatelessWidget {
                                 Expanded(
                                   child: MyButton(
                                     text: 'LOGIN',
-                                    onTap: () => context.go(Routes.signIn),
+                                    onTap: () => context.pop(),
                                   ),
                                 ),
                                 Expanded(

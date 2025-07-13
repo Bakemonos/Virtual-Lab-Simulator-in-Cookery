@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:virtual_lab/Components/customText.dart';
-import 'package:virtual_lab/Controllers/notifiers.dart';
+import 'package:virtual_lab/Controllers/controller.dart';
 import 'package:virtual_lab/Utils/properties.dart';
 
 class MyButton extends StatelessWidget {
@@ -10,6 +10,7 @@ class MyButton extends StatelessWidget {
   final Color? borderColor;
   final Function() onTap;
   final List<Color>? gradientColor;
+  final bool? loading;
 
   const MyButton({
     super.key,
@@ -18,6 +19,7 @@ class MyButton extends StatelessWidget {
     this.borderColor,
     this.textSize,
     this.gradientColor,
+    this.loading = false,
   });
 
   @override
@@ -59,12 +61,15 @@ class MyButton extends StatelessWidget {
         child: Container(
           alignment: Alignment.center,
           constraints: BoxConstraints(minWidth: 100.w, minHeight: 48.h),
-          child: MyText(
-            text: text,
-            size: textSize ?? 18.sp,
-            fontWeight: FontWeight.w600,
-            color: textLight,
-          ),
+          child:
+              loading!
+                  ? Center(child: CircularProgressIndicator(color: textLight))
+                  : MyText(
+                    text: text,
+                    size: textSize ?? 18.sp,
+                    fontWeight: FontWeight.w600,
+                    color: textLight,
+                  ),
         ),
       ),
     );

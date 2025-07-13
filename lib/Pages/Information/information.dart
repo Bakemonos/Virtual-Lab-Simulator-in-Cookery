@@ -4,7 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:virtual_lab/Components/customButton.dart';
 import 'package:virtual_lab/Components/customHeader.dart';
 import 'package:virtual_lab/Components/customText.dart';
-import 'package:virtual_lab/Controllers/notifiers.dart';
+import 'package:virtual_lab/Controllers/controller.dart';
 import 'package:virtual_lab/Utils/properties.dart';
 
 class MyInformationPage extends StatelessWidget {
@@ -13,6 +13,8 @@ class MyInformationPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final controller = AppController.instance;
+
+    final user = controller.userData.value;
 
     return Scaffold(
       resizeToAvoidBottomInset: false,
@@ -48,7 +50,7 @@ class MyInformationPage extends StatelessWidget {
                             padding: EdgeInsets.only(
                               left: 24.w,
                               right: 24.w,
-                              top: 24.h,
+                              top: 30.h,
                               bottom: 16.h,
                             ),
                             child: ScrollbarTheme(
@@ -63,21 +65,38 @@ class MyInformationPage extends StatelessWidget {
                                   child: Padding(
                                     padding: EdgeInsets.only(right: 10.w),
                                     child: Column(
+                                      spacing: 8.h,
                                       crossAxisAlignment:
                                           CrossAxisAlignment.start,
                                       children: [
-                                        controller.repeatedTextInput(
-                                          label: 'Email',
-                                        ),
-                                        SizedBox(height: 12.h),
-                                        controller.repeatedTextInput(
+                                        // controller.repeatedInformation(
+                                        //   label: 'User ID',
+                                        //   value: user.id.toString(),
+                                        // ),
+                                        controller.repeatedInformation(
                                           label: 'LRN',
+                                          value: user.lrn,
                                         ),
-                                        SizedBox(height: 16.h),
-                                        MyText(text: 'Status'),
-                                        SizedBox(height: 16.h),
-                                        MyText(text: 'COC 1'),
+                                        controller.repeatedInformation(
+                                          label: 'Email',
+                                          value: user.email,
+                                        ),
+                                        controller.repeatedInformation(
+                                          label: 'Fullname',
+                                          value:
+                                              '${user.firstName} ${user.lastName}',
+                                        ),
+                                        controller.repeatedInformation(
+                                          label: 'Gender',
+                                          value: user.gender,
+                                        ),
+                                        controller.repeatedInformation(
+                                          label: 'Grade Level',
+                                          value: user.gradeLevel,
+                                        ),
                                         SizedBox(height: 8.h),
+                                        MyText(text: 'Status'),
+                                        MyText(text: 'COC 1'),
                                         SizedBox(
                                           height: 48.h,
                                           child: MyButton(
@@ -85,9 +104,7 @@ class MyInformationPage extends StatelessWidget {
                                             onTap: () {},
                                           ),
                                         ),
-                                        SizedBox(height: 12.h),
                                         MyText(text: 'COC 2'),
-                                        SizedBox(height: 8.h),
                                         SizedBox(
                                           height: 48.h,
                                           child: MyButton(
@@ -100,9 +117,7 @@ class MyInformationPage extends StatelessWidget {
                                             onTap: () {},
                                           ),
                                         ),
-                                        SizedBox(height: 12.h),
                                         MyText(text: 'COC 3'),
-                                        SizedBox(height: 8.h),
                                         SizedBox(
                                           height: 48.h,
                                           child: MyButton(

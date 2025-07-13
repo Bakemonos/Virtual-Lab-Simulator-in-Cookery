@@ -5,7 +5,7 @@ import 'package:get/get.dart';
 import 'package:virtual_lab/Components/customSvgPicture.dart';
 import 'package:virtual_lab/Components/customText.dart';
 import 'package:virtual_lab/Components/shimmer.dart';
-import 'package:virtual_lab/Controllers/notifiers.dart';
+import 'package:virtual_lab/Controllers/controller.dart';
 import 'package:virtual_lab/Models/ingredientsModel.dart';
 import 'package:virtual_lab/Utils/properties.dart';
 

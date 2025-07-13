@@ -81,26 +81,27 @@ class _MyTextfieldState extends State<MyTextfield> {
           hintStyle: hintStyle,
           fillColor: widget.fillColor ?? backgroundColor,
           filled: true,
+          contentPadding: EdgeInsets.symmetric(
+            vertical: 12.h,
+            horizontal: 16.w,
+          ),
+
           border: UnderlineInputBorder(
             borderSide: BorderSide.none,
             borderRadius: BorderRadius.circular(12.r),
           ),
-
           enabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(12.r),
             borderSide: BorderSide.none,
           ),
-
           focusedBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(12.r),
             borderSide: BorderSide(color: darkBrown, width: 1.5),
           ),
-
           errorBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(12.r),
             borderSide: BorderSide(color: Colors.red, width: 1.5),
           ),
-
           focusedErrorBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(12.r),
             borderSide: BorderSide(color: Colors.redAccent, width: 2),
