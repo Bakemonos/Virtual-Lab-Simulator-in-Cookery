@@ -30,8 +30,13 @@ class AppController extends GetxController {
   }
 
   //? VARIABLE
+  late List<RxBool> selectedList;
+  Timer? _timer;
+
+  //? RX VARIABLE
   final gender = ''.obs;
   final gradeLevel = ''.obs;
+
   final emailErrorText = ''.obs;
   final changePasswordErrorText = ''.obs;
   final passwordErrorText = ''.obs;
@@ -41,22 +46,27 @@ class AppController extends GetxController {
   final firstnameErrorText = ''.obs;
   final gradeLevelErrorText = ''.obs;
 
-  //? RX VARIABLE
-  var isSelectedList = <RxBool>[].obs;
-  late List<RxBool> selectedList;
-  final soundToggle = true.obs;
-  final musicToggle = true.obs;
-  final loader = false.obs;
-  var seconds = 60.obs;
-  Timer? _timer;
-
-  final ingredientLimit = 10.obs;
-  final bagToggle = false.obs;
-
   final appName = ''.obs;
   final packageName = ''.obs;
   final version = ''.obs;
   final buildNumber = ''.obs;
+
+  var isSelectedList = <RxBool>[].obs;
+  final ingredientLimit = 10.obs;
+  var seconds = 60.obs;
+
+  final soundToggle = true.obs;
+  final musicToggle = true.obs;
+  final loader = false.obs;
+  final bagToggle = false.obs;
+
+  //? TEXT CONTROLLER
+  final emailController = TextEditingController();
+  final firstnameController = TextEditingController();
+  final lastnameController = TextEditingController();
+  final lrnController = TextEditingController();
+  final passwordController = TextEditingController();
+  final changePasswordController = TextEditingController();
 
   //? USER DATA
   Rx<UserModel> userData =
@@ -71,14 +81,6 @@ class AppController extends GetxController {
         gradeLevel: '',
         status: '',
       ).obs;
-
-  //? TEXT CONTROLLER
-  final emailController = TextEditingController();
-  final firstnameController = TextEditingController();
-  final lastnameController = TextEditingController();
-  final lrnController = TextEditingController();
-  final passwordController = TextEditingController();
-  final changePasswordController = TextEditingController();
 
   //! METHODS ---------------------------------------------------------------------------------------------------------------
 

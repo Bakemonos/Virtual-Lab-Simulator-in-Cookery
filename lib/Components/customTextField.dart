@@ -7,7 +7,7 @@ class MyTextfield extends StatelessWidget {
   final TextEditingController? controller;
   final String? hint;
   final bool? obscureText;
-  final bool? error; // NEW: For red border control
+  final bool? error;
   final Color? fillColor;
   final TextAlign? textAlign;
   final TextInputType? keyboardType;
@@ -20,7 +20,7 @@ class MyTextfield extends StatelessWidget {
     this.controller,
     this.hint,
     this.obscureText = false,
-    this.error = false, // default no error
+    this.error = false,
     this.fillColor = backgroundColor,
     this.textAlign = TextAlign.center,
     this.keyboardType,
@@ -80,7 +80,7 @@ class MyTextfield extends StatelessWidget {
               width: 1.5,
             ),
           ),
-          errorStyle: TextStyle(fontSize: 0, height: 0), // Hide Flutter errors
+          errorStyle: TextStyle(fontSize: 0, height: 0),
         ),
       ),
     );
