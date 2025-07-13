@@ -42,41 +42,73 @@ class MyTextfield extends StatefulWidget {
 class _MyTextfieldState extends State<MyTextfield> {
   @override
   Widget build(BuildContext context) {
-    var hintStyle = TextStyle(
+    final hintStyle = TextStyle(
       fontFamily: 'Poppins',
       fontSize: 16.sp,
       color: lightBrown,
       fontWeight: FontWeight.w400,
     );
 
-    var textStyle = TextStyle(
+    final textStyle = TextStyle(
       fontFamily: 'Poppins',
       fontSize: 16.sp,
-      color: Theme.of(context).textTheme.labelMedium!.color,
+      color: Theme.of(context).textTheme.labelMedium?.color ?? Colors.black,
       fontWeight: FontWeight.w400,
     );
 
     return SizedBox(
       height: 48.h,
       child: TextFormField(
-        obscureText: widget.obscureText!,
+        obscureText: widget.obscureText ?? false,
         style: textStyle,
-        validator: widget.validator,
+        validator:
+            widget.validator ??
+            (value) {
+              if (value == null || value.trim().isEmpty) {
+                return 'This field is required';
+              }
+              return null;
+            },
         controller: widget.controller,
-        textAlign: widget.textAlign!,
+        textAlign: widget.textAlign ?? TextAlign.center,
         keyboardType: widget.keyboardType,
-        enabled: widget.enabled,
+        enabled: widget.enabled ?? true,
         inputFormatters: widget.inputFormatters,
         onChanged: widget.onChanged,
         decoration: InputDecoration(
           floatingLabelBehavior: FloatingLabelBehavior.never,
           hintText: widget.hint,
           hintStyle: hintStyle,
-          fillColor: widget.fillColor,
+          fillColor: widget.fillColor ?? backgroundColor,
           filled: true,
           border: UnderlineInputBorder(
             borderSide: BorderSide.none,
             borderRadius: BorderRadius.circular(12.r),
+          ),
+
+          enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(12.r),
+            borderSide: BorderSide.none,
+          ),
+
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(12.r),
+            borderSide: BorderSide(color: darkBrown, width: 1.5),
+          ),
+
+          errorBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(12.r),
+            borderSide: BorderSide(color: Colors.red, width: 1.5),
+          ),
+
+          focusedErrorBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(12.r),
+            borderSide: BorderSide(color: Colors.redAccent, width: 2),
+          ),
+          errorStyle: TextStyle(
+            fontSize: 12.sp,
+            color: Colors.red,
+            fontWeight: FontWeight.w500,
           ),
         ),
       ),

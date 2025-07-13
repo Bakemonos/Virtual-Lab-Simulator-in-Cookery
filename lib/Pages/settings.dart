@@ -161,7 +161,7 @@ class MySettingsPage extends StatelessWidget {
                                         text: 'Log out',
                                         borderColor: redDark,
                                         gradientColor: [redLighter, redLight],
-                                        onTap: () {},
+                                        onTap: () => controller.logout(context),
                                       ),
                                     ),
                                   ],

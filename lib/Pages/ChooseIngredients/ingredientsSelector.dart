@@ -8,6 +8,7 @@ import 'package:virtual_lab/Components/custom_header.dart';
 import 'package:virtual_lab/Components/custom_text.dart';
 import 'package:virtual_lab/Components/shimmer.dart';
 import 'package:virtual_lab/Controllers/notifiers.dart';
+import 'package:virtual_lab/Json/coc1.dart';
 import 'package:virtual_lab/Models/ingredients_model.dart';
 import 'package:virtual_lab/Utils/helper.dart';
 import 'package:virtual_lab/Utils/properties.dart';
@@ -30,7 +31,7 @@ class _MyIngredientsSelectionPageState
   void initState() {
     super.initState();
     controller.selectedList = List.generate(
-      ingredients.length,
+      ingredientsample.length,
       (_) => false.obs,
     );
     controller.startTimer();
@@ -80,11 +81,12 @@ class _MyIngredientsSelectionPageState
                                       mainAxisSpacing: 8,
                                       childAspectRatio: 1,
                                     ),
-                                itemCount: ingredients.length,
+                                itemCount: ingredientsCOC1.length,
                                 itemBuilder: (context, index) {
-                                  var data = ingredients[index];
+                                  var data = ingredientsCOC1[index];
                                   var isSelected =
                                       controller.selectedList[index];
+
                                   return InkWell(
                                     onTap: () {
                                       setState(() {
@@ -125,16 +127,19 @@ class _MyIngredientsSelectionPageState
                                       ),
                                       child: Padding(
                                         padding: EdgeInsets.all(8.w),
-                                        child: CachedNetworkImage(
-                                          imageUrl: data.path,
-                                          placeholder:
-                                              (context, url) =>
-                                                  ShimmerSkeletonLoader(),
-                                          errorWidget:
-                                              (context, url, error) =>
-                                                  Icon(Icons.error),
-                                          fit: BoxFit.contain,
-                                        ),
+                                        child:
+                                            data.path == ''
+                                                ? SizedBox()
+                                                : CachedNetworkImage(
+                                                  imageUrl: data.path,
+                                                  placeholder:
+                                                      (context, url) =>
+                                                          ShimmerSkeletonLoader(),
+                                                  errorWidget:
+                                                      (context, url, error) =>
+                                                          Icon(Icons.error),
+                                                  fit: BoxFit.contain,
+                                                ),
                                       ),
                                     ),
                                   );

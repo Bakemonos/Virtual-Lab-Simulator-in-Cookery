@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:virtual_lab/Components/custom_button.dart';
+import 'package:virtual_lab/Components/custom_header.dart';
 import 'package:virtual_lab/Components/custom_text.dart';
 import 'package:virtual_lab/Controllers/notifiers.dart';
 import 'package:virtual_lab/Utils/properties.dart';
@@ -13,7 +14,7 @@ class MyLoginPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final controller = AppController.instance;
-
+    final signInFormKey = GlobalKey<FormState>();
     return Scaffold(
       resizeToAvoidBottomInset: false,
       body: Center(
@@ -49,86 +50,65 @@ class MyLoginPage extends StatelessWidget {
                           top: 24.h,
                           bottom: 16.h,
                         ),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            controller.repeatedTextInput(label: 'Email'),
-                            SizedBox(height: 8.h),
-                            controller.repeatedTextInput(label: 'Password'),
-                            SizedBox(height: 6.h),
-                            InkWell(
-                              onTap:
-                                  () => context.push(Routes.forgotEnterEmail),
-                              child: MyText(
-                                text: 'Forgot password',
-                                size: 14.sp,
-                                fontWeight: FontWeight.w500,
-                                decoration: TextDecoration.underline,
+                        child: Form(
+                          key: signInFormKey,
+                          child: Column(
+                            spacing: 8.h,
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              controller.repeatedTextInput(
+                                controller: controller.emailController,
+                                label: 'Email',
                               ),
-                            ),
-                            SizedBox(height: 8.h),
-                            Row(
-                              spacing: 16.w,
-                              children: [
-                                Expanded(
-                                  child: MyButton(
-                                    text: 'LOGIN',
-                                    onTap: () {
-                                      context.go(Routes.menu);
-                                    },
-                                  ),
+                              controller.repeatedTextInput(
+                                controller: controller.passwordController,
+
+                                label: 'Password',
+                              ),
+                              InkWell(
+                                onTap:
+                                    () => context.push(Routes.forgotEnterEmail),
+                                child: MyText(
+                                  text: 'Forgot password',
+                                  size: 14.sp,
+                                  fontWeight: FontWeight.w500,
+                                  decoration: TextDecoration.underline,
                                 ),
-                                Expanded(
-                                  child: MyButton(
-                                    text: 'SIGN UP',
-                                    onTap: () {
-                                      context.go(Routes.signUp);
-                                    },
+                              ),
+                              Row(
+                                spacing: 16.w,
+                                children: [
+                                  Expanded(
+                                    child: MyButton(
+                                      text: 'LOGIN',
+                                      onTap: () {
+                                        final form = signInFormKey.currentState;
+                                        if (form != null && form.validate()) {
+                                          controller.signin(context);
+                                        }
+                                      },
+                                    ),
                                   ),
-                                ),
-                              ],
-                            ),
-                          ],
+                                  Expanded(
+                                    child: MyButton(
+                                      text: 'SIGN UP',
+                                      onTap: () {
+                                        context.go(Routes.signUp);
+                                      },
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
                         ),
                       ),
                     ),
                   ),
                 ),
               ),
-              Align(
-                alignment: Alignment.topCenter,
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: lightBrown,
-                    borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(16.r),
-                      topRight: Radius.circular(16.r),
-                      bottomLeft: Radius.circular(8.r),
-                      bottomRight: Radius.circular(8.r),
-                    ),
-                    boxShadow: [
-                      BoxShadow(
-                        color: darkBrown,
-                        offset: Offset(0, 4),
-                        spreadRadius: 0.7,
-                      ),
-                    ],
-                  ),
-                  child: Padding(
-                    padding: EdgeInsets.symmetric(
-                      horizontal: 40.w,
-                      vertical: 6.h,
-                    ),
-                    child: MyText(
-                      text: 'LOGIN',
-                      color: textLight,
-                      fontWeight: FontWeight.w700,
-                      size: 28.sp,
-                    ),
-                  ),
-                ),
-              ),
+              MyHeader(text: 'LOGIN'),
             ],
           ),
         ),

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:virtual_lab/Components/custom_button.dart';
-import 'package:virtual_lab/Components/custom_text.dart';
+import 'package:virtual_lab/Components/custom_header.dart';
 import 'package:virtual_lab/Controllers/notifiers.dart';
 import 'package:virtual_lab/Utils/properties.dart';
 import 'package:virtual_lab/Utils/routes.dart';
@@ -13,7 +13,6 @@ class MySignUpPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final controller = AppController.instance;
-
     return Scaffold(
       resizeToAvoidBottomInset: false,
       body: Center(
@@ -68,25 +67,32 @@ class MySignUpPage extends StatelessWidget {
                                     child: Padding(
                                       padding: EdgeInsets.only(right: 10.w),
                                       child: Column(
+                                        spacing: 8.h,
                                         mainAxisSize: MainAxisSize.min,
                                         children: [
                                           controller.repeatedTextInput(
-                                            label: 'Email',
-                                          ),
-                                          SizedBox(height: 8.h),
-                                          controller.repeatedTextInput(
-                                            label: 'First Name',
-                                          ),
-                                          SizedBox(height: 8.h),
-                                          controller.repeatedTextInput(
-                                            label: 'Last Name',
-                                          ),
-                                          SizedBox(height: 8.h),
-                                          controller.repeatedTextInput(
+                                            controller:
+                                                controller.lrnController,
                                             label: 'LRN',
                                           ),
-                                          SizedBox(height: 8.h),
                                           controller.repeatedTextInput(
+                                            controller:
+                                                controller.firstnameController,
+                                            label: 'First Name',
+                                          ),
+                                          controller.repeatedTextInput(
+                                            controller:
+                                                controller.lastnameController,
+                                            label: 'Last Name',
+                                          ),
+                                          controller.repeatedTextInput(
+                                            controller:
+                                                controller.emailController,
+                                            label: 'Email',
+                                          ),
+                                          controller.repeatedTextInput(
+                                            controller:
+                                                controller.passwordController,
                                             label: 'Password',
                                           ),
                                         ],
@@ -102,13 +108,13 @@ class MySignUpPage extends StatelessWidget {
                                 Expanded(
                                   child: MyButton(
                                     text: 'LOGIN',
-                                    onTap: () => context.push(Routes.signIn),
+                                    onTap: () => context.go(Routes.signIn),
                                   ),
                                 ),
                                 Expanded(
                                   child: MyButton(
                                     text: 'SIGN UP',
-                                    onTap: () {},
+                                    onTap: () => controller.signup(context),
                                   ),
                                 ),
                               ],
@@ -120,40 +126,7 @@ class MySignUpPage extends StatelessWidget {
                   ),
                 ),
               ),
-              Align(
-                alignment: Alignment.topCenter,
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: lightBrown,
-                    borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(16.r),
-                      topRight: Radius.circular(16.r),
-                      bottomLeft: Radius.circular(8.r),
-                      bottomRight: Radius.circular(8.r),
-                    ),
-                    boxShadow: [
-                      BoxShadow(
-                        color: darkBrown,
-                        offset: Offset(0, 4),
-                        spreadRadius: 0.7,
-                      ),
-                    ],
-                  ),
-
-                  child: Padding(
-                    padding: EdgeInsets.symmetric(
-                      horizontal: 40.w,
-                      vertical: 6.h,
-                    ),
-                    child: MyText(
-                      text: 'SIGN UP',
-                      color: textLight,
-                      fontWeight: FontWeight.w700,
-                      size: 28.sp,
-                    ),
-                  ),
-                ),
-              ),
+              MyHeader(text: 'SIGN UP'),
             ],
           ),
         ),

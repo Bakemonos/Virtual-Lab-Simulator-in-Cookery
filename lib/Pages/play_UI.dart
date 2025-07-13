@@ -135,9 +135,9 @@ class MyPlayUIPage extends StatelessWidget {
                                 mainAxisSpacing: 8,
                                 childAspectRatio: 1,
                               ),
-                          itemCount: ingredients.length,
+                          itemCount: ingredientsample.length,
                           itemBuilder: (context, index) {
-                            var data = ingredients[index];
+                            var data = ingredientsample[index];
                             var isSelected = controller.selectedList[index];
                             return InkWell(
                               onTap: () {},
@@ -252,9 +252,9 @@ class MyPlayUIPage extends StatelessWidget {
               mainAxisSpacing: 8,
               childAspectRatio: 1,
             ),
-            itemCount: ingredients.length,
+            itemCount: ingredientsample.length,
             itemBuilder: (context, index) {
-              var data = ingredients[index];
+              var data = ingredientsample[index];
               var isSelected = controller.selectedList[index];
               return InkWell(
                 onTap: () {},
