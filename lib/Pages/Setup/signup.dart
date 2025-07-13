@@ -173,12 +173,15 @@ class MySignUpPage extends StatelessWidget {
                                   ),
                                 ),
                                 Expanded(
-                                  child: MyButton(
-                                    text: 'SIGN UP',
-                                    onTap: () {
-                                      controller.errorHandlerSignup();
-                                      controller.signup(context);
-                                    },
+                                  child: Obx(
+                                    () => MyButton(
+                                      loading: controller.loader.value,
+                                      text: 'SIGN UP',
+                                      onTap: () {
+                                        controller.errorHandlerSignup();
+                                        controller.signup(context);
+                                      },
+                                    ),
                                   ),
                                 ),
                               ],

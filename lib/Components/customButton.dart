@@ -33,7 +33,7 @@ class MyButton extends StatelessWidget {
         } catch (e) {
           debugPrint('Sound error: $e');
         }
-        onTap();
+        loading! ? null : onTap();
       },
       style: ElevatedButton.styleFrom(
         elevation: 0,

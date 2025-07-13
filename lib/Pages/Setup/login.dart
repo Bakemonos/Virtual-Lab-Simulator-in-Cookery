@@ -92,20 +92,14 @@ class _MyLoginPageState extends State<MyLoginPage> {
                                       () => MyButton(
                                         loading: controller.loader.value,
                                         text: 'LOGIN',
-                                        onTap:
-                                            controller.loader.value
-                                                ? () {}
-                                                : () {
-                                                  final form =
-                                                      signInFormKey
-                                                          .currentState;
-                                                  if (form != null &&
-                                                      form.validate()) {
-                                                    controller
-                                                        .errorHandlerSignin();
-                                                    controller.signin(context);
-                                                  }
-                                                },
+                                        onTap: () {
+                                          final form =
+                                              signInFormKey.currentState;
+                                          if (form != null && form.validate()) {
+                                            controller.errorHandlerSignin();
+                                            controller.signin(context);
+                                          }
+                                        },
                                       ),
                                     ),
                                   ),
