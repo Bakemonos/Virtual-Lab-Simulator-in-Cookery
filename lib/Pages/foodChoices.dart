@@ -2,13 +2,13 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
-import 'package:virtual_lab/Components/custom_button.dart';
-import 'package:virtual_lab/Components/custom_header.dart';
-import 'package:virtual_lab/Components/custom_svg_picture.dart';
-import 'package:virtual_lab/Components/custom_text.dart';
+import 'package:virtual_lab/Components/customButton.dart';
+import 'package:virtual_lab/Components/customHeader.dart';
+import 'package:virtual_lab/Components/customSvgPicture.dart';
+import 'package:virtual_lab/Components/customText.dart';
 import 'package:virtual_lab/Components/shimmer.dart';
 import 'package:virtual_lab/Controllers/notifiers.dart';
-import 'package:virtual_lab/Models/food_type_model.dart';
+import 'package:virtual_lab/Models/foodTypeModel.dart';
 import 'package:virtual_lab/Utils/properties.dart';
 import 'package:virtual_lab/Utils/routes.dart';
 

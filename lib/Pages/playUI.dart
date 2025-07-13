@@ -2,11 +2,11 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:virtual_lab/Components/custom_svg.dart';
-import 'package:virtual_lab/Components/custom_text.dart';
+import 'package:virtual_lab/Components/customSvgPicture.dart';
+import 'package:virtual_lab/Components/customText.dart';
 import 'package:virtual_lab/Components/shimmer.dart';
 import 'package:virtual_lab/Controllers/notifiers.dart';
-import 'package:virtual_lab/Models/ingredients_model.dart';
+import 'package:virtual_lab/Models/ingredientsModel.dart';
 import 'package:virtual_lab/Utils/properties.dart';
 
 class MyPlayUIPage extends StatelessWidget {

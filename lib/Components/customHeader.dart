@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:virtual_lab/Components/custom_text.dart';
+import 'package:virtual_lab/Components/customText.dart';
 import 'package:virtual_lab/Utils/properties.dart';
 
 class MyHeader extends StatelessWidget {
