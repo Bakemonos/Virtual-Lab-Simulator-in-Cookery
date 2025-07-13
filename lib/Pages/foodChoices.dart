@@ -56,7 +56,10 @@ class _MyFoodChoicesPageState extends State<MyFoodChoicesPage> {
                               ),
                               child: foodChoices(
                                 instructionFunction: () => instruction(data),
-                                onTap: playFunction(index),
+                                onTap: () {
+                                  controller.typeSelected = data;
+                                  context.push(Routes.ingredientsSelection);
+                                },
                                 unlocked: unlocked[index],
                                 path: data.path,
                                 label: data.label,
@@ -91,18 +94,18 @@ class _MyFoodChoicesPageState extends State<MyFoodChoicesPage> {
     );
   }
 
-  playFunction(int index) {
-    switch (index) {
-      case 1:
-        return () {};
-      case 2:
-        return () {};
-      default:
-        return () {
-          context.push(Routes.ingredientsSelection);
-        };
-    }
-  }
+  // playFunction(int index) {
+  //   switch (index) {
+  //     case 1:
+  //       return () {};
+  //     case 2:
+  //       return () {};
+  //     default:
+  //       return () {
+  //         context.push(Routes.ingredientsSelection);
+  //       };
+  //   }
+  // }
 
   void instruction(FoodTypeModel data) {
     showDialog(

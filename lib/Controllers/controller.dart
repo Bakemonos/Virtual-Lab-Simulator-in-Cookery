@@ -9,6 +9,8 @@ import 'package:virtual_lab/Components/customDropdown.dart';
 import 'package:virtual_lab/Components/customSvg.dart';
 import 'package:virtual_lab/Components/customText.dart';
 import 'package:virtual_lab/Components/customTextField.dart';
+import 'package:virtual_lab/Models/foodTypeModel.dart';
+import 'package:virtual_lab/Models/ingredientsModel.dart';
 import 'package:virtual_lab/Models/userModel.dart';
 import 'package:virtual_lab/Services/services.dart';
 import 'package:virtual_lab/Utils/helper.dart';
@@ -59,6 +61,7 @@ class AppController extends GetxController {
   final musicToggle = true.obs;
   final loader = false.obs;
   final bagToggle = false.obs;
+  final basketToggle = false.obs;
 
   //? TEXT CONTROLLER
   final emailController = TextEditingController();
@@ -81,6 +84,12 @@ class AppController extends GetxController {
         gradeLevel: '',
         status: '',
       ).obs;
+
+  //? INGREDIENT SELECTION
+  final ingredientsData = <IngredientsModel>[].obs;
+
+  //? TYPE
+  FoodTypeModel? typeSelected;
 
   //! METHODS ---------------------------------------------------------------------------------------------------------------
 
@@ -152,6 +161,10 @@ class AppController extends GetxController {
 
   void bagOntap() {
     bagToggle.value = !bagToggle.value;
+  }
+
+  void basketOntap() {
+    basketToggle.value = !basketToggle.value;
   }
 
   void startTimer() {

@@ -60,7 +60,7 @@ List<IngredientsModel> ingredientsCOC1 = [
   IngredientsModel(
     name: 'rice',
     path:
-        'https://res.cloudinary.com/dgvi2di6t/image/upload/v1752306496/rice_cfzrjk.png',
+        'https://res.cloudinary.com/dgvi2di6t/image/upload/v1752409828/rice_wwcorg.png',
     actions: [ActionsModel(action: '', status: '')],
     actionStatus: '',
   ),

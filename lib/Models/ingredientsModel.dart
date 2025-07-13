@@ -1,14 +1,14 @@
 class IngredientsModel {
   final String name;
   final String path;
-  final List<ActionsModel> actions;
-  final String actionStatus;
+  final List<ActionsModel>? actions;
+  final String? actionStatus;
 
   IngredientsModel({
     required this.name,
     required this.path,
-    required this.actions,
-    required this.actionStatus,
+    this.actions,
+    this.actionStatus,
   });
 }
 

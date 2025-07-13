@@ -59,7 +59,7 @@ class MyPlayUIPage extends StatelessWidget {
                           () =>
                               controller.bagToggle.value
                                   ? inventory(controller)
-                                  : inventoryUI(controller),
+                                  : inventoryToggle(controller),
                         ),
                       ),
                     ),
@@ -123,52 +123,12 @@ class MyPlayUIPage extends StatelessWidget {
                           fit: BoxFit.contain,
                         ),
                       ),
-                      SizedBox(height: 40.h),
-                      SizedBox(
-                        height: 120.h,
-                        child: GridView.builder(
-                          padding: EdgeInsets.all(8.w),
-                          gridDelegate:
-                              const SliverGridDelegateWithFixedCrossAxisCount(
-                                crossAxisCount: 4,
-                                crossAxisSpacing: 8,
-                                mainAxisSpacing: 8,
-                                childAspectRatio: 1,
-                              ),
-                          itemCount: ingredientsample.length,
-                          itemBuilder: (context, index) {
-                            var data = ingredientsample[index];
-                            var isSelected = controller.selectedList[index];
-                            return InkWell(
-                              onTap: () {},
-                              child: Container(
-                                alignment: Alignment.center,
-                                decoration: BoxDecoration(
-                                  color:
-                                      isSelected.value
-                                          ? lightGridColor
-                                          : lightGridColor.withValues(
-                                            alpha: 0.5,
-                                          ),
-                                  borderRadius: BorderRadius.circular(8.r),
-                                ),
-                                child: Padding(
-                                  padding: EdgeInsets.all(8.w),
-                                  child: CachedNetworkImage(
-                                    imageUrl: data.path,
-                                    placeholder:
-                                        (context, url) =>
-                                            ShimmerSkeletonLoader(),
-                                    errorWidget:
-                                        (context, url, error) =>
-                                            Icon(Icons.error),
-                                    fit: BoxFit.contain,
-                                  ),
-                                ),
-                              ),
-                            );
-                          },
-                        ),
+                      const Spacer(),
+                      Obx(
+                        () =>
+                            controller.basketToggle.value
+                                ? preparedIngredientsToggle(controller)
+                                : preparedIngredients(controller),
                       ),
                     ],
                   ),
@@ -181,7 +141,88 @@ class MyPlayUIPage extends StatelessWidget {
     );
   }
 
-  Widget inventoryUI(AppController controller) {
+  Widget preparedIngredientsToggle(AppController controller) {
+    return InkWell(
+      onTap: controller.basketOntap,
+      child: Column(
+        spacing: 4.h,
+        children: [
+          MySvgPicture(path: basket),
+          MyText(text: 'Basket', color: textLight, size: 12.sp),
+        ],
+      ),
+    );
+  }
+
+  Widget preparedIngredients(AppController controller) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        IconButton(
+          style: ButtonStyle(
+            shape: WidgetStatePropertyAll(
+              BeveledRectangleBorder(
+                borderRadius: BorderRadiusGeometry.circular(4.r),
+              ),
+            ),
+          ),
+          onPressed: controller.basketOntap,
+          icon: Container(
+            width: 32.w,
+            height: 32.h,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(4.r),
+              color: lightGridColor.withValues(alpha: 0.5),
+            ),
+            child: Center(
+              child: MySvgPicture(path: back, iconColor: textLight),
+            ),
+          ),
+        ),
+        SizedBox(
+          height: 120.h,
+          child: GridView.builder(
+            padding: EdgeInsets.all(8.w),
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 4,
+              crossAxisSpacing: 8,
+              mainAxisSpacing: 8,
+              childAspectRatio: 1,
+            ),
+            itemCount: ingredientsample.length,
+            itemBuilder: (context, index) {
+              var data = ingredientsample[index];
+              var isSelected = controller.selectedList[index];
+              return InkWell(
+                onTap: () {},
+                child: Container(
+                  alignment: Alignment.center,
+                  decoration: BoxDecoration(
+                    color:
+                        isSelected.value
+                            ? lightGridColor
+                            : lightGridColor.withValues(alpha: 0.5),
+                    borderRadius: BorderRadius.circular(8.r),
+                  ),
+                  child: Padding(
+                    padding: EdgeInsets.all(8.w),
+                    child: CachedNetworkImage(
+                      imageUrl: data.path,
+                      placeholder: (context, url) => ShimmerSkeletonLoader(),
+                      errorWidget: (context, url, error) => Icon(Icons.error),
+                      fit: BoxFit.contain,
+                    ),
+                  ),
+                ),
+              );
+            },
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget inventoryToggle(AppController controller) {
     return Column(
       spacing: 16.h,
       mainAxisAlignment: MainAxisAlignment.spaceBetween,

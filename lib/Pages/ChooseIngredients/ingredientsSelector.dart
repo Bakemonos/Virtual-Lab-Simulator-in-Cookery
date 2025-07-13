@@ -164,8 +164,12 @@ class _MyIngredientsSelectionPageState
                                         controller.seconds.value == 0
                                             ? () {
                                               context.go(Routes.playUI);
+                                              // sample();
                                             }
-                                            : () {},
+                                            : () {
+                                              context.go(Routes.playUI);
+                                              // sample();
+                                            },
                                   ),
                                 ),
                               ),
@@ -188,6 +192,30 @@ class _MyIngredientsSelectionPageState
           ),
         ],
       ),
+    );
+  }
+
+  void sample() {
+    controller.ingredientsData.clear();
+
+    for (int i = 0; i < ingredientsCOC1.length; i++) {
+      if (controller.selectedList[i].value) {
+        controller.ingredientsData.add(
+          IngredientsModel(
+            name: ingredientsCOC1[i].name,
+            path: ingredientsCOC1[i].path,
+            actions: null,
+            actionStatus: null,
+          ),
+        );
+      }
+    }
+
+    controller.ingredientsData.refresh();
+    debugPrint(
+      '\nDATA  \n'
+      'type : ${controller.typeSelected!.type}\n'
+      'ingredients : ${controller.ingredientsData.map((e) => {'name': e.name}).toList()}\n',
     );
   }
 }
