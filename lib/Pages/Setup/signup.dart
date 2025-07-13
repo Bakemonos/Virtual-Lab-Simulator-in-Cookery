@@ -67,31 +67,45 @@ class MySignUpPage extends StatelessWidget {
                                     child: Padding(
                                       padding: EdgeInsets.only(right: 10.w),
                                       child: Column(
-                                        spacing: 8.h,
+                                        spacing: 16.h,
                                         mainAxisSize: MainAxisSize.min,
                                         children: [
                                           controller.repeatedTextInput(
+                                            errorText: controller.lrnErrorText,
                                             controller:
                                                 controller.lrnController,
                                             label: 'LRN',
                                           ),
                                           controller.repeatedTextInput(
+                                            errorText:
+                                                controller.firstnameErrorText,
                                             controller:
                                                 controller.firstnameController,
                                             label: 'First Name',
                                           ),
                                           controller.repeatedTextInput(
+                                            errorText:
+                                                controller.lastnameErrorText,
                                             controller:
                                                 controller.lastnameController,
                                             label: 'Last Name',
                                           ),
                                           controller.repeatedTextInput(
+                                            errorText:
+                                                controller.emailErrorText,
                                             controller:
                                                 controller.emailController,
                                             label: 'Email',
                                           ),
                                           Obx(
                                             () => controller.repeatedDropdown(
+                                              hasError:
+                                                  controller
+                                                      .genderErrorText
+                                                      .value
+                                                      .isNotEmpty,
+                                              errorText:
+                                                  controller.genderErrorText,
                                               selectedValue:
                                                   controller.gender.value,
                                               label: 'Gender',
@@ -109,6 +123,14 @@ class MySignUpPage extends StatelessWidget {
                                           ),
                                           Obx(
                                             () => controller.repeatedDropdown(
+                                              hasError:
+                                                  controller
+                                                      .gradeLevelErrorText
+                                                      .value
+                                                      .isNotEmpty,
+                                              errorText:
+                                                  controller
+                                                      .gradeLevelErrorText,
                                               selectedValue:
                                                   controller.gradeLevel.value,
                                               label: 'Grade Level',
@@ -124,6 +146,8 @@ class MySignUpPage extends StatelessWidget {
                                             ),
                                           ),
                                           controller.repeatedTextInput(
+                                            errorText:
+                                                controller.passwordErrorText,
                                             obscureText: true,
                                             controller:
                                                 controller.passwordController,
@@ -142,13 +166,19 @@ class MySignUpPage extends StatelessWidget {
                                 Expanded(
                                   child: MyButton(
                                     text: 'LOGIN',
-                                    onTap: () => context.pop(),
+                                    onTap: () {
+                                      controller.resetErrorHandler();
+                                      context.pop();
+                                    },
                                   ),
                                 ),
                                 Expanded(
                                   child: MyButton(
                                     text: 'SIGN UP',
-                                    onTap: () => controller.signup(context),
+                                    onTap: () {
+                                      controller.errorHandlerSignup();
+                                      controller.signup(context);
+                                    },
                                   ),
                                 ),
                               ],

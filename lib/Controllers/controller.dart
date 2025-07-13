@@ -32,6 +32,14 @@ class AppController extends GetxController {
   //? VARIABLE
   final gender = ''.obs;
   final gradeLevel = ''.obs;
+  final emailErrorText = ''.obs;
+  final changePasswordErrorText = ''.obs;
+  final passwordErrorText = ''.obs;
+  final genderErrorText = ''.obs;
+  final lrnErrorText = ''.obs;
+  final lastnameErrorText = ''.obs;
+  final firstnameErrorText = ''.obs;
+  final gradeLevelErrorText = ''.obs;
 
   //? RX VARIABLE
   var isSelectedList = <RxBool>[].obs;
@@ -70,6 +78,60 @@ class AppController extends GetxController {
   final lastnameController = TextEditingController();
   final lrnController = TextEditingController();
   final passwordController = TextEditingController();
+  final changePasswordController = TextEditingController();
+
+  //! METHODS ---------------------------------------------------------------------------------------------------------------
+
+  void resetErrorHandler() {
+    emailErrorText.value = '';
+    changePasswordErrorText.value = '';
+    passwordErrorText.value = '';
+    genderErrorText.value = '';
+    lrnErrorText.value = '';
+    lastnameErrorText.value = '';
+    firstnameErrorText.value = '';
+    gradeLevelErrorText.value = '';
+  }
+
+  void errorHandlerSignin() {
+    if (emailController.text.isEmpty) {
+      emailErrorText.value = 'Email is required';
+    } else {
+      emailErrorText.value = '';
+    }
+
+    if (passwordController.text.isEmpty) {
+      passwordErrorText.value = 'Password is required';
+    } else {
+      passwordErrorText.value = '';
+    }
+  }
+
+  void errorHandlerSignup() {
+    emailErrorText.value =
+        emailController.text.isEmpty ? 'Email is required' : '';
+
+    passwordErrorText.value =
+        passwordController.text.isEmpty ? 'Password is required' : '';
+
+    changePasswordErrorText.value =
+        changePasswordController.text.isEmpty
+            ? 'Confirm Password is required'
+            : '';
+
+    lrnErrorText.value = lrnController.text.isEmpty ? 'LRN is required' : '';
+
+    firstnameErrorText.value =
+        firstnameController.text.isEmpty ? 'First Name is required' : '';
+
+    lastnameErrorText.value =
+        lastnameController.text.isEmpty ? 'Last Name is required' : '';
+
+    gradeLevelErrorText.value =
+        gradeLevel.value.isEmpty ? 'Grade Level is required' : '';
+
+    genderErrorText.value = gender.value.isEmpty ? 'Gender is required' : '';
+  }
 
   void resetSignup() {
     lrnController.clear();
@@ -85,8 +147,6 @@ class AppController extends GetxController {
     emailController.clear();
     passwordController.clear();
   }
-
-  //? METHODS
 
   void bagOntap() {
     bagToggle.value = !bagToggle.value;
@@ -124,6 +184,8 @@ class AppController extends GetxController {
     await player.play(AssetSource(clickEffect1));
   }
 
+  //! WIDGET ----------------------------------------------------------------------------------------------------------------
+
   Widget floatingButton({
     required BuildContext context,
     required Function() onTap,
@@ -152,18 +214,47 @@ class AppController extends GetxController {
 
   Widget repeatedTextInput({
     required String label,
-    TextEditingController? controller,
-    bool? obscureText = false,
+    required TextEditingController controller,
+    required RxString errorText,
+    bool obscureText = false,
   }) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
-      spacing: 4.h,
       children: [
-        MyText(text: label, fontWeight: FontWeight.w600),
-        MyTextfield(
-          obscureText: obscureText,
-          controller: controller,
-          hint: 'Enter $label',
+        Row(
+          spacing: 8.w,
+          children: [
+            Obx(
+              () => MyText(
+                text: label,
+                fontWeight: FontWeight.w600,
+                color: errorText.value.isNotEmpty ? redLighter : lightBrown,
+              ),
+            ),
+            Obx(
+              () =>
+                  errorText.value.isNotEmpty
+                      ? Padding(
+                        padding: EdgeInsets.only(top: 4.h),
+                        child: MyText(
+                          text: '* ${errorText.value}',
+                          color: redLighter,
+                          fontWeight: FontWeight.w400,
+                          size: 14.sp,
+                        ),
+                      )
+                      : SizedBox.shrink(),
+            ),
+          ],
+        ),
+        SizedBox(height: 4.h),
+        Obx(
+          () => MyTextfield(
+            controller: controller,
+            hint: 'Enter $label',
+            obscureText: obscureText,
+            error: errorText.value.isNotEmpty,
+          ),
         ),
       ],
     );
@@ -173,15 +264,42 @@ class AppController extends GetxController {
     required String label,
     required List<String> items,
     required String hint,
-    String? selectedValue,
-    void Function(String?)? onChanged,
+    required RxString errorText,
+    required String? selectedValue,
+    required void Function(String?) onChanged,
+    bool? hasError = false,
   }) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
-      spacing: 4.h,
       children: [
-        MyText(text: label, fontWeight: FontWeight.w600),
+        Row(
+          spacing: 8.w,
+          children: [
+            Obx(
+              () => MyText(
+                text: label,
+                fontWeight: FontWeight.w600,
+                color: errorText.value.isNotEmpty ? redLighter : lightBrown,
+              ),
+            ),
+            Obx(
+              () =>
+                  errorText.value.isNotEmpty
+                      ? Padding(
+                        padding: EdgeInsets.only(top: 4.h, bottom: 4.h),
+                        child: MyText(
+                          text: errorText.value,
+                          fontWeight: FontWeight.w400,
+                          color: redLighter,
+                          size: 14.sp,
+                        ),
+                      )
+                      : SizedBox.shrink(),
+            ),
+          ],
+        ),
         MyDropDown(
+          hasError: hasError!,
           items: items,
           hintText: hint,
           value: selectedValue,
@@ -201,7 +319,7 @@ class AppController extends GetxController {
     );
   }
 
-  //? SERVICES
+  //! SERVICES METHOD -------------------------------------------------------------------------------------------------------
 
   //? SIGN UP
   Future<void> signup(BuildContext context) async {

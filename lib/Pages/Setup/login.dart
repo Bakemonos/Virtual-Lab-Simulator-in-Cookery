@@ -9,9 +9,14 @@ import 'package:virtual_lab/Utils/properties.dart';
 import 'package:virtual_lab/Components/customText.dart';
 import 'package:virtual_lab/Utils/routes.dart';
 
-class MyLoginPage extends StatelessWidget {
+class MyLoginPage extends StatefulWidget {
   const MyLoginPage({super.key});
 
+  @override
+  State<MyLoginPage> createState() => _MyLoginPageState();
+}
+
+class _MyLoginPageState extends State<MyLoginPage> {
   @override
   Widget build(BuildContext context) {
     final controller = AppController.instance;
@@ -59,10 +64,12 @@ class MyLoginPage extends StatelessWidget {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               controller.repeatedTextInput(
+                                errorText: controller.emailErrorText,
                                 controller: controller.emailController,
                                 label: 'Email',
                               ),
                               controller.repeatedTextInput(
+                                errorText: controller.passwordErrorText,
                                 obscureText: true,
                                 controller: controller.passwordController,
                                 label: 'Password',
@@ -94,6 +101,8 @@ class MyLoginPage extends StatelessWidget {
                                                           .currentState;
                                                   if (form != null &&
                                                       form.validate()) {
+                                                    controller
+                                                        .errorHandlerSignin();
                                                     controller.signin(context);
                                                   }
                                                 },
@@ -104,6 +113,7 @@ class MyLoginPage extends StatelessWidget {
                                     child: MyButton(
                                       text: 'SIGN UP',
                                       onTap: () {
+                                        controller.resetErrorHandler();
                                         context.push(Routes.signUp);
                                       },
                                     ),

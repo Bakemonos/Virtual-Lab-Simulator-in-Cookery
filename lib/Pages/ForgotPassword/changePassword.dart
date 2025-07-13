@@ -51,9 +51,15 @@ class MyForgotChangePasswordPage extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            controller.repeatedTextInput(label: 'Password'),
+                            controller.repeatedTextInput(
+                              controller: controller.passwordController,
+                              errorText: controller.passwordErrorText,
+                              label: 'Password',
+                            ),
                             SizedBox(height: 12.h),
                             controller.repeatedTextInput(
+                              errorText: controller.changePasswordErrorText,
+                              controller: controller.changePasswordController,
                               label: 'Change Password',
                             ),
                             SizedBox(height: 16.h),

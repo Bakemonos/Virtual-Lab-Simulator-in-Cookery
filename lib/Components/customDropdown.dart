@@ -2,13 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:virtual_lab/Utils/properties.dart';
 
-class MyDropDown extends StatefulWidget {
+class MyDropDown extends StatelessWidget {
   final String? value;
   final String hintText;
   final List<String> items;
   final void Function(String?)? onChanged;
-  final String? Function(String?)? validator;
   final Color? fillColor;
+  final bool hasError;
 
   const MyDropDown({
     super.key,
@@ -16,15 +16,10 @@ class MyDropDown extends StatefulWidget {
     required this.hintText,
     this.value,
     this.onChanged,
-    this.validator,
     this.fillColor = backgroundColor,
+    this.hasError = false,
   });
 
-  @override
-  State<MyDropDown> createState() => _MyDropDownState();
-}
-
-class _MyDropDownState extends State<MyDropDown> {
   @override
   Widget build(BuildContext context) {
     final textStyle = TextStyle(
@@ -41,16 +36,19 @@ class _MyDropDownState extends State<MyDropDown> {
       fontWeight: FontWeight.w400,
     );
 
+    Color borderColor = hasError ? Colors.red : Colors.transparent;
+
     return SizedBox(
       height: 48.h,
       child: DropdownButtonFormField<String>(
-        value: widget.items.contains(widget.value) ? widget.value : null,
+        value: items.contains(value) ? value : null,
         isExpanded: true,
-        alignment: Alignment.center, // Center the selected value
+        alignment: Alignment.center,
+        autovalidateMode: AutovalidateMode.always,
         decoration: InputDecoration(
           floatingLabelBehavior: FloatingLabelBehavior.never,
-          hintText: null, // Remove the default hint to customize it manually
-          fillColor: widget.fillColor,
+          hintText: null,
+          fillColor: fillColor,
           filled: true,
           contentPadding: EdgeInsets.symmetric(
             vertical: 12.h,
@@ -62,46 +60,29 @@ class _MyDropDownState extends State<MyDropDown> {
           ),
           enabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(12.r),
-            borderSide: BorderSide.none,
+            borderSide: BorderSide(
+              color: borderColor,
+              width: hasError ? 1.5 : 0,
+            ),
           ),
           focusedBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(12.r),
-            borderSide: BorderSide(color: darkBrown, width: 1.5),
+            borderSide: BorderSide(
+              color: hasError ? Colors.red : darkBrown,
+              width: 1.5,
+            ),
           ),
-          errorBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(12.r),
-            borderSide: BorderSide(color: Colors.red, width: 1.5),
-          ),
-          focusedErrorBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(12.r),
-            borderSide: BorderSide(color: Colors.redAccent, width: 2),
-          ),
-          errorStyle: TextStyle(
-            fontSize: 12.sp,
-            color: Colors.red,
-            fontWeight: FontWeight.w500,
-          ),
+          errorStyle: const TextStyle(height: 0, fontSize: 0),
         ),
         hint: Center(
-          child: Text(
-            widget.hintText,
-            style: hintStyle,
-            textAlign: TextAlign.center,
-          ),
+          child: Text(hintText, style: hintStyle, textAlign: TextAlign.center),
         ),
-        dropdownColor: widget.fillColor,
+        dropdownColor: fillColor,
         iconEnabledColor: darkBrown,
         style: textStyle,
-        validator:
-            widget.validator ??
-            (value) {
-              if (value == null || value.isEmpty) {
-                return 'This field is required';
-              }
-              return null;
-            },
+        validator: (value) => null,
         items:
-            widget.items
+            items
                 .map(
                   (value) => DropdownMenuItem<String>(
                     value: value,
@@ -115,7 +96,7 @@ class _MyDropDownState extends State<MyDropDown> {
                   ),
                 )
                 .toList(),
-        onChanged: widget.onChanged,
+        onChanged: onChanged,
       ),
     );
   }

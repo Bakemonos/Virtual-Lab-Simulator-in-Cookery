@@ -51,7 +51,11 @@ class MyForgotEnterEmailPage extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            controller.repeatedTextInput(label: 'Email'),
+                            controller.repeatedTextInput(
+                              errorText: controller.emailErrorText,
+                              controller: controller.emailController,
+                              label: 'Email',
+                            ),
                             SizedBox(height: 24.h),
                             Row(
                               spacing: 16.w,
