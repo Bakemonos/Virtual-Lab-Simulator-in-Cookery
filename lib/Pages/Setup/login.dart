@@ -93,8 +93,7 @@ class _MyLoginPageState extends State<MyLoginPage> {
                                         loading: controller.loader.value,
                                         text: 'LOGIN',
                                         onTap: () {
-                                          final form =
-                                              signInFormKey.currentState;
+                                          final form = signInFormKey.currentState;
                                           if (form != null && form.validate()) {
                                             controller.errorHandlerSignin();
                                             controller.signin(context);

@@ -81,40 +81,25 @@ class MySettingsPage extends StatelessWidget {
                                           Obx(
                                             () => _settingIconToggle(
                                               controller: controller,
-                                              path:
-                                                  controller.soundToggle.value
-                                                      ? soundOn
-                                                      : soundOff,
+                                              path: controller.soundToggle.value ? soundOn : soundOff,
                                               onTap: () {
-                                                controller.soundToggle.value =
-                                                    !controller
-                                                        .soundToggle
-                                                        .value;
+                                                controller.soundToggle.value = !controller.soundToggle.value;
                                               },
                                             ),
                                           ),
                                           Obx(
                                             () => _settingIconToggle(
                                               controller: controller,
-                                              path:
-                                                  controller.musicToggle.value
-                                                      ? musicOn
-                                                      : musicOff,
+                                              path: controller.musicToggle.value ? musicOn : musicOff,
                                               onTap: () {
-                                                controller.musicToggle.value =
-                                                    !controller
-                                                        .musicToggle
-                                                        .value;
+                                                controller.musicToggle.value = !controller.musicToggle.value;
                                               },
                                             ),
                                           ),
                                           _settingIconToggle(
                                             controller: controller,
                                             path: information,
-                                            onTap:
-                                                () => context.push(
-                                                  Routes.information,
-                                                ),
+                                            onTap:() => context.push(Routes.information),
                                           ),
                                         ],
                                       ),
@@ -149,9 +134,7 @@ class MySettingsPage extends StatelessWidget {
                                         text: 'Back to Menu',
                                         borderColor: redDark,
                                         gradientColor: [redLighter, redLight],
-                                        onTap: () {
-                                          context.push(Routes.menu);
-                                        },
+                                        onTap: ()=> context.push(Routes.menu),
                                       ),
                                     ),
                                     SizedBox(height: 12.h),
@@ -161,7 +144,7 @@ class MySettingsPage extends StatelessWidget {
                                         text: 'Log out',
                                         borderColor: redDark,
                                         gradientColor: [redLighter, redLight],
-                                        onTap: () => controller.logout(context),
+                                        onTap: () async => controller.logoutDialog(context),
                                       ),
                                     ),
                                   ],

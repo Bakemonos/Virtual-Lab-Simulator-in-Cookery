@@ -50,6 +50,7 @@ const String burger = "assets/icons/burger.svg";
 const String close = "assets/icons/close.svg";
 const String back = "assets/icons/back.svg";
 const String basket = "assets/icons/basket.svg";
+const String box = "assets/icons/box.svg";
 
 //? ON
 const String soundOn = "assets/icons/sound_on.svg";

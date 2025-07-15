@@ -1,9 +1,11 @@
 import 'dart:async';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:go_router/go_router.dart';
+import 'package:virtual_lab/Components/customConfirmationDialog.dart';
 import 'package:virtual_lab/Components/customDialog.dart';
 import 'package:virtual_lab/Components/customDropdown.dart';
 import 'package:virtual_lab/Components/customSvg.dart';
@@ -61,7 +63,7 @@ class AppController extends GetxController {
   final musicToggle = true.obs;
   final loader = false.obs;
   final bagToggle = false.obs;
-  final basketToggle = false.obs;
+  final equipmentToggle = false.obs;
 
   //? TEXT CONTROLLER
   final emailController = TextEditingController();
@@ -79,7 +81,7 @@ class AppController extends GetxController {
         firstName: '',
         lastName: '',
         email: '',
-        gender: '',
+        gender: '', 
         password: '',
         gradeLevel: '',
         status: '',
@@ -91,8 +93,52 @@ class AppController extends GetxController {
   //? TYPE
   FoodTypeModel? typeSelected;
 
+  Future<void> exitDialog(BuildContext context) async {
+    await showConfirmationDialog(
+      context: context,
+      title: 'Exit App',
+      message: 'Are you sure you want to quit the game?',
+      icon: Icons.exit_to_app,
+      iconColor: Colors.orange,
+      confirmColor: Colors.red,
+      confirmText: 'Quit',
+      cancelText: 'Cancel',
+      onConfirm: () {
+        SystemNavigator.pop(); 
+      },
+      onCancel: () {
+        print('User canceled exit');
+      },
+    );
+  }
+
+  Future<void> logoutDialog(BuildContext context) async {
+    await showConfirmationDialog(
+      context: context,
+      title: 'Logout',
+      message: 'Are you sure you want to log out?',
+      icon: Icons.logout,
+      iconColor: Colors.red,
+      confirmColor: Colors.red,
+      confirmText: 'Logout',
+      cancelText: 'Cancel',
+      onConfirm: (){
+        userData.value = UserModel.empty();
+        context.go(Routes.signIn);
+      },
+    );
+  }
+
   //! METHODS ---------------------------------------------------------------------------------------------------------------
 
+  BoxDecoration designUI() {
+    return BoxDecoration(
+      color: lightBrown,
+      borderRadius: BorderRadius.circular(8.r),
+      border: Border.all(width: 2.w, color: darkBrown),
+    );
+  }
+  
   void resetErrorHandler() {
     emailErrorText.value = '';
     changePasswordErrorText.value = '';
@@ -163,8 +209,8 @@ class AppController extends GetxController {
     bagToggle.value = !bagToggle.value;
   }
 
-  void basketOntap() {
-    basketToggle.value = !basketToggle.value;
+  void equipmentOntap() {
+    equipmentToggle.value = !equipmentToggle.value;
   }
 
   void startTimer() {
@@ -399,7 +445,7 @@ class AppController extends GetxController {
         'email': emailController.text,
         'password': passwordController.text,
       };
-
+ 
       final response = await db.post('auth/loginStudent', data);
 
       if (response.success!) {
@@ -435,10 +481,5 @@ class AppController extends GetxController {
       }
       debugPrint('Error: $e');
     }
-  }
-
-  void logout(BuildContext context) {
-    userData.value = UserModel.empty();
-    context.go(Routes.signIn);
   }
 }

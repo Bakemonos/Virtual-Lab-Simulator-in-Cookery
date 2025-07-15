@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:virtual_lab/Components/customButton.dart';
 import 'package:virtual_lab/Components/customHeader.dart';
+import 'package:virtual_lab/Controllers/controller.dart';
 import 'package:virtual_lab/Pages/foodChoices.dart';
 import 'package:virtual_lab/Utils/properties.dart';
 import 'package:virtual_lab/Utils/routes.dart';
@@ -12,6 +13,8 @@ class MyMenuPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final controller = AppController.instance;
+
     return Scaffold(
       resizeToAvoidBottomInset: false,
       body: Center(
@@ -88,7 +91,7 @@ class MyMenuPage extends StatelessWidget {
                                 text: 'Quit',
                                 borderColor: redDark,
                                 gradientColor: [redLighter, redLight],
-                                onTap: () {},
+                                onTap: () async => controller.exitDialog(context),
                               ),
                             ),
                           ],
