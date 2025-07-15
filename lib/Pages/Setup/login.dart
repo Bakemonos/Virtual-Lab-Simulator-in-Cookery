@@ -21,108 +21,112 @@ class _MyLoginPageState extends State<MyLoginPage> {
   Widget build(BuildContext context) {
     final controller = AppController.instance;
     final signInFormKey = GlobalKey<FormState>();
-    return Scaffold(
-      resizeToAvoidBottomInset: false,
-      body: Center(
-        child: Padding(
-          padding: EdgeInsets.symmetric(vertical: 8.h),
-          child: Stack(
-            children: [
-              Align(
-                alignment: Alignment.bottomCenter,
-                child: Container(
-                  width: 500.w,
-                  margin: EdgeInsets.only(top: 24.h),
-                  decoration: BoxDecoration(
-                    color: lightBrown,
-                    borderRadius: BorderRadius.circular(30.r),
-                  ),
-                  child: Padding(
-                    padding: EdgeInsets.only(
-                      left: 16.w,
-                      right: 16.w,
-                      top: 8.w,
-                      bottom: 20.sp,
+
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (_, _) => controller.exitDialog(context),
+      child: Scaffold(
+        resizeToAvoidBottomInset: false,
+        body: Center(
+          child: Padding(
+            padding: EdgeInsets.symmetric(vertical: 8.h),
+            child: Stack(
+              children: [
+                Align(
+                  alignment: Alignment.bottomCenter,
+                  child: Container(
+                    width: 500.w,
+                    margin: EdgeInsets.only(top: 24.h),
+                    decoration: BoxDecoration(
+                      color: lightBrown,
+                      borderRadius: BorderRadius.circular(30.r),
                     ),
-                    child: Container(
-                      decoration: BoxDecoration(
-                        color: foregroundColor,
-                        borderRadius: BorderRadius.circular(16.r),
+                    child: Padding(
+                      padding: EdgeInsets.only(
+                        left: 16.w,
+                        right: 16.w,
+                        top: 8.w,
+                        bottom: 20.sp,
                       ),
-                      child: Padding(
-                        padding: EdgeInsets.only(
-                          left: 24.w,
-                          right: 24.w,
-                          top: 24.h,
-                          bottom: 16.h,
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: foregroundColor,
+                          borderRadius: BorderRadius.circular(16.r),
                         ),
-                        child: Form(
-                          key: signInFormKey,
-                          child: Column(
-                            spacing: 8.h,
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              controller.repeatedTextInput(
-                                errorText: controller.emailErrorText,
-                                controller: controller.emailController,
-                                label: 'Email',
-                              ),
-                              controller.repeatedTextInput(
-                                errorText: controller.passwordErrorText,
-                                obscureText: true,
-                                controller: controller.passwordController,
-                                label: 'Password',
-                              ),
-                              InkWell(
-                                onTap:
-                                    () => context.push(Routes.forgotEnterEmail),
-                                child: MyText(
-                                  text: 'Forgot password',
-                                  size: 14.sp,
-                                  fontWeight: FontWeight.w500,
-                                  decoration: TextDecoration.underline,
+                        child: Padding(
+                          padding: EdgeInsets.only(
+                            left: 24.w,
+                            right: 24.w,
+                            top: 24.h,
+                            bottom: 16.h,
+                          ),
+                          child: Form(
+                            key: signInFormKey,
+                            child: Column(
+                              spacing: 8.h,
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                controller.repeatedTextInput(
+                                  errorText: controller.emailErrorText,
+                                  controller: controller.emailController,
+                                  label: 'Email',
                                 ),
-                              ),
-                              Row(
-                                spacing: 16.w,
-                                children: [
-                                  Expanded(
-                                    child: Obx(
-                                      () => MyButton(
-                                        loading: controller.loader.value,
-                                        text: 'LOGIN',
+                                controller.repeatedTextInput(
+                                  errorText: controller.passwordErrorText,
+                                  obscureText: true,
+                                  controller: controller.passwordController,
+                                  label: 'Password',
+                                ),
+                                InkWell(
+                                  onTap:() => context.push(Routes.forgotEnterEmail),
+                                  child: MyText(
+                                    text: 'Forgot password',
+                                    size: 14.sp,
+                                    fontWeight: FontWeight.w500,
+                                    decoration: TextDecoration.underline,
+                                  ),
+                                ),
+                                Row(
+                                  spacing: 16.w,
+                                  children: [
+                                    Expanded(
+                                      child: Obx(
+                                        () => MyButton(
+                                          loading: controller.loader.value,
+                                          text: 'LOGIN',
+                                          onTap: () {
+                                            final form = signInFormKey.currentState;
+                                            if (form != null && form.validate()) {
+                                              controller.errorHandlerSignin();
+                                              controller.signin(context);
+                                            }
+                                          },
+                                        ),
+                                      ),
+                                    ),
+                                    Expanded(
+                                      child: MyButton(
+                                        text: 'SIGN UP',
                                         onTap: () {
-                                          final form = signInFormKey.currentState;
-                                          if (form != null && form.validate()) {
-                                            controller.errorHandlerSignin();
-                                            controller.signin(context);
-                                          }
+                                          controller.resetErrorHandler();
+                                          context.push(Routes.signUp);
                                         },
                                       ),
                                     ),
-                                  ),
-                                  Expanded(
-                                    child: MyButton(
-                                      text: 'SIGN UP',
-                                      onTap: () {
-                                        controller.resetErrorHandler();
-                                        context.push(Routes.signUp);
-                                      },
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ],
+                                  ],
+                                ),
+                              ],
+                            ),
                           ),
                         ),
                       ),
                     ),
                   ),
                 ),
-              ),
-              MyHeader(text: 'LOGIN'),
-            ],
+                MyHeader(text: 'LOGIN'),
+              ],
+            ),
           ),
         ),
       ),

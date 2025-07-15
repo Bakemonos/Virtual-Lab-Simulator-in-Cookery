@@ -65,7 +65,7 @@ class _MyProcedurePlatingPageState extends State<MyProcedurePlatingPage>  with T
                 padding: EdgeInsets.all(16.w),
                 child: Row(
                   children: [
-                    MySvgPicture(path: board1),
+                    const MySvgPicture(path: board1),
                     const Spacer(),
                     GestureDetector(
                       onTap: handleTap,

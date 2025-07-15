@@ -36,7 +36,7 @@ class MyDropDown extends StatelessWidget {
       fontWeight: FontWeight.w400,
     );
 
-    Color borderColor = hasError ? Colors.red : Colors.transparent;
+    Color borderColor = hasError ? redLighter : Colors.transparent;
 
     return SizedBox(
       height: 48.h,
@@ -46,10 +46,11 @@ class MyDropDown extends StatelessWidget {
         alignment: Alignment.center,
         autovalidateMode: AutovalidateMode.always,
         decoration: InputDecoration(
-          floatingLabelBehavior: FloatingLabelBehavior.never,
           hintText: null,
           fillColor: fillColor,
           filled: true,
+          floatingLabelBehavior: FloatingLabelBehavior.never,
+          errorStyle: const TextStyle(height: 0, fontSize: 0),
           contentPadding: EdgeInsets.symmetric(
             vertical: 12.h,
             horizontal: 16.w,
@@ -67,35 +68,24 @@ class MyDropDown extends StatelessWidget {
           ),
           focusedBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(12.r),
-            borderSide: BorderSide(
-              color: hasError ? Colors.red : darkBrown,
-              width: 1.5,
-            ),
+            borderSide: BorderSide(color: hasError ? redLighter : darkBrown, width: 1.5),
           ),
-          errorStyle: const TextStyle(height: 0, fontSize: 0),
         ),
-        hint: Center(
-          child: Text(hintText, style: hintStyle, textAlign: TextAlign.center),
-        ),
+        hint: Center(child: Text(hintText, style: hintStyle, textAlign: TextAlign.center)),
         dropdownColor: fillColor,
         iconEnabledColor: darkBrown,
         style: textStyle,
         validator: (value) => null,
-        items:
-            items
-                .map(
-                  (value) => DropdownMenuItem<String>(
-                    value: value,
-                    child: Center(
-                      child: Text(
-                        value,
-                        style: textStyle,
-                        textAlign: TextAlign.center,
-                      ),
-                    ),
-                  ),
-                )
-                .toList(),
+        items: items.map((value) => DropdownMenuItem<String>(
+          value: value,
+          child: Center(
+            child: Text(
+              value,
+              style: textStyle,
+              textAlign: TextAlign.center,
+            ),
+          ),
+        )).toList(),
         onChanged: onChanged,
       ),
     );

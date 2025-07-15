@@ -1,53 +1,32 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:virtual_lab/Components/customText.dart';
+import 'package:quickalert/models/quickalert_type.dart';
+import 'package:quickalert/widgets/quickalert_dialog.dart';
+import 'package:virtual_lab/Utils/properties.dart';
 
-Future<void> showSuccessDialog({
+Future<void> quickAlertDialog({
   required BuildContext context,
   required String title,
   required String message,
-  String buttonText = 'Continue',
-  Color iconColor = Colors.green,
-  IconData icon = Icons.check_circle,
-  VoidCallback? onConfirm,
+  required QuickAlertType type,
+  String? cancelBtnText = 'Cancel',
+  String? confirmBtnText = 'Confirm',
+  Color? rightBtnColor = greenLighter,
+  void Function()? onConfirmBtnTap,
+  bool? showCancelBtn =false,
 }) async {
-  return showDialog<void>(
+  return QuickAlert.show(
     context: context,
+    type: type,
+    title: title,
+    titleColor: darkBrown,
+    text: message,
+    textColor: lightBrown,
+    cancelBtnText: cancelBtnText!,
+    confirmBtnText: confirmBtnText!,
+    confirmBtnColor: rightBtnColor!,
+    onConfirmBtnTap: onConfirmBtnTap,
     barrierDismissible: false,
-    builder: (BuildContext context) {
-      return AlertDialog(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12.r),
-        ),
-        content: ConstrainedBox(
-          constraints: BoxConstraints(minWidth: 300.w, maxWidth: 400.w),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Icon(icon, color: iconColor, size: 64.w),
-              SizedBox(height: 16.h),
-              MyText(text: title, size: 20.sp, fontWeight: FontWeight.bold),
-              SizedBox(height: 8),
-              MyText(text: message, textAlign: TextAlign.center, size: 14.sp),
-              SizedBox(height: 24.h),
-              ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: iconColor,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8.r),
-                  ),
-                ),
-                onPressed: () {
-                  if (onConfirm != null) {
-                    onConfirm();
-                  }
-                },
-                child: MyText(text: buttonText, color: Colors.white),
-              ),
-            ],
-          ),
-        ),
-      );
-    },
+    showCancelBtn: showCancelBtn!,
+    disableBackBtn: true,
   );
 }

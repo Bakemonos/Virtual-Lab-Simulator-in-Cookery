@@ -5,7 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:go_router/go_router.dart';
-import 'package:virtual_lab/Components/customConfirmationDialog.dart';
+import 'package:quickalert/models/quickalert_type.dart';
 import 'package:virtual_lab/Components/customDialog.dart';
 import 'package:virtual_lab/Components/customDropdown.dart';
 import 'package:virtual_lab/Components/customSvg.dart';
@@ -93,36 +93,30 @@ class AppController extends GetxController {
   //? TYPE
   FoodTypeModel? typeSelected;
 
-  Future<void> exitDialog(BuildContext context) async {
-    await showConfirmationDialog(
+  void exitDialog(BuildContext context) {
+    quickAlertDialog(
       context: context,
-      title: 'Exit App',
+      type: QuickAlertType.warning, 
+      title: 'Exit App', 
       message: 'Are you sure you want to quit the game?',
-      icon: Icons.exit_to_app,
-      iconColor: Colors.orange,
-      confirmColor: Colors.red,
-      confirmText: 'Quit',
-      cancelText: 'Cancel',
-      onConfirm: () {
+      cancelBtnText: 'Cancel',
+      confirmBtnText: 'Quit',
+      onConfirmBtnTap: () {
         SystemNavigator.pop(); 
-      },
-      onCancel: () {
-        print('User canceled exit');
       },
     );
   }
 
-  Future<void> logoutDialog(BuildContext context) async {
-    await showConfirmationDialog(
+  void logoutDialog(BuildContext context) {
+    quickAlertDialog(
       context: context,
-      title: 'Logout',
+      type: QuickAlertType.warning, 
+      title: 'Logout', 
       message: 'Are you sure you want to log out?',
-      icon: Icons.logout,
-      iconColor: Colors.red,
-      confirmColor: Colors.red,
-      confirmText: 'Logout',
-      cancelText: 'Cancel',
-      onConfirm: (){
+      cancelBtnText: 'Cancel',
+      confirmBtnText: 'Logout',
+      showCancelBtn: true,
+      onConfirmBtnTap: () {
         userData.value = UserModel.empty();
         context.go(Routes.signIn);
       },
@@ -406,11 +400,12 @@ class AppController extends GetxController {
         debugPrint('SUCCESS : ${response.message}');
 
         if (context.mounted) {
-          showSuccessDialog(
+          quickAlertDialog(
             context: context,
-            title: 'Account Created!',
-            message: 'Your account has been successfully created.',
-            onConfirm: () {
+            type: QuickAlertType.success, 
+            title: 'Account Created!', 
+            message: response.message.toString(),
+            onConfirmBtnTap: () {
               context.go(Routes.signIn);
             },
           );
@@ -424,13 +419,11 @@ class AppController extends GetxController {
       loader.value = false;
       final errorMessage = helper.getErrorMessage(e);
       if (context.mounted) {
-        showSuccessDialog(
+        quickAlertDialog(
           context: context,
-          title: 'Sign up Failed!',
+          type: QuickAlertType.error, 
+          title: 'Sign up Failed!', 
           message: errorMessage,
-          onConfirm: () {
-            context.pop();
-          },
         );
       }
       debugPrint('Error: $e');
@@ -453,30 +446,29 @@ class AppController extends GetxController {
         debugPrint('SUCCESS : ${response.message}');
 
         if (context.mounted) {
-          showSuccessDialog(
+          quickAlertDialog(
             context: context,
-            title: 'Login Successful!',
+            type: QuickAlertType.success, 
+            title: 'Login Successful!', 
             message: response.message.toString(),
-            onConfirm: () {
+            onConfirmBtnTap: () {
+              resetSignin();
               userData.value = UserModel.fromJson(response.data);
               context.go(Routes.menu);
             },
           );
         }
 
-        resetSignin();
       }
     } catch (e) {
       loader.value = false;
       final errorMessage = helper.getErrorMessage(e);
       if (context.mounted) {
-        showSuccessDialog(
+        quickAlertDialog(
           context: context,
-          title: 'Login Failed!',
+          type: QuickAlertType.error, 
+          title: 'Login Failed!', 
           message: errorMessage,
-          onConfirm: () {
-            context.pop();
-          },
         );
       }
       debugPrint('Error: $e');

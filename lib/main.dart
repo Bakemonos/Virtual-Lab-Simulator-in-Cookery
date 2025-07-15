@@ -20,7 +20,7 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   await GeneralBindings().dependencies();
-
+ 
   await dotenv.load(fileName: '.env');
 
   cloudinary = CloudinaryObject.fromCloudName(cloudName: cloudName.toString());
