@@ -5,9 +5,9 @@ import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:virtual_lab/Utils/bindings.dart';
-import 'package:virtual_lab/Utils/go_routes.dart';
-import 'package:virtual_lab/Utils/properties.dart';
+import 'package:virtual_lab/utils/bindings.dart';
+import 'package:virtual_lab/utils/go_routes.dart';
+import 'package:virtual_lab/utils/properties.dart';
 
 late CloudinaryObject cloudinary;
 
@@ -20,7 +20,7 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   await GeneralBindings().dependencies();
- 
+
   await dotenv.load(fileName: '.env');
 
   cloudinary = CloudinaryObject.fromCloudName(cloudName: cloudName.toString());

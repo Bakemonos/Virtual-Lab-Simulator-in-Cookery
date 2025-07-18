@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:virtual_lab/Components/customText.dart';
 import 'package:virtual_lab/Controllers/controller.dart';
-import 'package:virtual_lab/Utils/properties.dart';
+import 'package:virtual_lab/utils/properties.dart';
 
 class MyButton extends StatelessWidget {
   final String text;
@@ -47,23 +47,29 @@ class MyButton extends StatelessWidget {
       ),
       child: Ink(
         decoration: BoxDecoration(
-          gradient: gradientColor != null ? LinearGradient(
-            colors: gradientColor!,
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-          ) : null,
+          gradient:
+              gradientColor != null
+                  ? LinearGradient(
+                    colors: gradientColor!,
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                  )
+                  : null,
           color: gradientColor == null ? greenLight : null,
           borderRadius: BorderRadius.circular(24.r),
         ),
         child: Container(
           alignment: Alignment.center,
           constraints: BoxConstraints(minWidth: 100.w, minHeight: 48.h),
-          child: loading! ? Center(child: CircularProgressIndicator(color: textLight)) : MyText(
-            text: text,
-            size: textSize ?? 18.sp,
-            fontWeight: FontWeight.w600,
-            color: textLight,
-          ),
+          child:
+              loading!
+                  ? Center(child: CircularProgressIndicator(color: textLight))
+                  : MyText(
+                    text: text,
+                    size: textSize ?? 18.sp,
+                    fontWeight: FontWeight.w600,
+                    color: textLight,
+                  ),
         ),
       ),
     );

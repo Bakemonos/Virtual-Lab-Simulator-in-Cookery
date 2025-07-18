@@ -51,6 +51,7 @@ const String close = "assets/icons/close.svg";
 const String back = "assets/icons/back.svg";
 const String basket = "assets/icons/basket.svg";
 const String box = "assets/icons/box.svg";
+const String trashbag = "assets/icons/trashbag.svg";
 
 //? ON
 const String soundOn = "assets/icons/sound_on.svg";

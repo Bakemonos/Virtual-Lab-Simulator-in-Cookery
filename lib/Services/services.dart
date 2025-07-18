@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
-import 'package:virtual_lab/Services/api_response.dart';
+import 'package:virtual_lab/services/api_response.dart';
 
 class ApiServices extends GetxController {
   static ApiServices get instance => Get.find();

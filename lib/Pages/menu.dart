@@ -5,8 +5,8 @@ import 'package:virtual_lab/Components/customButton.dart';
 import 'package:virtual_lab/Components/customHeader.dart';
 import 'package:virtual_lab/Controllers/controller.dart';
 import 'package:virtual_lab/Pages/foodChoices.dart';
-import 'package:virtual_lab/Utils/properties.dart';
-import 'package:virtual_lab/Utils/routes.dart';
+import 'package:virtual_lab/utils/properties.dart';
+import 'package:virtual_lab/utils/routes.dart';
 
 class MyMenuPage extends StatelessWidget {
   const MyMenuPage({super.key});
@@ -94,7 +94,9 @@ class MyMenuPage extends StatelessWidget {
                                   text: 'Quit',
                                   borderColor: redDark,
                                   gradientColor: [redLighter, redLight],
-                                  onTap: () async => controller.exitDialog(context),
+                                  onTap:
+                                      () async =>
+                                          controller.exitDialog(context),
                                 ),
                               ),
                             ],

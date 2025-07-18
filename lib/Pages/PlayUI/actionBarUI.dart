@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:virtual_lab/Utils/properties.dart';
+import 'package:virtual_lab/utils/properties.dart';
 
 class TimingHitBar extends StatelessWidget {
   final Animation<double> animation;
@@ -49,11 +49,7 @@ class TimingHitBar extends StatelessWidget {
                 final cursorY = animation.value * barHeight;
                 return Positioned(
                   top: cursorY.clamp(0, barHeight - 4.h),
-                  child: Container(
-                    width: 30.w,
-                    height: 4.h,
-                    color: redLighter,
-                  ),
+                  child: Container(width: 30.w, height: 4.h, color: redLighter),
                 );
               },
             ),

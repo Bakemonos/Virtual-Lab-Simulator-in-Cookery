@@ -5,9 +5,9 @@ import 'package:go_router/go_router.dart';
 import 'package:virtual_lab/Components/customButton.dart';
 import 'package:virtual_lab/Components/customHeader.dart';
 import 'package:virtual_lab/Controllers/controller.dart';
-import 'package:virtual_lab/Utils/properties.dart';
+import 'package:virtual_lab/utils/properties.dart';
 import 'package:virtual_lab/Components/customText.dart';
-import 'package:virtual_lab/Utils/routes.dart';
+import 'package:virtual_lab/utils/routes.dart';
 
 class MyLoginPage extends StatefulWidget {
   const MyLoginPage({super.key});
@@ -79,7 +79,9 @@ class _MyLoginPageState extends State<MyLoginPage> {
                                   label: 'Password',
                                 ),
                                 InkWell(
-                                  onTap:() => context.push(Routes.forgotEnterEmail),
+                                  onTap:
+                                      () =>
+                                          context.push(Routes.forgotEnterEmail),
                                   child: MyText(
                                     text: 'Forgot password',
                                     size: 14.sp,
@@ -96,8 +98,10 @@ class _MyLoginPageState extends State<MyLoginPage> {
                                           loading: controller.loader.value,
                                           text: 'LOGIN',
                                           onTap: () {
-                                            final form = signInFormKey.currentState;
-                                            if (form != null && form.validate()) {
+                                            final form =
+                                                signInFormKey.currentState;
+                                            if (form != null &&
+                                                form.validate()) {
                                               controller.errorHandlerSignin();
                                               controller.signin(context);
                                             }

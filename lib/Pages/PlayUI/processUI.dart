@@ -7,7 +7,7 @@ import 'package:virtual_lab/Components/customText.dart';
 import 'package:virtual_lab/Components/shimmer.dart';
 import 'package:virtual_lab/Controllers/controller.dart';
 import 'package:virtual_lab/Models/ingredientsModel.dart';
-import 'package:virtual_lab/Utils/properties.dart';
+import 'package:virtual_lab/utils/properties.dart';
 
 class MyProcessPage extends StatelessWidget {
   const MyProcessPage({super.key});
@@ -35,17 +35,30 @@ class MyProcessPage extends StatelessWidget {
                 ),
               ),
               const Spacer(),
-              Obx(() => controller.equipmentToggle.value ? preparedIngredients(controller) : SizedBox(
-                width: double.infinity,
-                child: Column(
-                  spacing: 12.h,
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
-                    equipToggler(controller: controller, iconPath: box, label: 'Tools'),
-                    equipToggler(controller: controller, iconPath: basket, label: 'Basket'),
-                  ],
-                ),
-              )),
+              Obx(
+                () =>
+                    controller.equipmentToggle.value
+                        ? preparedIngredients(controller)
+                        : SizedBox(
+                          width: double.infinity,
+                          child: Column(
+                            spacing: 12.h,
+                            crossAxisAlignment: CrossAxisAlignment.end,
+                            children: [
+                              equipToggler(
+                                controller: controller,
+                                iconPath: box,
+                                label: 'Tools',
+                              ),
+                              equipToggler(
+                                controller: controller,
+                                iconPath: basket,
+                                label: 'Basket',
+                              ),
+                            ],
+                          ),
+                        ),
+              ),
             ],
           ),
         ),
@@ -53,7 +66,11 @@ class MyProcessPage extends StatelessWidget {
     );
   }
 
-  Widget equipToggler({required AppController controller, required String label, required iconPath}) {
+  Widget equipToggler({
+    required AppController controller,
+    required String label,
+    required iconPath,
+  }) {
     return InkWell(
       onTap: controller.equipmentOntap,
       child: Column(
@@ -133,5 +150,4 @@ class MyProcessPage extends StatelessWidget {
       ],
     );
   }
-
 }

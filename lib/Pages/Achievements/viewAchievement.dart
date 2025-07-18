@@ -8,8 +8,8 @@ import 'package:virtual_lab/Components/customSvg.dart';
 import 'package:virtual_lab/Components/customText.dart';
 import 'package:virtual_lab/Components/shimmer.dart';
 import 'package:virtual_lab/Controllers/controller.dart';
-import 'package:virtual_lab/Utils/properties.dart';
-import 'package:virtual_lab/Utils/routes.dart';
+import 'package:virtual_lab/utils/properties.dart';
+import 'package:virtual_lab/utils/routes.dart';
 
 class MyViewAchievementPage extends StatefulWidget {
   const MyViewAchievementPage({super.key});

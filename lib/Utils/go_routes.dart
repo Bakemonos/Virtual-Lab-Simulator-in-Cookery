@@ -15,7 +15,7 @@ import 'package:virtual_lab/Pages/menu.dart';
 import 'package:virtual_lab/Pages/PlayUI/playUI.dart';
 import 'package:virtual_lab/Pages/settings.dart';
 import 'package:virtual_lab/Pages/Setup/signup.dart';
-import 'package:virtual_lab/Utils/routes.dart';
+import 'package:virtual_lab/utils/routes.dart';
 
 final myRoutesProvider = Provider<GoRouter>((ref) {
   return GoRouter(

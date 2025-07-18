@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:quickalert/models/quickalert_type.dart';
 import 'package:quickalert/widgets/quickalert_dialog.dart';
-import 'package:virtual_lab/Utils/properties.dart';
+import 'package:virtual_lab/utils/properties.dart';
 
 Future<void> quickAlertDialog({
   required BuildContext context,
@@ -12,7 +12,8 @@ Future<void> quickAlertDialog({
   String? confirmBtnText = 'Confirm',
   Color? rightBtnColor = greenLighter,
   void Function()? onConfirmBtnTap,
-  bool? showCancelBtn =false,
+  bool? showCancelBtn = false,
+  bool? barrierDismissible = false,
 }) async {
   return QuickAlert.show(
     context: context,
@@ -25,8 +26,8 @@ Future<void> quickAlertDialog({
     confirmBtnText: confirmBtnText!,
     confirmBtnColor: rightBtnColor!,
     onConfirmBtnTap: onConfirmBtnTap,
-    barrierDismissible: false,
+    barrierDismissible: barrierDismissible!,
     showCancelBtn: showCancelBtn!,
-    disableBackBtn: true,
+    disableBackBtn: false,
   );
 }

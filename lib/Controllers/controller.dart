@@ -14,10 +14,10 @@ import 'package:virtual_lab/Components/customTextField.dart';
 import 'package:virtual_lab/Models/foodTypeModel.dart';
 import 'package:virtual_lab/Models/ingredientsModel.dart';
 import 'package:virtual_lab/Models/userModel.dart';
-import 'package:virtual_lab/Services/services.dart';
-import 'package:virtual_lab/Utils/helper.dart';
-import 'package:virtual_lab/Utils/properties.dart';
-import 'package:virtual_lab/Utils/routes.dart';
+import 'package:virtual_lab/services/services.dart';
+import 'package:virtual_lab/utils/helper.dart';
+import 'package:virtual_lab/utils/properties.dart';
+import 'package:virtual_lab/utils/routes.dart';
 
 class AppController extends GetxController {
   static AppController get instance => Get.find();
@@ -81,7 +81,7 @@ class AppController extends GetxController {
         firstName: '',
         lastName: '',
         email: '',
-        gender: '', 
+        gender: '',
         password: '',
         gradeLevel: '',
         status: '',
@@ -96,13 +96,14 @@ class AppController extends GetxController {
   void exitDialog(BuildContext context) {
     quickAlertDialog(
       context: context,
-      type: QuickAlertType.warning, 
-      title: 'Exit App', 
+      type: QuickAlertType.warning,
+      title: 'Exit App',
       message: 'Are you sure you want to quit the game?',
       cancelBtnText: 'Cancel',
       confirmBtnText: 'Quit',
+      barrierDismissible: true,
       onConfirmBtnTap: () {
-        SystemNavigator.pop(); 
+        SystemNavigator.pop();
       },
     );
   }
@@ -110,8 +111,8 @@ class AppController extends GetxController {
   void logoutDialog(BuildContext context) {
     quickAlertDialog(
       context: context,
-      type: QuickAlertType.warning, 
-      title: 'Logout', 
+      type: QuickAlertType.warning,
+      title: 'Logout',
       message: 'Are you sure you want to log out?',
       cancelBtnText: 'Cancel',
       confirmBtnText: 'Logout',
@@ -132,7 +133,7 @@ class AppController extends GetxController {
       border: Border.all(width: 2.w, color: darkBrown),
     );
   }
-  
+
   void resetErrorHandler() {
     emailErrorText.value = '';
     changePasswordErrorText.value = '';
@@ -402,8 +403,8 @@ class AppController extends GetxController {
         if (context.mounted) {
           quickAlertDialog(
             context: context,
-            type: QuickAlertType.success, 
-            title: 'Account Created!', 
+            type: QuickAlertType.success,
+            title: 'Account Created!',
             message: response.message.toString(),
             onConfirmBtnTap: () {
               context.go(Routes.signIn);
@@ -421,8 +422,8 @@ class AppController extends GetxController {
       if (context.mounted) {
         quickAlertDialog(
           context: context,
-          type: QuickAlertType.error, 
-          title: 'Sign up Failed!', 
+          type: QuickAlertType.error,
+          title: 'Sign up Failed!',
           message: errorMessage,
         );
       }
@@ -438,7 +439,7 @@ class AppController extends GetxController {
         'email': emailController.text,
         'password': passwordController.text,
       };
- 
+
       final response = await db.post('auth/loginStudent', data);
 
       if (response.success!) {
@@ -448,8 +449,8 @@ class AppController extends GetxController {
         if (context.mounted) {
           quickAlertDialog(
             context: context,
-            type: QuickAlertType.success, 
-            title: 'Login Successful!', 
+            type: QuickAlertType.success,
+            title: 'Login Successful!',
             message: response.message.toString(),
             onConfirmBtnTap: () {
               resetSignin();
@@ -458,7 +459,6 @@ class AppController extends GetxController {
             },
           );
         }
-
       }
     } catch (e) {
       loader.value = false;
@@ -466,8 +466,8 @@ class AppController extends GetxController {
       if (context.mounted) {
         quickAlertDialog(
           context: context,
-          type: QuickAlertType.error, 
-          title: 'Login Failed!', 
+          type: QuickAlertType.error,
+          title: 'Login Failed!',
           message: errorMessage,
         );
       }

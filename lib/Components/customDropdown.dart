@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:virtual_lab/Utils/properties.dart';
+import 'package:virtual_lab/utils/properties.dart';
 
 class MyDropDown extends StatelessWidget {
   final String? value;
@@ -68,24 +68,34 @@ class MyDropDown extends StatelessWidget {
           ),
           focusedBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(12.r),
-            borderSide: BorderSide(color: hasError ? redLighter : darkBrown, width: 1.5),
+            borderSide: BorderSide(
+              color: hasError ? redLighter : darkBrown,
+              width: 1.5,
+            ),
           ),
         ),
-        hint: Center(child: Text(hintText, style: hintStyle, textAlign: TextAlign.center)),
+        hint: Center(
+          child: Text(hintText, style: hintStyle, textAlign: TextAlign.center),
+        ),
         dropdownColor: fillColor,
         iconEnabledColor: darkBrown,
         style: textStyle,
         validator: (value) => null,
-        items: items.map((value) => DropdownMenuItem<String>(
-          value: value,
-          child: Center(
-            child: Text(
-              value,
-              style: textStyle,
-              textAlign: TextAlign.center,
-            ),
-          ),
-        )).toList(),
+        items:
+            items
+                .map(
+                  (value) => DropdownMenuItem<String>(
+                    value: value,
+                    child: Center(
+                      child: Text(
+                        value,
+                        style: textStyle,
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                  ),
+                )
+                .toList(),
         onChanged: onChanged,
       ),
     );
