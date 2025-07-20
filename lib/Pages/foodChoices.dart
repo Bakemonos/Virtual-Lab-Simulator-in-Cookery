@@ -8,7 +8,8 @@ import 'package:virtual_lab/components/customSvgPicture.dart';
 import 'package:virtual_lab/components/customText.dart';
 import 'package:virtual_lab/components/shimmer.dart';
 import 'package:virtual_lab/Controllers/controller.dart';
-import 'package:virtual_lab/Models/foodTypeModel.dart';
+import 'package:virtual_lab/json/foodMenu.dart';
+import 'package:virtual_lab/models/foodMenuModel.dart';
 import 'package:virtual_lab/utils/properties.dart';
 import 'package:virtual_lab/utils/routes.dart';
 
@@ -49,16 +50,21 @@ class _MyFoodChoicesPageState extends State<MyFoodChoicesPage> {
                         child: Row(
                           mainAxisSize: MainAxisSize.min,
                           children: List.generate(3, (index) {
-                            var data = foodType[index];
+                            var data = foodMenu[index];
                             return Padding(
                               padding: EdgeInsets.only(
                                 right: index != 2 ? 24.w : 0,
                               ),
                               child: foodChoices(
                                 instructionFunction: () => instruction(data),
-                                onTap: () {
+                                onTap: () async {
                                   controller.typeSelected = data;
-                                  context.push(Routes.ingredientsSelection);
+                                  // context.push(Routes.ingr edientsSelection);
+
+                                  //TODO HERE TESTING
+                                  await controller.getInventory(context);
+
+                                  // context.push(Routes.playUI);
                                 },
                                 unlocked: unlocked[index],
                                 path: data.path,
@@ -107,7 +113,7 @@ class _MyFoodChoicesPageState extends State<MyFoodChoicesPage> {
   //   }
   // }
 
-  void instruction(FoodTypeModel data) {
+  void instruction(FoodMenuModel data) {
     showDialog(
       context: context,
       builder: (context) {

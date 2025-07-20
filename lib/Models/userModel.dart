@@ -21,17 +21,17 @@ class UserModel {
     required this.status,
   });
 
-  factory UserModel.fromJson(Map<String, dynamic> json) {
+  factory UserModel.fromJson(Map<String, dynamic> map) {
     return UserModel(
-      id: json['_id'],
-      lrn: json['lrn'],
-      firstName: json['firstName'],
-      lastName: json['lastName'],
-      email: json['email'],
-      gender: json['gender'],
-      password: json['password'],
-      gradeLevel: json['gradeLevel'],
-      status: json['status'],
+      id: map['_id'],
+      lrn: map['lrn'],
+      firstName: map['firstName'],
+      lastName: map['lastName'],
+      email: map['email'],
+      gender: map['gender'],
+      password: map['password'],
+      gradeLevel: map['gradeLevel'],
+      status: map['status'],
     );
   }
 

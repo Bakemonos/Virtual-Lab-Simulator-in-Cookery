@@ -1,4 +1,6 @@
+import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
@@ -12,12 +14,28 @@ class ApiServices extends GetxController {
   //? GET
   Future<ApiResponse> get(String endpoint) async {
     print('\nENDPOINT : $apiKey/$endpoint\n');
-    final response = await http.get(Uri.parse('$apiKey$endpoint'));
 
-    if (response.statusCode == 200) {
-      return ApiResponse.fromJson(jsonDecode(response.body));
-    } else {
-      throw Exception('GET failed: ${response.body}');
+    try {
+      final response = await http
+          .get(Uri.parse('$apiKey/$endpoint'))
+          .timeout(Duration(seconds: 15));
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        return ApiResponse.fromJson(jsonDecode(response.body));
+      } else {
+        final body = jsonDecode(response.body);
+        return ApiResponse(
+          success: false,
+          message: body['message'] ?? 'GET failed: ${response.statusCode}',
+          data: null,
+        );
+      }
+    } on TimeoutException catch (_) {
+      throw Exception('Request timeout. Please try again later.');
+    } on SocketException catch (_) {
+      throw Exception('No Internet Connection.');
+    } catch (e) {
+      throw Exception('Network error: $e');
     }
   }
 

@@ -1,6 +1,9 @@
+import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:get/get.dart';
+import 'package:virtual_lab/utils/enum.dart';
 
 class Helper extends GetxController {
   static Helper get instance => Get.find();
@@ -13,6 +16,12 @@ class Helper extends GetxController {
 
   String getErrorMessage(Object e) {
     try {
+      if (e is SocketException) {
+        return 'No Internet Connection.';
+      } else if (e is TimeoutException) {
+        return 'Request timed out. Please try again.';
+      }
+
       final raw = e.toString();
       final jsonStart = raw.indexOf('{');
 
@@ -22,9 +31,28 @@ class Helper extends GetxController {
         return jsonMap['message'] ?? 'An unknown error occurred';
       }
 
-      return 'An unexpected error occurred. Please try again.';
+      return raw;
     } catch (_) {
-      return 'An unexpected error occurred. Please try again.';
+      return e.toString();
+    }
+  }
+
+  IngredientType stringToIngredientType(String type) {
+    switch (type.toLowerCase()) {
+      case 'vegetable':
+        return IngredientType.vegetable;
+      case 'meat':
+        return IngredientType.meat;
+      case 'fruit':
+        return IngredientType.fruit;
+      case 'grain':
+        return IngredientType.grain;
+      case 'dairy':
+        return IngredientType.dairy;
+      case 'spice':
+        return IngredientType.spice;
+      default:
+        throw Exception('Unknown IngredientType: $type');
     }
   }
 }

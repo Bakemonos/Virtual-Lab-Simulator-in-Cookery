@@ -11,10 +11,11 @@ import 'package:virtual_lab/Components/customDropdown.dart';
 import 'package:virtual_lab/Components/customSvg.dart';
 import 'package:virtual_lab/Components/customText.dart';
 import 'package:virtual_lab/Components/customTextField.dart';
-import 'package:virtual_lab/Models/foodTypeModel.dart';
+import 'package:virtual_lab/models/foodMenuModel.dart';
 import 'package:virtual_lab/Models/ingredientsModel.dart';
 import 'package:virtual_lab/Models/userModel.dart';
 import 'package:virtual_lab/services/services.dart';
+import 'package:virtual_lab/utils/enum.dart';
 import 'package:virtual_lab/utils/helper.dart';
 import 'package:virtual_lab/utils/properties.dart';
 import 'package:virtual_lab/utils/routes.dart';
@@ -64,6 +65,7 @@ class AppController extends GetxController {
   final loader = false.obs;
   final bagToggle = false.obs;
   final equipmentToggle = false.obs;
+  final actionToggle = false.obs;
 
   //? TEXT CONTROLLER
   final emailController = TextEditingController();
@@ -74,24 +76,21 @@ class AppController extends GetxController {
   final changePasswordController = TextEditingController();
 
   //? USER DATA
-  Rx<UserModel> userData =
-      UserModel(
-        id: '',
-        lrn: '',
-        firstName: '',
-        lastName: '',
-        email: '',
-        gender: '',
-        password: '',
-        gradeLevel: '',
-        status: '',
-      ).obs;
+  Rx<UserModel> userData = UserModel.empty().obs;
+
+  //? USER INVENTORY DATA
+  Rx<InventoryModel> typeInventory = InventoryModel.empty().obs;
+
+  //? DRAG & DROP
+  Rx<IngredientsModel> ingredientDragDropData = IngredientsModel.empty().obs;
+  final currentActions = <ActionType>[].obs;
+  final selectedActionIndex = RxnInt();
 
   //? INGREDIENT SELECTION
   final ingredientsData = <IngredientsModel>[].obs;
 
   //? TYPE
-  FoodTypeModel? typeSelected;
+  FoodMenuModel? typeSelected;
 
   void exitDialog(BuildContext context) {
     quickAlertDialog(
@@ -126,9 +125,25 @@ class AppController extends GetxController {
 
   //! METHODS ---------------------------------------------------------------------------------------------------------------
 
-  BoxDecoration designUI() {
+  void discard() {
+    actionToggle.value = false;
+    currentActions.clear();
+    ingredientDragDropData.value = IngredientsModel.empty();
+  }
+
+  void updateActionsList(IngredientsModel ingredient) {
+    final ingredientType = helper.stringToIngredientType(
+      'meat'.toLowerCase(),
+      // ingredient.type.toLowerCase(),
+    );
+    final actions = getActionsForIngredient(ingredientType);
+
+    currentActions.value = actions;
+  }
+
+  BoxDecoration designUI({Color? backGround = lightBrown}) {
     return BoxDecoration(
-      color: lightBrown,
+      color: backGround,
       borderRadius: BorderRadius.circular(8.r),
       border: Border.all(width: 2.w, color: darkBrown),
     );
@@ -202,6 +217,11 @@ class AppController extends GetxController {
 
   void bagOntap() {
     bagToggle.value = !bagToggle.value;
+  }
+
+  void actionOnTap(IngredientsModel ingredient) {
+    updateActionsList(ingredient);
+    actionToggle.value = !actionToggle.value;
   }
 
   void equipmentOntap() {
@@ -381,20 +401,20 @@ class AppController extends GetxController {
   Future<void> signup(BuildContext context) async {
     loader.value = true;
     try {
-      final data = {
-        'lrn': lrnController.text,
-        'firstName': firstnameController.text,
-        'lastName': lastnameController.text,
-        'email': emailController.text,
-        'gender': gender.value,
-        'gradeLevel': gradeLevel.value,
-        'password': passwordController.text,
-        'status': 'pending',
-      };
+      final data = UserModel(
+        lrn: lrnController.text,
+        firstName: firstnameController.text,
+        lastName: lastnameController.text,
+        email: emailController.text,
+        gender: gender.value,
+        password: passwordController.text,
+        gradeLevel: gradeLevel.value,
+        status: 'pending',
+      );
 
-      debugPrint('\nData : $data\n');
+      debugPrint('\nData : ${data.toJson()}\n');
 
-      final response = await db.post('student/create', data);
+      final response = await db.post('student/create', data.toJson());
 
       if (response.success!) {
         loader.value = false;
@@ -454,7 +474,7 @@ class AppController extends GetxController {
             message: response.message.toString(),
             onConfirmBtnTap: () {
               resetSignin();
-              userData.value = UserModel.fromJson(response.data);
+              userData.value = UserModel.fromJson(response.data!);
               context.go(Routes.menu);
             },
           );
@@ -472,6 +492,85 @@ class AppController extends GetxController {
         );
       }
       debugPrint('Error: $e');
+    }
+  }
+
+  //? INVENTORY PICKED
+  Future<void> ingredientsCreate(
+    BuildContext context,
+    InventoryModel data,
+  ) async {
+    loader.value = true;
+    try {
+      final response = await db.post('inventory/create', data.toJson());
+
+      if (response.success!) {
+        loader.value = false;
+        debugPrint('SUCCESS : ${response.message}');
+
+        if (context.mounted) {
+          quickAlertDialog(
+            context: context,
+            type: QuickAlertType.success,
+            title: 'Success Created!',
+            message: response.message.toString(),
+            onConfirmBtnTap: () {
+              context.go(Routes.playUI);
+            },
+          );
+        }
+      } else {
+        debugPrint('FAILED : ${response.message}');
+      }
+    } catch (e) {
+      loader.value = false;
+      final errorMessage = helper.getErrorMessage(e);
+      if (context.mounted) {
+        quickAlertDialog(
+          context: context,
+          type: QuickAlertType.error,
+          title: 'Create Failed!',
+          message: errorMessage,
+        );
+      }
+      debugPrint('Error: $e');
+    }
+  }
+
+  //? GET INVENTORY
+  Future<void> getInventory(BuildContext context) async {
+    loader.value = true;
+    try {
+      final studentId = userData.value.id;
+      final coc = typeSelected!.menu;
+      final type = 'take_one';
+
+      final response = await db.get(
+        'inventory/read/$studentId/?type=$coc&take=$type',
+      );
+
+      if (response.success!) {
+        loader.value = false;
+        debugPrint('RESPONSE SUCCESS: ${response.success}');
+        if (response.data != null && context.mounted) {
+          context.go(Routes.playUI);
+          try {
+            typeInventory.value = InventoryModel.fromJson(response.data!);
+          } catch (e) {
+            debugPrint('PARSING ERROR: $e');
+          }
+        } else {
+          debugPrint('DATA IS NULL');
+          typeInventory.value = InventoryModel.empty();
+        }
+      } else {
+        debugPrint('FAILED : ${response.message}');
+      }
+    } catch (e, stacktrace) {
+      loader.value = false;
+      final errorMessage = helper.getErrorMessage(e);
+      debugPrint('Error: $errorMessage');
+      debugPrint('STACKTRACE: $stacktrace');
     }
   }
 }

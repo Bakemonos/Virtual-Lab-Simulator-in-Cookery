@@ -7,7 +7,7 @@ import 'package:virtual_lab/Components/customHeader.dart';
 import 'package:virtual_lab/Components/customText.dart';
 import 'package:virtual_lab/Components/shimmer.dart';
 import 'package:virtual_lab/Controllers/controller.dart';
-import 'package:virtual_lab/Models/foodTypeModel.dart';
+import 'package:virtual_lab/json/foodMenu.dart';
 import 'package:virtual_lab/utils/properties.dart';
 import 'package:virtual_lab/utils/routes.dart';
 
@@ -48,7 +48,7 @@ class _MyAchievementTypePageState extends State<MyAchievementTypePage> {
                         child: Row(
                           mainAxisSize: MainAxisSize.min,
                           children: List.generate(3, (index) {
-                            var data = foodType[index];
+                            var data = foodMenu[index];
                             return Padding(
                               padding: EdgeInsets.only(
                                 right: index != 2 ? 24.w : 0,

@@ -6,7 +6,7 @@ import 'package:virtual_lab/Components/customSvgPicture.dart';
 import 'package:virtual_lab/Components/customText.dart';
 import 'package:virtual_lab/Components/shimmer.dart';
 import 'package:virtual_lab/Controllers/controller.dart';
-import 'package:virtual_lab/Models/ingredientsModel.dart';
+import 'package:virtual_lab/json/foods.dart';
 import 'package:virtual_lab/utils/properties.dart';
 
 class MyProcessPage extends StatelessWidget {
@@ -118,9 +118,9 @@ class MyProcessPage extends StatelessWidget {
               mainAxisSpacing: 8,
               childAspectRatio: 1,
             ),
-            itemCount: ingredientsample.length,
+            itemCount: 3,
             itemBuilder: (context, index) {
-              var data = ingredientsample[index];
+              // var data = ingredientsample[index];
               var isSelected = controller.selectedList[index];
               return InkWell(
                 onTap: () {},
@@ -136,7 +136,7 @@ class MyProcessPage extends StatelessWidget {
                   child: Padding(
                     padding: EdgeInsets.all(8.w),
                     child: CachedNetworkImage(
-                      imageUrl: data.path,
+                      imageUrl: '',
                       placeholder: (context, url) => ShimmerSkeletonLoader(),
                       errorWidget: (context, url, error) => Icon(Icons.error),
                       fit: BoxFit.contain,

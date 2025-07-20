@@ -1,33 +1,8 @@
-class FoodTypeModel {
-  final String? type;
-  final String name;
-  final String label;
-  final String path;
-  final String title;
-  final List<FoodDesciptionModel> instructions;
-  final String description;
+import 'package:virtual_lab/models/foodMenuModel.dart';
 
-  FoodTypeModel({
-    this.type,
-    required this.name,
-    required this.label,
-    required this.path,
-    required this.title,
-    required this.instructions,
-    required this.description,
-  });
-}
-
-class FoodDesciptionModel {
-  final String name;
-  final List<String> list;
-
-  FoodDesciptionModel({required this.name, required this.list});
-}
-
-List<FoodTypeModel> foodType = [
-  FoodTypeModel(
-    type: 'coc1',
+List<FoodMenuModel> foodMenu = [
+  FoodMenuModel(
+    menu: 'coc1',
     title: 'Hot Meal',
     name: 'Soup\'s',
     label: 'Soup, Sauce',
@@ -49,8 +24,8 @@ List<FoodTypeModel> foodType = [
       ),
     ],
   ),
-  FoodTypeModel(
-    type: 'coc2',
+  FoodMenuModel(
+    menu: 'coc2',
     title: 'Cold Meal',
     name: 'Appetizer\'s',
     label: 'Appetizer, Sandwich, salad',
@@ -70,8 +45,8 @@ List<FoodTypeModel> foodType = [
       ),
     ],
   ),
-  FoodTypeModel(
-    type: 'coc3',
+  FoodMenuModel(
+    menu: 'coc3',
     title: 'Desserts',
     name: 'Desserts',
     label: 'Desserts',

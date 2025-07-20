@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
 import 'package:virtual_lab/Controllers/controller.dart';
 import 'package:virtual_lab/Pages/PlayUI/inventoryUI.dart';
 import 'package:virtual_lab/Pages/PlayUI/procedurePlatingUI.dart';
 import 'package:virtual_lab/Pages/PlayUI/processUI.dart';
+import 'package:virtual_lab/utils/properties.dart';
+import 'package:virtual_lab/utils/routes.dart';
 
 class MyPlayUIPage extends StatelessWidget {
   const MyPlayUIPage({super.key});
@@ -14,24 +17,51 @@ class MyPlayUIPage extends StatelessWidget {
 
     return PopScope(
       canPop: false,
-      onPopInvokedWithResult: (_, _) => controller.exitDialog(context),
+      onPopInvokedWithResult: (didPop, _) {
+        if (!didPop) {
+          controller.exitDialog(context);
+        }
+      },
       child: Scaffold(
         resizeToAvoidBottomInset: false,
-        body: Padding(
-          padding: EdgeInsets.all(16.w),
-          child: Row(
-            spacing: 16.w,
-            children: [
-              const MyInventoryPage(),
-              const MyProcedurePlatingPage(),
-              const MyProcessPage()
-            ],
-          ),
+        body: Stack(
+          children: [
+            Center(
+              child: Padding(
+                padding: EdgeInsets.all(16.w),
+                child: Row(
+                  spacing: 16.w,
+                  children: [
+                    const MyInventoryPage(),
+                    const MyProcedurePlatingPage(),
+                    const MyProcessPage(),
+                  ],
+                ),
+              ),
+            ),
+            Positioned(
+              top: 6.h,
+              right: 8.w,
+              child: Container(
+                height: 60.h,
+                width: 60.w,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: backgroundColor,
+                ),
+              ),
+            ),
+            controller.floatingButton(
+              context: context,
+              icon: menu,
+              isLeft: false,
+              onTap: () {
+                context.go(Routes.menu);
+              },
+            ),
+          ],
         ),
       ),
     );
   }
 }
-
-
-

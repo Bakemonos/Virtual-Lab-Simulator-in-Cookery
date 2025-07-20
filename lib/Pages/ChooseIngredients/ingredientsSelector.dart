@@ -7,8 +7,8 @@ import 'package:virtual_lab/Components/customButton.dart';
 import 'package:virtual_lab/Components/customHeader.dart';
 import 'package:virtual_lab/Components/shimmer.dart';
 import 'package:virtual_lab/Controllers/controller.dart';
-import 'package:virtual_lab/json/coc1.dart';
 import 'package:virtual_lab/Models/ingredientsModel.dart';
+import 'package:virtual_lab/json/coc1.dart';
 import 'package:virtual_lab/Components/customText.dart';
 import 'package:virtual_lab/utils/helper.dart';
 import 'package:virtual_lab/utils/properties.dart';
@@ -30,10 +30,10 @@ class _MyIngredientsSelectionPageState
   @override
   void initState() {
     super.initState();
-    controller.selectedList = List.generate(
-      ingredientsample.length,
-      (_) => false.obs,
-    );
+    // controller.selectedList = List.generate(
+    //   ingredientsample.length,
+    //   (_) => false.obs,
+    // );
     controller.startTimer();
   }
 
@@ -163,12 +163,10 @@ class _MyIngredientsSelectionPageState
                                     onTap:
                                         controller.seconds.value == 0
                                             ? () {
-                                              context.go(Routes.playUI);
-                                              // sample();
+                                              pickerCreate();
                                             }
                                             : () {
-                                              context.go(Routes.playUI);
-                                              // sample();
+                                              pickerCreate();
                                             },
                                   ),
                                 ),
@@ -195,7 +193,8 @@ class _MyIngredientsSelectionPageState
     );
   }
 
-  void sample() {
+  void pickerCreate() async {
+    final user = controller.userData.value;
     controller.ingredientsData.clear();
 
     for (int i = 0; i < ingredientsCOC1.length; i++) {
@@ -204,18 +203,21 @@ class _MyIngredientsSelectionPageState
           IngredientsModel(
             name: ingredientsCOC1[i].name,
             path: ingredientsCOC1[i].path,
-            actions: null,
-            actionStatus: null,
+            type: ingredientsCOC1[i].path,
           ),
         );
       }
     }
 
     controller.ingredientsData.refresh();
-    debugPrint(
-      '\nDATA  \n'
-      'type : ${controller.typeSelected!.type}\n'
-      'ingredients : ${controller.ingredientsData.map((e) => {'name': e.name}).toList()}\n',
+
+    final data = InventoryModel(
+      type: controller.typeSelected!.menu ?? '',
+      studentId: user.id ?? '',
+      take: 'take_one',
+      ingredients: controller.ingredientsData,
     );
+
+    await controller.ingredientsCreate(context, data);
   }
 }

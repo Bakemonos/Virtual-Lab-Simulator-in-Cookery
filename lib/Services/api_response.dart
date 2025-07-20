@@ -1,17 +1,17 @@
 class ApiResponse {
   final String? message;
-  final dynamic data;
+  final Map<String, dynamic>? data;
   final String? token;
   final bool? success;
 
   ApiResponse({this.message, this.data, this.token, this.success});
 
-  factory ApiResponse.fromJson(Map<String, dynamic> json) {
+  factory ApiResponse.fromJson(Map<String, dynamic> map) {
     return ApiResponse(
-      message: json['message'],
-      data: json['data'],
-      token: json['token'],
-      success: json['success'],
+      message: map['message'],
+      data: map['data'] != null ? Map<String, dynamic>.from(map['data']) : null,
+      token: map['token'],
+      success: map['success'],
     );
   }
 }

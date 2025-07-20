@@ -89,12 +89,12 @@ class _MyLoginPageState extends State<MyLoginPage> {
                                     decoration: TextDecoration.underline,
                                   ),
                                 ),
-                                Row(
-                                  spacing: 16.w,
-                                  children: [
-                                    Expanded(
-                                      child: Obx(
-                                        () => MyButton(
+                                Obx(
+                                  () => Row(
+                                    spacing: 16.w,
+                                    children: [
+                                      Expanded(
+                                        child: MyButton(
                                           loading: controller.loader.value,
                                           text: 'LOGIN',
                                           onTap: () {
@@ -108,17 +108,19 @@ class _MyLoginPageState extends State<MyLoginPage> {
                                           },
                                         ),
                                       ),
-                                    ),
-                                    Expanded(
-                                      child: MyButton(
-                                        text: 'SIGN UP',
-                                        onTap: () {
-                                          controller.resetErrorHandler();
-                                          context.push(Routes.signUp);
-                                        },
-                                      ),
-                                    ),
-                                  ],
+                                      if (!controller.loader.value)
+                                        Expanded(
+                                          child: MyButton(
+                                            text: 'SIGN UP',
+                                            onTap: () {
+                                              controller.resetErrorHandler();
+                                              controller.loader.value = false;
+                                              context.push(Routes.signUp);
+                                            },
+                                          ),
+                                        ),
+                                    ],
+                                  ),
                                 ),
                               ],
                             ),
