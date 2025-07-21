@@ -35,6 +35,7 @@ class AppController extends GetxController {
   }
 
   //? VARIABLE
+  late Animation<double> animation;
   late List<RxBool> selectedList;
   Timer? _timer;
 
@@ -65,6 +66,7 @@ class AppController extends GetxController {
   final loader = false.obs;
   final bagToggle = false.obs;
   final equipmentToggle = false.obs;
+  final actionListToggle = false.obs;
   final actionToggle = false.obs;
 
   //? TEXT CONTROLLER
@@ -84,7 +86,6 @@ class AppController extends GetxController {
   //? DRAG & DROP
   Rx<IngredientsModel> ingredientDragDropData = IngredientsModel.empty().obs;
   final currentActions = <ActionType>[].obs;
-  final selectedActionIndex = RxnInt();
 
   //? INGREDIENT SELECTION
   final ingredientsData = <IngredientsModel>[].obs;
@@ -125,8 +126,28 @@ class AppController extends GetxController {
 
   //! METHODS ---------------------------------------------------------------------------------------------------------------
 
-  void discard() {
+  void handleTap(BuildContext context) {
     actionToggle.value = false;
+    final barHeight = context.size?.height ?? 100.h;
+    final greenZoneHeight = 16.h;
+
+    final centerStart = (barHeight / 2) - (greenZoneHeight / 2);
+    final centerEnd = (barHeight / 2) + (greenZoneHeight / 2);
+
+    final cursorY = animation.value * barHeight;
+
+    if (cursorY >= centerStart && cursorY <= centerEnd) {
+      debugPrint("🎯 Perfect");
+    } else if ((cursorY - centerStart).abs() < 10.h || (cursorY - centerEnd).abs() < 10.h) {
+      debugPrint("👍 Good");
+    } else {
+      debugPrint("❌ Miss");
+    }
+  }
+
+  void discard() {
+    actionToggle.value  = false;
+    actionListToggle.value = false;
     currentActions.clear();
     ingredientDragDropData.value = IngredientsModel.empty();
   }
@@ -221,7 +242,7 @@ class AppController extends GetxController {
 
   void actionOnTap(IngredientsModel ingredient) {
     updateActionsList(ingredient);
-    actionToggle.value = !actionToggle.value;
+    actionListToggle.value = !actionListToggle.value;
   }
 
   void equipmentOntap() {

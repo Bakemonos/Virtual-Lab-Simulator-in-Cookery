@@ -21,7 +21,10 @@ class MySvgPicture extends StatelessWidget {
     return SvgPicture.asset(
       path,
       fit: fit!,
-      color: iconColor,
+      colorFilter: iconColor != null
+          ? ColorFilter.mode(iconColor!, BlendMode.srcIn)
+          : null,
+      // color: iconColor,
       width: iconSize,
     );
   }

@@ -23,7 +23,6 @@ class _MyProcedurePlatingPageState extends State<MyProcedurePlatingPage>
   final controller = AppController.instance;
   final helper = Helper.instance;
   late AnimationController animationController;
-  late Animation<double> animation;
   Color acceptedColor = lightBrown;
 
   @override
@@ -34,7 +33,7 @@ class _MyProcedurePlatingPageState extends State<MyProcedurePlatingPage>
       duration: Duration(seconds: 2),
     )..repeat(reverse: true);
 
-    animation = Tween<double>(begin: 0, end: 1).animate(
+    controller.animation = Tween<double>(begin: 0, end: 1).animate(
       CurvedAnimation(parent: animationController, curve: Curves.linear),
     );
   }
@@ -45,21 +44,6 @@ class _MyProcedurePlatingPageState extends State<MyProcedurePlatingPage>
     super.dispose();
   }
 
-  void handleTap() {
-    double position = animation.value;
-    double centerStart = 0.4;
-    double centerEnd = 0.6;
-
-    if (position >= centerStart && position <= centerEnd) {
-      print("🎯 Perfect");
-    } else if ((position - centerStart).abs() < 0.1 ||
-        (position - centerEnd).abs() < 0.1) {
-      print("👍 Good");
-    } else {
-      print("❌ Miss");
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return SizedBox(
@@ -68,7 +52,7 @@ class _MyProcedurePlatingPageState extends State<MyProcedurePlatingPage>
         spacing: 16.h,
         children: [
           Expanded(child: Container(decoration: controller.designUI())),
-          Expanded(
+          Expanded( 
             child: DragTarget<IngredientsModel>(
               onAcceptWithDetails: (details) {
                 debugPrint(details.data.type);
@@ -89,72 +73,85 @@ class _MyProcedurePlatingPageState extends State<MyProcedurePlatingPage>
                         spacing: 16.w,
                         children: [
                           Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Stack(
                                 alignment: Alignment.center,
                                 children: [
-                                  MySvgPicture(
-                                    path: board1,
-                                    iconSize: hasIngredient ? 140.h : 160.h,
-                                  ),
-                                  if (hasIngredient)
-                                    Draggable(
-                                      data: ingredient,
-                                      feedback: SizedBox(
-                                        height: 80.h,
-                                        child: Padding(
-                                          padding: EdgeInsets.all(8.w),
-                                          child: CachedNetworkImage(
-                                            imageUrl: ingredient.path,
-                                            placeholder: (context, url) =>
-                                                ShimmerSkeletonLoader(),
-                                            errorWidget:
-                                                (context, url, error) =>
-                                                    Icon(Icons.error),
-                                            fit: BoxFit.contain,
-                                          ),
-                                        ),
-                                      ),
-                                      childWhenDragging: Center(
-                                        child: MyText(text: ingredient.name),
-                                      ),
-                                      child: SizedBox(
-                                        height: 80.h,
+                                  Expanded(child: MySvgPicture(path: board1,iconSize: 160.h)),
+                                  if (hasIngredient) Draggable(
+                                    data: ingredient,
+                                    feedback: SizedBox(
+                                      height: 80.h,
+                                      child: Padding(
+                                        padding: EdgeInsets.all(8.w),
                                         child: CachedNetworkImage(
                                           imageUrl: ingredient.path,
-                                          placeholder: (context, url) =>
-                                              ShimmerSkeletonLoader(),
-                                          errorWidget: (context, url, error) =>
-                                              Icon(Icons.error),
+                                          placeholder: (context, url) => ShimmerSkeletonLoader(),
+                                          errorWidget: (context, url, error) => Icon(Icons.error),
                                           fit: BoxFit.contain,
                                         ),
                                       ),
                                     ),
+                                    childWhenDragging: Center(
+                                      child: MyText(text: ingredient.name),
+                                    ),
+                                    child: InkWell(
+                                      onTap: () => controller.actionOnTap(ingredient),
+                                      child: SizedBox(
+                                        height: 80.h,
+                                        child: CachedNetworkImage(
+                                          imageUrl: ingredient.path,
+                                          placeholder: (context, url) => ShimmerSkeletonLoader(),
+                                          errorWidget: (context, url, error) => Icon(Icons.error),
+                                          fit: BoxFit.contain,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
                                 ],
                               ),
-                              if (hasIngredient) actionButtonUI(ingredient),
+                              
+                              // if (hasIngredient) actionButtonUI(ingredient),
+                          
                             ],
                           ),
 
-                          if () const Spacer(),
 
                           //* ACTION LIST
                           Obx(() {
-                            final showActionList = controller.ingredientDragDropData.value.path.isNotEmpty && controller.actionToggle.value;
-                            return showActionList ? actionListUI() : SizedBox();
+                            final showActionList = controller.ingredientDragDropData.value.path.isNotEmpty && controller.actionListToggle.value;
+                            return controller.actionToggle.value? SizedBox() : (showActionList ? actionListUI() : SizedBox());
                           }),
+                          
+                          if(controller.actionToggle.value) Column(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              InkWell(
+                                onTap: ()=> controller.handleTap(context),
+                                child: Container(
+                                  width: 48.w,
+                                  height: 48.h,
+                                  decoration: BoxDecoration(
+                                    color: darkBrown,
+                                    borderRadius: BorderRadius.circular(4.r),
+                                    border: Border.all(width: 2, color: backgroundColor)
+                                  ),
+                                  child: Center(
+                                    child: MySvgPicture(path: tap),
+                                  ),
+                                ),
+                              )
+                              
+                            ],
+                          ),
 			
                           //* ACTION BAR
-                          if ()
-                            GestureDetector(
-                              onTap: handleTap,
-                              child: TimingHitBar(
-                                animation: animation,
-                                controller: animationController,
-                              ),
-                            ),
-
+                          if (controller.actionToggle.value) TimingHitBar(
+                            animation: controller.animation,
+                            controller: animationController,
+                          ),
                         ],
                       ),
                     ),
@@ -168,20 +165,7 @@ class _MyProcedurePlatingPageState extends State<MyProcedurePlatingPage>
     );
   }
 
-  Widget actionButtonUI(IngredientsModel ingredient) {
-    return Row(
-      spacing: 8.w,
-      children: [
-        actionButton(text: 'Discard', onPressed: () => controller.discard()),
-        Obx(() => actionButton(
-          text: controller.actionToggle.value ? 'Close' : 'Action',
-          onPressed: () => controller.actionOnTap(ingredient),
-        )),
-      ],
-    );
-  }
-
-  Widget actionListUI() {
+   Widget actionListUI() {
     return Expanded(
       flex: 2,
       child: Container(
@@ -191,44 +175,48 @@ class _MyProcedurePlatingPageState extends State<MyProcedurePlatingPage>
           borderRadius: BorderRadius.circular(4.r),
         ),
         child: Obx(() => ListView.builder(
-              itemCount: controller.currentActions.length,
-              itemBuilder: (context, index) {
-                final action = controller.currentActions[index];
-                final isSelected =
-                    controller.selectedActionIndex.value == index;
-
-                return InkWell(
-                  onTap: () {
-                    controller.selectedActionIndex.value = index;
-                  },
-                  child: Container(
-                    color: isSelected ? Colors.orange.shade300 : Colors.transparent,
-                    child: Padding(
-                      padding: EdgeInsets.all(4.w),
-                      child: MyText(
-                        text: action.name,
-                        textAlign: TextAlign.center,
-                        color: textLight,
-                        size: 14.sp,
-                      ),
-                    ),
-                  ),
-                );
+          itemCount: controller.currentActions.length,
+          itemBuilder: (context, index) {
+            final action = controller.currentActions[index];
+            return InkWell(
+              onTap: () {
+                controller.actionToggle.value = true;
               },
-            )),
+              child: Padding(
+                padding: EdgeInsets.all(4.w),
+                child: MyText(
+                  text: action.name,
+                  textAlign: TextAlign.center,
+                  color: textLight,
+                  size: 14.sp,
+                ),
+              ),
+            );
+          },
+        )),
       ),
     );
   }
 
-  Widget actionButton({
-    required String text,
-    required void Function() onPressed,
-  }) {
-    return TextButton(
-      style: TextButton.styleFrom(backgroundColor: backgroundColor),
-      onPressed: onPressed,
-      child: MyText(text: text, size: 14.sp),
-    );
-  }
+  // Widget actionButtonUI(IngredientsModel ingredient) {
+  //   return Obx(() => controller.actionToggle.value? SizedBox() :  actionButton(
+  //     text: controller.actionListToggle.value ? 'Close' : 'Action',
+  //     onPressed: () => controller.actionOnTap(ingredient),
+  //   ));
+  // }
+
+  // Widget actionButton({
+  //   required String text,
+  //   required void Function() onPressed,
+  // }) {
+  //   return SizedBox(
+  //     width: 130.w,
+  //     child: TextButton(
+  //       style: TextButton.styleFrom(backgroundColor: backgroundColor),
+  //       onPressed: onPressed,
+  //       child: MyText(text: text, size: 14.sp),
+  //     ),
+  //   );
+  // }
 
 }

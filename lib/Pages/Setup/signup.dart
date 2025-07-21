@@ -160,10 +160,10 @@ class MySignUpPage extends StatelessWidget {
                                 ),
                               ),
                             ),
-                            Row(
+                            Obx(()=> Row(
                               spacing: 16.w,
                               children: [
-                                Expanded(
+                                if(!controller.loader.value) Expanded(
                                   child: MyButton(
                                     text: 'LOGIN',
                                     onTap: () {
@@ -173,19 +173,17 @@ class MySignUpPage extends StatelessWidget {
                                   ),
                                 ),
                                 Expanded(
-                                  child: Obx(
-                                    () => MyButton(
-                                      loading: controller.loader.value,
-                                      text: 'SIGN UP',
-                                      onTap: () {
-                                        controller.errorHandlerSignup();
-                                        controller.signup(context);
-                                      },
-                                    ),
+                                  child: MyButton(
+                                    loading: controller.loader.value,
+                                    text: 'SIGN UP',
+                                    onTap: () {
+                                      controller.errorHandlerSignup();
+                                      controller.signup(context);
+                                    },
                                   ),
                                 ),
                               ],
-                            ),
+                            ))
                           ],
                         ),
                       ),

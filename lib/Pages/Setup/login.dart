@@ -108,17 +108,16 @@ class _MyLoginPageState extends State<MyLoginPage> {
                                           },
                                         ),
                                       ),
-                                      if (!controller.loader.value)
-                                        Expanded(
-                                          child: MyButton(
-                                            text: 'SIGN UP',
-                                            onTap: () {
-                                              controller.resetErrorHandler();
-                                              controller.loader.value = false;
-                                              context.push(Routes.signUp);
-                                            },
-                                          ),
+                                      if (!controller.loader.value) Expanded(
+                                        child: MyButton(
+                                          text: 'SIGN UP',
+                                          onTap: () {
+                                            controller.resetErrorHandler();
+                                            controller.loader.value = false;
+                                            context.push(Routes.signUp);
+                                          },
                                         ),
+                                      ),
                                     ],
                                   ),
                                 ),

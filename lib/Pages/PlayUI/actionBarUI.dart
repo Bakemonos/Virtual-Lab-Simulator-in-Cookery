@@ -17,11 +17,11 @@ class TimingHitBar extends StatelessWidget {
     return LayoutBuilder(
       builder: (context, constraints) {
         final barHeight = constraints.maxHeight;
-        final greenZoneHeight = 20.h;
-
+        final greenZoneHeight = 16.h;
+    
         final centerStart = (barHeight / 2) - (greenZoneHeight / 2);
         // final centerEnd = (barHeight / 2) + (greenZoneHeight / 2);
-
+    
         return Stack(
           alignment: Alignment.center,
           children: [
@@ -39,7 +39,7 @@ class TimingHitBar extends StatelessWidget {
                 width: 24.w,
                 height: greenZoneHeight,
                 decoration: BoxDecoration(
-                  color: greenLighter.withValues(alpha: 0.5),
+                  color: Colors.green,
                 ),
               ),
             ),
@@ -52,10 +52,6 @@ class TimingHitBar extends StatelessWidget {
                   child: Container(width: 30.w, height: 4.h, color: redLighter),
                 );
               },
-            ),
-            Positioned(
-              top: -24.h,
-              child: Icon(Icons.arrow_drop_down, size: 24.sp, color: darkBrown),
             ),
           ],
         );
