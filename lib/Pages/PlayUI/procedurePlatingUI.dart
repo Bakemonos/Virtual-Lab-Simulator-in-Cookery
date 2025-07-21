@@ -5,6 +5,7 @@ import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 import 'package:virtual_lab/Components/customSvg.dart';
 import 'package:virtual_lab/Controllers/controller.dart';
 import 'package:virtual_lab/Models/ingredientsModel.dart';
+import 'package:virtual_lab/Pages/PlayUI/actionBarUI.dart';
 import 'package:virtual_lab/components/customText.dart';
 import 'package:virtual_lab/components/shimmer.dart';
 import 'package:virtual_lab/utils/helper.dart';
@@ -19,10 +20,10 @@ class MyProcedurePlatingPage extends StatefulWidget {
 
 class _MyProcedurePlatingPageState extends State<MyProcedurePlatingPage>
     with TickerProviderStateMixin {
+  final controller = AppController.instance;
   final helper = Helper.instance;
   late AnimationController animationController;
   late Animation<double> animation;
-  final controller = AppController.instance;
   Color acceptedColor = lightBrown;
 
   @override
@@ -80,10 +81,7 @@ class _MyProcedurePlatingPageState extends State<MyProcedurePlatingPage>
 
                   return Container(
                     decoration: controller.designUI(
-                      backGround:
-                          candidateData.isEmpty
-                              ? acceptedColor
-                              : greenLighter.withValues(alpha: 0.8),
+                      backGround: candidateData.isEmpty ? acceptedColor : greenLighter.withValues(alpha: 0.8),
                     ),
                     child: Padding(
                       padding: EdgeInsets.all(10.w),
@@ -100,36 +98,17 @@ class _MyProcedurePlatingPageState extends State<MyProcedurePlatingPage>
                                     path: board1,
                                     iconSize: hasIngredient ? 140.h : 160.h,
                                   ),
-                                  ingredient.path.isEmpty
-                                      ? SizedBox.shrink()
-                                      : Draggable(
-                                        data: ingredient,
-                                        feedback: SizedBox(
-                                          height: 80.h,
-                                          child: Padding(
-                                            padding: EdgeInsets.all(8.w),
-                                            child: CachedNetworkImage(
-                                              imageUrl: ingredient.path,
-                                              placeholder:
-                                                  (context, url) =>
-                                                      ShimmerSkeletonLoader(),
-                                              errorWidget:
-                                                  (context, url, error) =>
-                                                      Icon(Icons.error),
-                                              fit: BoxFit.contain,
-                                            ),
-                                          ),
-                                        ),
-                                        childWhenDragging: Center(
-                                          child: MyText(text: ingredient.name),
-                                        ),
-                                        child: SizedBox(
-                                          height: 80.h,
+                                  if (hasIngredient)
+                                    Draggable(
+                                      data: ingredient,
+                                      feedback: SizedBox(
+                                        height: 80.h,
+                                        child: Padding(
+                                          padding: EdgeInsets.all(8.w),
                                           child: CachedNetworkImage(
                                             imageUrl: ingredient.path,
-                                            placeholder:
-                                                (context, url) =>
-                                                    ShimmerSkeletonLoader(),
+                                            placeholder: (context, url) =>
+                                                ShimmerSkeletonLoader(),
                                             errorWidget:
                                                 (context, url, error) =>
                                                     Icon(Icons.error),
@@ -137,31 +116,45 @@ class _MyProcedurePlatingPageState extends State<MyProcedurePlatingPage>
                                           ),
                                         ),
                                       ),
+                                      childWhenDragging: Center(
+                                        child: MyText(text: ingredient.name),
+                                      ),
+                                      child: SizedBox(
+                                        height: 80.h,
+                                        child: CachedNetworkImage(
+                                          imageUrl: ingredient.path,
+                                          placeholder: (context, url) =>
+                                              ShimmerSkeletonLoader(),
+                                          errorWidget: (context, url, error) =>
+                                              Icon(Icons.error),
+                                          fit: BoxFit.contain,
+                                        ),
+                                      ),
+                                    ),
                                 ],
                               ),
                               if (hasIngredient) actionButtonUI(ingredient),
                             ],
                           ),
 
-                          // if (false) const Spacer(),
+                          if () const Spacer(),
 
                           //* ACTION LIST
-                          Obx(
-                            () =>
-                                (hasIngredient && controller.actionToggle.value)
-                                    ? actionListUI()
-                                    : SizedBox(),
-                          ),
-
+                          Obx(() {
+                            final showActionList = controller.ingredientDragDropData.value.path.isNotEmpty && controller.actionToggle.value;
+                            return showActionList ? actionListUI() : SizedBox();
+                          }),
+			
                           //* ACTION BAR
-                          // if (false)
-                          //   GestureDetector(
-                          //     onTap: handleTap,
-                          //     child: TimingHitBar(
-                          //       animation: animation,
-                          //       controller: animationController,
-                          //     ),
-                          //   ),
+                          if ()
+                            GestureDetector(
+                              onTap: handleTap,
+                              child: TimingHitBar(
+                                animation: animation,
+                                controller: animationController,
+                              ),
+                            ),
+
                         ],
                       ),
                     ),
@@ -180,12 +173,10 @@ class _MyProcedurePlatingPageState extends State<MyProcedurePlatingPage>
       spacing: 8.w,
       children: [
         actionButton(text: 'Discard', onPressed: () => controller.discard()),
-        Obx(
-          () => actionButton(
-            text: controller.actionToggle.value ? 'Close' : 'Action',
-            onPressed: () => controller.actionOnTap(ingredient),
-          ),
-        ),
+        Obx(() => actionButton(
+          text: controller.actionToggle.value ? 'Close' : 'Action',
+          onPressed: () => controller.actionOnTap(ingredient),
+        )),
       ],
     );
   }
@@ -199,31 +190,32 @@ class _MyProcedurePlatingPageState extends State<MyProcedurePlatingPage>
           border: Border.all(width: 2.w, color: backgroundColor),
           borderRadius: BorderRadius.circular(4.r),
         ),
-        child: ListView.builder(
-          itemCount: controller.currentActions.length,
-          itemBuilder: (context, index) {
-            final action = controller.currentActions[index];
-            final isSelected = controller.selectedActionIndex.value == index;
+        child: Obx(() => ListView.builder(
+              itemCount: controller.currentActions.length,
+              itemBuilder: (context, index) {
+                final action = controller.currentActions[index];
+                final isSelected =
+                    controller.selectedActionIndex.value == index;
 
-            return InkWell(
-              onTap: () {
-                controller.selectedActionIndex.value = index;
-              },
-              child: Container(
-                color: isSelected ? Colors.orange.shade300 : Colors.transparent,
-                child: Padding(
-                  padding: EdgeInsets.all(4.w),
-                  child: MyText(
-                    text: action.name,
-                    textAlign: TextAlign.center,
-                    color: textLight,
-                    size: 14.sp,
+                return InkWell(
+                  onTap: () {
+                    controller.selectedActionIndex.value = index;
+                  },
+                  child: Container(
+                    color: isSelected ? Colors.orange.shade300 : Colors.transparent,
+                    child: Padding(
+                      padding: EdgeInsets.all(4.w),
+                      child: MyText(
+                        text: action.name,
+                        textAlign: TextAlign.center,
+                        color: textLight,
+                        size: 14.sp,
+                      ),
+                    ),
                   ),
-                ),
-              ),
-            );
-          },
-        ),
+                );
+              },
+            )),
       ),
     );
   }
@@ -238,4 +230,5 @@ class _MyProcedurePlatingPageState extends State<MyProcedurePlatingPage>
       child: MyText(text: text, size: 14.sp),
     );
   }
+
 }

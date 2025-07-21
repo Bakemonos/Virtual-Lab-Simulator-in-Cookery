@@ -553,9 +553,13 @@ class AppController extends GetxController {
         loader.value = false;
         debugPrint('RESPONSE SUCCESS: ${response.success}');
         if (response.data != null && context.mounted) {
-          context.go(Routes.playUI);
           try {
             typeInventory.value = InventoryModel.fromJson(response.data!);
+            if(typeInventory.value.ingredients.isEmpty){
+              context.go(Routes.ingredientsSelection);
+            } else {
+              context.go(Routes.playUI);
+            }
           } catch (e) {
             debugPrint('PARSING ERROR: $e');
           }
@@ -573,4 +577,5 @@ class AppController extends GetxController {
       debugPrint('STACKTRACE: $stacktrace');
     }
   }
+
 }

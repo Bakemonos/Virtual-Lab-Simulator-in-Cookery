@@ -59,12 +59,7 @@ class _MyFoodChoicesPageState extends State<MyFoodChoicesPage> {
                                 instructionFunction: () => instruction(data),
                                 onTap: () async {
                                   controller.typeSelected = data;
-                                  // context.push(Routes.ingr edientsSelection);
-
-                                  //TODO HERE TESTING
                                   await controller.getInventory(context);
-
-                                  // context.push(Routes.playUI);
                                 },
                                 unlocked: unlocked[index],
                                 path: data.path,

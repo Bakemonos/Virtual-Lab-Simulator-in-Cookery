@@ -30,10 +30,10 @@ class _MyIngredientsSelectionPageState
   @override
   void initState() {
     super.initState();
-    // controller.selectedList = List.generate(
-    //   ingredientsample.length,
-    //   (_) => false.obs,
-    // );
+    controller.selectedList = List.generate(
+      ingredientsCOC1.length,
+      (_) => false.obs,
+    );
     controller.startTimer();
   }
 

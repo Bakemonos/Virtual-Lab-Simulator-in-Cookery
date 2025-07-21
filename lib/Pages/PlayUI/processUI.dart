@@ -6,7 +6,6 @@ import 'package:virtual_lab/Components/customSvgPicture.dart';
 import 'package:virtual_lab/Components/customText.dart';
 import 'package:virtual_lab/Components/shimmer.dart';
 import 'package:virtual_lab/Controllers/controller.dart';
-import 'package:virtual_lab/json/foods.dart';
 import 'package:virtual_lab/utils/properties.dart';
 
 class MyProcessPage extends StatelessWidget {
@@ -36,28 +35,18 @@ class MyProcessPage extends StatelessWidget {
               ),
               const Spacer(),
               Obx(
-                () =>
-                    controller.equipmentToggle.value
-                        ? preparedIngredients(controller)
-                        : SizedBox(
-                          width: double.infinity,
-                          child: Column(
-                            spacing: 12.h,
-                            crossAxisAlignment: CrossAxisAlignment.end,
-                            children: [
-                              equipToggler(
-                                controller: controller,
-                                iconPath: box,
-                                label: 'Tools',
-                              ),
-                              equipToggler(
-                                controller: controller,
-                                iconPath: basket,
-                                label: 'Basket',
-                              ),
-                            ],
-                          ),
-                        ),
+                () => controller.equipmentToggle.value ? preparedIngredients(controller)
+                : SizedBox(
+                  width: double.infinity,
+                  child: Column(
+                    spacing: 12.h,
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      equipToggler(controller: controller, iconPath: box, label: 'Tools'),
+                      equipToggler(controller: controller, iconPath: basket, label: 'Basket'),
+                    ],
+                  ),
+                ),
               ),
             ],
           ),
@@ -121,16 +110,13 @@ class MyProcessPage extends StatelessWidget {
             itemCount: 3,
             itemBuilder: (context, index) {
               // var data = ingredientsample[index];
-              var isSelected = controller.selectedList[index];
               return InkWell(
                 onTap: () {},
                 child: Container(
                   alignment: Alignment.center,
                   decoration: BoxDecoration(
-                    color:
-                        isSelected.value
-                            ? lightGridColor
-                            : lightGridColor.withValues(alpha: 0.5),
+                    color: lightGridColor,
+                        
                     borderRadius: BorderRadius.circular(8.r),
                   ),
                   child: Padding(
