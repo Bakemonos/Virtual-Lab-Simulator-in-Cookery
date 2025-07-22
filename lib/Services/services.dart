@@ -20,6 +20,8 @@ class ApiServices extends GetxController {
           .get(Uri.parse('$apiKey/$endpoint'))
           .timeout(Duration(seconds: 15));
 
+          print('\nDATA : ${response.body}\n');
+
       if (response.statusCode == 200 || response.statusCode == 201) {
         return ApiResponse.fromJson(jsonDecode(response.body));
       } else {

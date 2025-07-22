@@ -566,19 +566,17 @@ class AppController extends GetxController {
       final coc = typeSelected!.menu;
       final type = 'take_one';
 
-      final response = await db.get(
-        'inventory/read/$studentId/?type=$coc&take=$type',
-      );
+      final response = await db.get('inventory/read/$studentId/?type=$coc&take=$type');
 
       if (response.success!) {
         loader.value = false;
         debugPrint('RESPONSE SUCCESS: ${response.success}');
         if (response.data != null && context.mounted) {
           try {
-            typeInventory.value = InventoryModel.fromJson(response.data!);
-            if(typeInventory.value.ingredients.isEmpty){
+            if(response.data==null){
               context.go(Routes.ingredientsSelection);
             } else {
+              typeInventory.value = InventoryModel.fromJson(response.data!);
               context.go(Routes.playUI);
             }
           } catch (e) {
@@ -589,8 +587,15 @@ class AppController extends GetxController {
           typeInventory.value = InventoryModel.empty();
         }
       } else {
+        if(response.data==null){
+          if(context.mounted) context.go(Routes.ingredientsSelection);
+        } else {
+          typeInventory.value = InventoryModel.fromJson(response.data!);
+          if(context.mounted) context.go(Routes.playUI);
+        }
         debugPrint('FAILED : ${response.message}');
       }
+
     } catch (e, stacktrace) {
       loader.value = false;
       final errorMessage = helper.getErrorMessage(e);

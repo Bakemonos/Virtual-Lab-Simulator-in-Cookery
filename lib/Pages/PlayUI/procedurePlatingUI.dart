@@ -55,7 +55,6 @@ class _MyProcedurePlatingPageState extends State<MyProcedurePlatingPage>
           Expanded( 
             child: DragTarget<IngredientsModel>(
               onAcceptWithDetails: (details) {
-                debugPrint(details.data.type);
                 controller.ingredientDragDropData.value = details.data;
               },
               builder: (context, candidateData, rejectedData) {
@@ -72,59 +71,55 @@ class _MyProcedurePlatingPageState extends State<MyProcedurePlatingPage>
                       child: Row(
                         spacing: 16.w,
                         children: [
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Stack(
-                                alignment: Alignment.center,
-                                children: [
-                                  Expanded(child: MySvgPicture(path: board1,iconSize: 160.h)),
-                                  if (hasIngredient) Draggable(
-                                    data: ingredient,
-                                    feedback: SizedBox(
-                                      height: 80.h,
-                                      child: Padding(
-                                        padding: EdgeInsets.all(8.w),
-                                        child: CachedNetworkImage(
-                                          imageUrl: ingredient.path,
-                                          placeholder: (context, url) => ShimmerSkeletonLoader(),
-                                          errorWidget: (context, url, error) => Icon(Icons.error),
-                                          fit: BoxFit.contain,
-                                        ),
-                                      ),
-                                    ),
-                                    childWhenDragging: Center(
-                                      child: MyText(text: ingredient.name),
-                                    ),
-                                    child: InkWell(
-                                      onTap: () => controller.actionOnTap(ingredient),
-                                      child: SizedBox(
-                                        height: 80.h,
-                                        child: CachedNetworkImage(
-                                          imageUrl: ingredient.path,
-                                          placeholder: (context, url) => ShimmerSkeletonLoader(),
-                                          errorWidget: (context, url, error) => Icon(Icons.error),
-                                          fit: BoxFit.contain,
-                                        ),
+
+                          //* PROCEDURE AREA
+                          SizedBox(
+                            width: 140.w,
+                            child: Stack(
+                              alignment: Alignment.center,
+                              children: [
+                                Expanded(child: MySvgPicture(path: board1,iconSize: 160.h)),
+                                if (hasIngredient) Draggable(
+                                  data: ingredient,
+                                  feedback: SizedBox(
+                                    height: 80.h,
+                                    child: Padding(
+                                      padding: EdgeInsets.all(8.w),
+                                      child: CachedNetworkImage(
+                                        imageUrl: ingredient.path,
+                                        placeholder: (context, url) => ShimmerSkeletonLoader(),
+                                        errorWidget: (context, url, error) => Icon(Icons.error),
+                                        fit: BoxFit.contain,
                                       ),
                                     ),
                                   ),
-                                ],
-                              ),
-                              
-                              // if (hasIngredient) actionButtonUI(ingredient),
-                          
-                            ],
+                                  childWhenDragging: Center(
+                                    child: MyText(text: ingredient.name),
+                                  ),
+                                  child: InkWell(
+                                    onTap: () => controller.actionOnTap(ingredient),
+                                    child: SizedBox(
+                                      height: 80.h,
+                                      child: CachedNetworkImage(
+                                        imageUrl: ingredient.path,
+                                        placeholder: (context, url) => ShimmerSkeletonLoader(),
+                                        errorWidget: (context, url, error) => Icon(Icons.error),
+                                        fit: BoxFit.contain,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
-
 
                           //* ACTION LIST
                           Obx(() {
                             final showActionList = controller.ingredientDragDropData.value.path.isNotEmpty && controller.actionListToggle.value;
                             return controller.actionToggle.value? SizedBox() : (showActionList ? actionListUI() : SizedBox());
                           }),
-                          
+
+                          //* ACTION TAPPER
                           if(controller.actionToggle.value) Column(
                             mainAxisAlignment: MainAxisAlignment.end,
                             children: [
@@ -152,6 +147,7 @@ class _MyProcedurePlatingPageState extends State<MyProcedurePlatingPage>
                             animation: controller.animation,
                             controller: animationController,
                           ),
+                        
                         ],
                       ),
                     ),
