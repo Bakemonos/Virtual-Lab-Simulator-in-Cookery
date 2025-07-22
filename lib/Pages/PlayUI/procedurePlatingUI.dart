@@ -1,7 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
+import 'package:get/get.dart';
 import 'package:virtual_lab/Components/customSvg.dart';
 import 'package:virtual_lab/Controllers/controller.dart';
 import 'package:virtual_lab/Models/ingredientsModel.dart';
@@ -22,6 +22,7 @@ class _MyProcedurePlatingPageState extends State<MyProcedurePlatingPage>
     with TickerProviderStateMixin {
   final controller = AppController.instance;
   final helper = Helper.instance;
+
   late AnimationController animationController;
   Color acceptedColor = lightBrown;
 
@@ -30,7 +31,7 @@ class _MyProcedurePlatingPageState extends State<MyProcedurePlatingPage>
     super.initState();
     animationController = AnimationController(
       vsync: this,
-      duration: Duration(seconds: 2),
+      duration: const Duration(seconds: 2),
     )..repeat(reverse: true);
 
     controller.animation = Tween<double>(begin: 0, end: 1).animate(
@@ -41,6 +42,9 @@ class _MyProcedurePlatingPageState extends State<MyProcedurePlatingPage>
   @override
   void dispose() {
     animationController.dispose();
+    controller.actionToggle.value = false;
+    controller.actionListToggle.value = false;
+    controller.ingredientDragDropData = IngredientsModel.empty().obs;
     super.dispose();
   }
 
@@ -52,7 +56,7 @@ class _MyProcedurePlatingPageState extends State<MyProcedurePlatingPage>
         spacing: 16.h,
         children: [
           Expanded(child: Container(decoration: controller.designUI())),
-          Expanded( 
+          Expanded(
             child: DragTarget<IngredientsModel>(
               onAcceptWithDetails: (details) {
                 controller.ingredientDragDropData.value = details.data;
@@ -64,7 +68,7 @@ class _MyProcedurePlatingPageState extends State<MyProcedurePlatingPage>
 
                   return Container(
                     decoration: controller.designUI(
-                      backGround: candidateData.isEmpty ? acceptedColor : greenLighter.withValues(alpha: 0.8),
+                      backGround: candidateData.isEmpty ? acceptedColor : greenLighter.withOpacity(0.8),
                     ),
                     child: Padding(
                       padding: EdgeInsets.all(10.w),
@@ -72,82 +76,84 @@ class _MyProcedurePlatingPageState extends State<MyProcedurePlatingPage>
                         spacing: 16.w,
                         children: [
 
-                          //* PROCEDURE AREA
+                          //? PROCEDURE AREA
                           SizedBox(
                             width: 140.w,
                             child: Stack(
                               alignment: Alignment.center,
                               children: [
-                                Expanded(child: MySvgPicture(path: board1,iconSize: 160.h)),
-                                if (hasIngredient) Draggable(
-                                  data: ingredient,
-                                  feedback: SizedBox(
-                                    height: 80.h,
-                                    child: Padding(
-                                      padding: EdgeInsets.all(8.w),
-                                      child: CachedNetworkImage(
-                                        imageUrl: ingredient.path,
-                                        placeholder: (context, url) => ShimmerSkeletonLoader(),
-                                        errorWidget: (context, url, error) => Icon(Icons.error),
-                                        fit: BoxFit.contain,
-                                      ),
-                                    ),
-                                  ),
-                                  childWhenDragging: Center(
-                                    child: MyText(text: ingredient.name),
-                                  ),
-                                  child: InkWell(
-                                    onTap: () => controller.actionOnTap(ingredient),
-                                    child: SizedBox(
+                                MySvgPicture(path: board1, iconSize: 160.h),
+                                if (hasIngredient)
+                                  Draggable(
+                                    data: ingredient,
+                                    onDragStarted: () {
+                                      controller.bagToggle.value= false;
+                                    },
+                                    feedback: SizedBox(
                                       height: 80.h,
-                                      child: CachedNetworkImage(
-                                        imageUrl: ingredient.path,
-                                        placeholder: (context, url) => ShimmerSkeletonLoader(),
-                                        errorWidget: (context, url, error) => Icon(Icons.error),
-                                        fit: BoxFit.contain,
+                                      child: Padding(
+                                        padding: EdgeInsets.all(8.w),
+                                        child: CachedNetworkImage(
+                                          imageUrl: ingredient.path,
+                                          placeholder: (context, url) => const ShimmerSkeletonLoader(),
+                                          errorWidget: (context, url, error) => const Icon(Icons.error),
+                                          fit: BoxFit.contain,
+                                        ),
+                                      ),
+                                    ),
+                                    childWhenDragging: Center(
+                                      child: MyText(text: ingredient.name),
+                                    ),
+                                    child: InkWell(
+                                      onTap: () => controller.actionOnTap(ingredient),
+                                      child: SizedBox(
+                                        height: 80.h,
+                                        child: CachedNetworkImage(
+                                          imageUrl: ingredient.path,
+                                          placeholder: (context, url) => const ShimmerSkeletonLoader(),
+                                          errorWidget: (context, url, error) => const Icon(Icons.error),
+                                          fit: BoxFit.contain,
+                                        ),
                                       ),
                                     ),
                                   ),
-                                ),
                               ],
                             ),
                           ),
+                          
+                          if(controller.actionToggle.value) const Spacer(),
 
-                          //* ACTION LIST
+                          //? ACTION LIST
                           Obx(() {
                             final showActionList = controller.ingredientDragDropData.value.path.isNotEmpty && controller.actionListToggle.value;
-                            return controller.actionToggle.value? SizedBox() : (showActionList ? actionListUI() : SizedBox());
+                            return controller.actionToggle.value ? const SizedBox() : (showActionList ? actionListUI() : const SizedBox());
                           }),
 
-                          //* ACTION TAPPER
-                          if(controller.actionToggle.value) Column(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            children: [
-                              InkWell(
-                                onTap: ()=> controller.handleTap(context),
-                                child: Container(
-                                  width: 48.w,
-                                  height: 48.h,
-                                  decoration: BoxDecoration(
-                                    color: darkBrown,
-                                    borderRadius: BorderRadius.circular(4.r),
-                                    border: Border.all(width: 2, color: backgroundColor)
+                          //? ACTION TAPPER
+                          if (controller.actionToggle.value)
+                            Column(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                InkWell(
+                                  onTap: () => controller.handleTap(context),
+                                  child: Container(
+                                    width: 48.w, height: 48.h,
+                                    decoration: BoxDecoration(
+                                      color: darkBrown,
+                                      borderRadius: BorderRadius.circular(4.r),
+                                      border: Border.all(width: 2, color: backgroundColor),
+                                    ),
+                                    child: Center(child: MySvgPicture(path: tap)),
                                   ),
-                                  child: Center(
-                                    child: MySvgPicture(path: tap),
-                                  ),
-                                ),
-                              )
-                              
-                            ],
-                          ),
-			
-                          //* ACTION BAR
+                                )
+                              ],
+                            ),
+
+                          // ACTION BAR
                           if (controller.actionToggle.value) TimingHitBar(
                             animation: controller.animation,
                             controller: animationController,
                           ),
-                        
                         ],
                       ),
                     ),
@@ -161,7 +167,7 @@ class _MyProcedurePlatingPageState extends State<MyProcedurePlatingPage>
     );
   }
 
-   Widget actionListUI() {
+  Widget actionListUI() {
     return Expanded(
       flex: 2,
       child: Container(
@@ -193,26 +199,4 @@ class _MyProcedurePlatingPageState extends State<MyProcedurePlatingPage>
       ),
     );
   }
-
-  // Widget actionButtonUI(IngredientsModel ingredient) {
-  //   return Obx(() => controller.actionToggle.value? SizedBox() :  actionButton(
-  //     text: controller.actionListToggle.value ? 'Close' : 'Action',
-  //     onPressed: () => controller.actionOnTap(ingredient),
-  //   ));
-  // }
-
-  // Widget actionButton({
-  //   required String text,
-  //   required void Function() onPressed,
-  // }) {
-  //   return SizedBox(
-  //     width: 130.w,
-  //     child: TextButton(
-  //       style: TextButton.styleFrom(backgroundColor: backgroundColor),
-  //       onPressed: onPressed,
-  //       child: MyText(text: text, size: 14.sp),
-  //     ),
-  //   );
-  // }
-
 }
