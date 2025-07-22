@@ -95,19 +95,6 @@ class _MyFoodChoicesPageState extends State<MyFoodChoicesPage> {
     );
   }
 
-  // playFunction(int index) {
-  //   switch (index) {
-  //     case 1:
-  //       return () {};
-  //     case 2:
-  //       return () {};
-  //     default:
-  //       return () {
-  //         context.push(Routes.ingredientsSelection);
-  //       };
-  //   }
-  // }
-
   void instruction(FoodMenuModel data) {
     showDialog(
       context: context,
@@ -330,6 +317,7 @@ class _MyFoodChoicesPageState extends State<MyFoodChoicesPage> {
               child: SizedBox(
                 height: 48.h,
                 child: MyButton(
+                  loading: controller.loader.value,
                   borderColor: unlocked ? null : redDark,
                   gradientColor: unlocked ? null : [redLighter, redLighter],
                   text: unlocked ? 'Play' : 'Locked',

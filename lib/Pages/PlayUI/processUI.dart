@@ -42,7 +42,7 @@ class MyProcessPage extends StatelessWidget {
                     spacing: 12.h,
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
-                      equipToggler(controller: controller, iconPath: box, label: 'Tools'),
+                      equipToggler(controller: controller, iconPath: box, label: 'Inventory'),
                       equipToggler(controller: controller, iconPath: basket, label: 'Basket'),
                     ],
                   ),
@@ -99,39 +99,43 @@ class MyProcessPage extends StatelessWidget {
         ),
         SizedBox(
           height: 120.h,
-          child: GridView.builder(
-            padding: EdgeInsets.all(8.w),
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 4,
-              crossAxisSpacing: 8,
-              mainAxisSpacing: 8,
-              childAspectRatio: 1,
-            ),
-            itemCount: 3,
-            itemBuilder: (context, index) {
-              // var data = ingredientsample[index];
-              return InkWell(
-                onTap: () {},
-                child: Container(
-                  alignment: Alignment.center,
-                  decoration: BoxDecoration(
-                    color: lightGridColor,
-                        
-                    borderRadius: BorderRadius.circular(8.r),
-                  ),
-                  child: Padding(
-                    padding: EdgeInsets.all(8.w),
-                    child: CachedNetworkImage(
-                      imageUrl: '',
-                      placeholder: (context, url) => ShimmerSkeletonLoader(),
-                      errorWidget: (context, url, error) => Icon(Icons.error),
-                      fit: BoxFit.contain,
+          child: Obx((){
+            final prepared = controller.preparedData.value.ingredients;
+
+            return GridView.builder(
+              padding: EdgeInsets.all(8.w),
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 4,
+                crossAxisSpacing: 8,
+                mainAxisSpacing: 8,
+                childAspectRatio: 1,
+              ),
+              itemCount: prepared.length,
+              itemBuilder: (context, index) {
+                var data = prepared[index];
+
+                return InkWell(
+                  onTap: () {},
+                  child: Container(
+                    alignment: Alignment.center,
+                    decoration: BoxDecoration(
+                      color: lightGridColor,
+                      borderRadius: BorderRadius.circular(8.r),
+                    ),
+                    child: Padding(
+                      padding: EdgeInsets.all(8.w),
+                      child: CachedNetworkImage(
+                        imageUrl: data.path,
+                        placeholder: (context, url) => ShimmerSkeletonLoader(),
+                        errorWidget: (context, url, error) => Icon(Icons.error),
+                        fit: BoxFit.contain,
+                      ),
                     ),
                   ),
-                ),
-              );
-            },
-          ),
+                );
+              },
+            );
+          })
         ),
       ],
     );

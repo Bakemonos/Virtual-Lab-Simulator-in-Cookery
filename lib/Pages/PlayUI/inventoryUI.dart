@@ -21,6 +21,14 @@ class _MyInventoryPageState extends State<MyInventoryPage> {
   Color acceptedColor = lightBrown;
 
   @override
+  void initState() {
+     WidgetsBinding.instance.addPostFrameCallback((_) {
+      controller.getInventory(context);
+    });
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return SizedBox(
       width: 145.w,

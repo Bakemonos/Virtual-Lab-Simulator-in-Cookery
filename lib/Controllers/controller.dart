@@ -59,7 +59,7 @@ class AppController extends GetxController {
 
   var isSelectedList = <RxBool>[].obs;
   final ingredientLimit = 10.obs;
-  var seconds = 60.obs;
+  var seconds = 30.obs;
 
   final soundToggle = true.obs;
   final musicToggle = true.obs;
@@ -92,6 +92,21 @@ class AppController extends GetxController {
 
   //? TYPE
   FoodMenuModel? typeSelected;
+
+
+  //? HOLD INGREDIENTS INFORMATION 
+  Rx<IngredientsModel> ingredientActionData = IngredientsModel.empty().obs;
+  RxList<ActionsModel> actionHistory = <ActionsModel>[].obs;
+  final RxList<ActionType> ingredientsCurrentActions = <ActionType>[].obs;
+  RxList<ActionsModel> selectedActions = <ActionsModel>[].obs;
+  final Rxn<ActionType> pendingAction = Rxn();  
+
+  //? HOLD PRERARED INFORMATION
+  RxList<IngredientsModel> preparedIngredients = <IngredientsModel>[].obs;
+  Rx<InventoryModel> preparedData = InventoryModel.empty().obs;
+  RxList<InventoryModel> preparedInventories = <InventoryModel>[].obs;
+
+
 
   void exitDialog(BuildContext context) {
     quickAlertDialog(
@@ -126,7 +141,7 @@ class AppController extends GetxController {
 
   //! METHODS ---------------------------------------------------------------------------------------------------------------
 
-  void handleTap(BuildContext context) {
+  ActionStatus handleTap(BuildContext context) {
     actionToggle.value = false;
     final barHeight = context.size?.height ?? 100.h;
     final greenZoneHeight = 16.h;
@@ -137,18 +152,20 @@ class AppController extends GetxController {
     final cursorY = animation.value * barHeight;
 
     if (cursorY >= centerStart && cursorY <= centerEnd) {
-      debugPrint("🎯 Perfect");
+      return ActionStatus.perfect;
     } else if ((cursorY - centerStart).abs() < 10.h || (cursorY - centerEnd).abs() < 10.h) {
-      debugPrint("👍 Good");
+      return ActionStatus.good;
     } else {
-      debugPrint("❌ Miss");
+      return ActionStatus.bad;
     }
   }
 
   void discard() {
+    currentActions.clear();
     actionToggle.value  = false;
     actionListToggle.value = false;
-    currentActions.clear();
+    preparedData.value = InventoryModel.empty();
+    ingredientActionData.value = IngredientsModel.empty();
     ingredientDragDropData.value = IngredientsModel.empty();
   }
 
@@ -259,7 +276,7 @@ class AppController extends GetxController {
       }
     });
   }
-
+  
   void stopTimer() {
     _timer?.cancel();
   }
@@ -558,42 +575,40 @@ class AppController extends GetxController {
     }
   }
 
-  //? GET INVENTORY
   Future<void> getInventory(BuildContext context) async {
     loader.value = true;
+    
     try {
       final studentId = userData.value.id;
       final coc = typeSelected!.menu;
       final type = 'take_one';
 
       final response = await db.get('inventory/read/$studentId/?type=$coc&take=$type');
+      loader.value = false;
 
-      if (response.success!) {
-        loader.value = false;
-        debugPrint('RESPONSE SUCCESS: ${response.success}');
-        if (response.data != null && context.mounted) {
-          try {
-            if(response.data==null){
-              context.go(Routes.ingredientsSelection);
-            } else {
-              typeInventory.value = InventoryModel.fromJson(response.data!);
-              context.go(Routes.playUI);
-            }
-          } catch (e) {
-            debugPrint('PARSING ERROR: $e');
+      if (!context.mounted) return;
+
+      if (response.success! && response.data != null) {
+        try {
+          typeInventory.value = InventoryModel.fromJson(response.data!);
+
+          if (context.mounted) {
+            context.go(Routes.playUI);
           }
-        } else {
-          debugPrint('DATA IS NULL');
+          
+        } catch (e) {
+          debugPrint('PARSING ERROR: $e');
           typeInventory.value = InventoryModel.empty();
         }
+
       } else {
-        if(response.data==null){
-          if(context.mounted) context.go(Routes.ingredientsSelection);
-        } else {
-          typeInventory.value = InventoryModel.fromJson(response.data!);
-          if(context.mounted) context.go(Routes.playUI);
+        typeInventory.value = InventoryModel.empty();
+
+        if (context.mounted) {
+          context.go(Routes.ingredientsSelection);
         }
-        debugPrint('FAILED : ${response.message}');
+
+        debugPrint('Inventory fetch failed: ${response.message}');
       }
 
     } catch (e, stacktrace) {

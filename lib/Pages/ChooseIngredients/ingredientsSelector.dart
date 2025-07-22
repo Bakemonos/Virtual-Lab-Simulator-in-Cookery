@@ -37,6 +37,12 @@ class _MyIngredientsSelectionPageState
     controller.startTimer();
   }
 
+  // @override
+  // void dispose() {
+  //   controller.resetTimer();
+  //   super.dispose();
+  // }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
