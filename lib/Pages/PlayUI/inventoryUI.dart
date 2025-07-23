@@ -52,7 +52,6 @@ class _MyInventoryPageState extends State<MyInventoryPage> {
             child: controller.bagToggle.value ? SizedBox.shrink(key: ValueKey('trashBagClosed'))
             : DragTarget<IngredientsModel>(
               onAcceptWithDetails: (details) {
-                debugPrint(details.data.type);
                 controller.discard();
               },
               builder: (context, candidateData, rejectedData) {

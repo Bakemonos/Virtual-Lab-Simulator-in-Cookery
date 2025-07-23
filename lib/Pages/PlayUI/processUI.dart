@@ -6,6 +6,7 @@ import 'package:virtual_lab/Components/customSvgPicture.dart';
 import 'package:virtual_lab/Components/customText.dart';
 import 'package:virtual_lab/Components/shimmer.dart';
 import 'package:virtual_lab/Controllers/controller.dart';
+import 'package:virtual_lab/Models/ingredientsModel.dart';
 import 'package:virtual_lab/utils/properties.dart';
 
 class MyProcessPage extends StatelessWidget {
@@ -24,15 +25,24 @@ class MyProcessPage extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
-              SizedBox(
-                width: 180.w,
-                child: CachedNetworkImage(
-                  imageUrl: kitchenTools,
-                  placeholder: (context, url) => ShimmerSkeletonLoader(),
-                  errorWidget: (context, url, error) => Icon(Icons.error),
-                  fit: BoxFit.contain,
-                ),
+              DragTarget<List<IngredientsModel>>(
+                onAcceptWithDetails: (details) {
+                  controller.processData.value = details.data;
+                },
+                builder: (context, candidateData, rejectedData){
+                  return SizedBox(
+                    width: 180.w,
+                    height: 100.h,
+                    child: CachedNetworkImage(
+                      imageUrl: kaldero,
+                      placeholder: (context, url) => ShimmerSkeletonLoader(),
+                      errorWidget: (context, url, error) => Icon(Icons.error),
+                      fit: BoxFit.contain,
+                    ),
+                  );
+                },
               ),
+              controller.actionButton(text: 'Check', onPressed: (){}),
               const Spacer(),
               Obx(
                 () => controller.equipmentToggle.value ? preparedIngredients(controller)
@@ -55,6 +65,99 @@ class MyProcessPage extends StatelessWidget {
     );
   }
 
+  Widget preparedIngredients(AppController controller) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        IconButton(
+          style: ButtonStyle(
+            shape: WidgetStatePropertyAll(
+              BeveledRectangleBorder(
+                borderRadius: BorderRadiusGeometry.circular(4.r),
+              ),
+            ),
+          ),
+          onPressed: controller.equipmentOntap,
+          icon: Container(
+            width: 48.w,
+            height: 48.h,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(4.r),
+              color: lightGridColor.withValues(alpha: 0.5),
+            ),
+            child: Center(
+              child: MySvgPicture(path: back, iconColor: textLight),
+            ),
+          ),
+        ),
+        SizedBox(
+          height: 100.h,
+          child: Obx((){
+            final prepared = controller.preparedData.value.ingredients;
+
+            return GridView.builder(  
+              padding: EdgeInsets.all(8.w),
+              scrollDirection: Axis.horizontal,
+              physics: AlwaysScrollableScrollPhysics(),
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 1,
+                crossAxisSpacing: 8,
+                mainAxisSpacing: 8,
+                childAspectRatio: 1,
+              ),
+              itemCount: prepared.length,
+              itemBuilder: (context, index) {
+                var data = prepared[index];
+
+                return LongPressDraggable(
+                  data: data,
+                  feedback: SizedBox(
+                    height: 80.h,
+                    child: Padding(
+                      padding: EdgeInsets.all(8.w),
+                      child: CachedNetworkImage(
+                        imageUrl: data.path,
+                        placeholder: (context, url) => ShimmerSkeletonLoader(),
+                        errorWidget: (context, url, error) => Icon(Icons.error),
+                        fit: BoxFit.contain,
+                      ),
+                    ),
+                  ),
+                  childWhenDragging: Container(
+                    decoration: BoxDecoration(
+                      color: lightGridColor,
+                      borderRadius: BorderRadius.circular(8.r),
+                    ),
+                    child: Center(child: MyText(text: data.name)),
+                  ),
+                  child: InkWell(
+                    onTap: () {},
+                    child: Container(
+                      alignment: Alignment.center,
+                      decoration: BoxDecoration(
+                        color: lightGridColor,
+                        borderRadius: BorderRadius.circular(8.r),
+                      ),
+                      child: Padding(
+                        padding: EdgeInsets.all(8.w),
+                        child: CachedNetworkImage(
+                          imageUrl: data.path,
+                          placeholder: (context, url) => ShimmerSkeletonLoader(),
+                          errorWidget: (context, url, error) => Icon(Icons.error),
+                          fit: BoxFit.contain,
+                        ),
+                      ),
+                    ),
+                  ),
+                );
+              },
+            );
+          })
+        ),
+      ],
+    );
+  }
+
   Widget equipToggler({
     required AppController controller,
     required String label,
@@ -71,73 +174,5 @@ class MyProcessPage extends StatelessWidget {
       ),
     );
   }
-
-  Widget preparedIngredients(AppController controller) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        IconButton(
-          style: ButtonStyle(
-            shape: WidgetStatePropertyAll(
-              BeveledRectangleBorder(
-                borderRadius: BorderRadiusGeometry.circular(4.r),
-              ),
-            ),
-          ),
-          onPressed: controller.equipmentOntap,
-          icon: Container(
-            width: 32.w,
-            height: 32.h,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(4.r),
-              color: lightGridColor.withValues(alpha: 0.5),
-            ),
-            child: Center(
-              child: MySvgPicture(path: back, iconColor: textLight),
-            ),
-          ),
-        ),
-        SizedBox(
-          height: 120.h,
-          child: Obx((){
-            final prepared = controller.preparedData.value.ingredients;
-
-            return GridView.builder(
-              padding: EdgeInsets.all(8.w),
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 4,
-                crossAxisSpacing: 8,
-                mainAxisSpacing: 8,
-                childAspectRatio: 1,
-              ),
-              itemCount: prepared.length,
-              itemBuilder: (context, index) {
-                var data = prepared[index];
-
-                return InkWell(
-                  onTap: () {},
-                  child: Container(
-                    alignment: Alignment.center,
-                    decoration: BoxDecoration(
-                      color: lightGridColor,
-                      borderRadius: BorderRadius.circular(8.r),
-                    ),
-                    child: Padding(
-                      padding: EdgeInsets.all(8.w),
-                      child: CachedNetworkImage(
-                        imageUrl: data.path,
-                        placeholder: (context, url) => ShimmerSkeletonLoader(),
-                        errorWidget: (context, url, error) => Icon(Icons.error),
-                        fit: BoxFit.contain,
-                      ),
-                    ),
-                  ),
-                );
-              },
-            );
-          })
-        ),
-      ],
-    );
-  }
+  
 }

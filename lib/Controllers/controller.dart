@@ -106,6 +106,8 @@ class AppController extends GetxController {
   Rx<InventoryModel> preparedData = InventoryModel.empty().obs;
   RxList<InventoryModel> preparedInventories = <InventoryModel>[].obs;
 
+  //? HOLD PROCESS INFORMATION
+  RxList<IngredientsModel> processData = <IngredientsModel>[].obs;
 
 
   void exitDialog(BuildContext context) {
@@ -141,6 +143,20 @@ class AppController extends GetxController {
 
   //! METHODS ---------------------------------------------------------------------------------------------------------------
 
+  Widget actionButton({
+    required String text,
+    required void Function() onPressed,
+  }) {
+    return SizedBox(
+      height: 32.h,
+      child: TextButton(
+        style: TextButton.styleFrom(backgroundColor: backgroundColor),
+        onPressed: onPressed,
+        child: MyText(text: text, size: 14.sp),
+      ),
+    );
+  }
+  
   ActionStatus handleTap(BuildContext context) {
     actionToggle.value = false;
     final barHeight = context.size?.height ?? 100.h;
@@ -164,7 +180,6 @@ class AppController extends GetxController {
     currentActions.clear();
     actionToggle.value  = false;
     actionListToggle.value = false;
-    preparedData.value = InventoryModel.empty();
     ingredientActionData.value = IngredientsModel.empty();
     ingredientDragDropData.value = IngredientsModel.empty();
   }

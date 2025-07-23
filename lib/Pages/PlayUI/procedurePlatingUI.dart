@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:go_router/go_router.dart';
 import 'package:virtual_lab/Components/customSvg.dart';
 import 'package:virtual_lab/Controllers/controller.dart';
 import 'package:virtual_lab/Models/ingredientsModel.dart';
@@ -42,13 +43,13 @@ class _MyProcedurePlatingPageState extends State<MyProcedurePlatingPage>
   @override
   void dispose() {
     controller.discard();
+    controller.preparedData.value = InventoryModel.empty();
     animationController.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    final user = controller.userData.value;
 
     return SizedBox(
       width: 320.w,
@@ -78,7 +79,7 @@ class _MyProcedurePlatingPageState extends State<MyProcedurePlatingPage>
 
                   return Container(
                     decoration: controller.designUI(
-                      backGround: candidateData.isEmpty ? acceptedColor : greenLighter.withOpacity(0.8),
+                      backGround: candidateData.isEmpty ? acceptedColor : greenLighter.withValues(alpha: 0.8),
                     ),
                     child: Padding(
                       padding: EdgeInsets.all(8.w),
@@ -136,23 +137,29 @@ class _MyProcedurePlatingPageState extends State<MyProcedurePlatingPage>
                                 ),
                                 Align(
                                   alignment: Alignment.bottomLeft,
-                                  child: Row(
+                                  child: Obx(()=> Row(
                                     spacing: 8.w,
                                     children: [
-                                      Obx(() {
-                                        return controller.selectedActions.isNotEmpty ? actionButton(
-                                            text: 'Confirm',
-                                            onPressed: () => confirmIngredient(
-                                              type: controller.typeSelected!.menu ?? '',
-                                              studentId: controller.userData.value.id!,
-                                              take: 'take_one',
-                                            ),
-                                          )
-                                        : const SizedBox();
-                                      }),
-                                      actionButton(text: 'Check', onPressed: () {}),
+                                      if(controller.selectedActions.isNotEmpty) controller.actionButton(
+                                        text: 'Confirm',
+                                        onPressed: () => confirmIngredient(
+                                          type: controller.typeSelected!.menu ?? '',
+                                          studentId: controller.userData.value.id!,
+                                          take: 'take_one',
+                                        ),
+                                      ),
+                                      if(hasIngredient) controller.actionButton(
+                                        text: 'Check', 
+                                        onPressed: (){
+                                          final ingredient = controller.ingredientActionData.value;
+                                          if (ingredient.actions.isNotEmpty) {
+                                            controller.preparedIngredients.add(ingredient);
+                                            checkStatus(ingredient);
+                                          }
+                                        }
+                                      ),
                                     ],
-                                  ),
+                                  )),
                                 )
                               ],
                             ),
@@ -200,6 +207,123 @@ class _MyProcedurePlatingPageState extends State<MyProcedurePlatingPage>
           ),
         ],
       ),
+    );
+  }
+
+  void checkStatus(IngredientsModel ingredient) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          contentPadding: EdgeInsets.zero,
+          content: Container(
+            width: 360.w,
+            decoration: BoxDecoration(
+              color: backgroundColor,
+              borderRadius: BorderRadius.circular(16.r),
+            ),
+            child: Padding(
+              padding: EdgeInsets.all(16.w),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                spacing: 16.h,
+                children: [
+                  Row(
+                    spacing: 14.w,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Image.asset(logo, width: 32.w),
+                      MyText(text: 'Ingredient Status'),
+                      const Spacer(),
+                      IconButton(
+                        style: ButtonStyle(
+                          shape: WidgetStatePropertyAll(
+                            BeveledRectangleBorder(
+                              borderRadius: BorderRadiusGeometry.circular(4.r),
+                            ),
+                          ),
+                        ),
+                        onPressed: () => context.pop(),
+                        icon: Container(
+                          width: 32.w,
+                          height: 32.h,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(4.r),
+                            color: lightButtonBackground.withValues(alpha: 0.3),
+                          ),
+                          child: Center(
+                            child: MySvgPicture(
+                              path: close,
+                              iconColor: darkBrown,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  Expanded(
+                    child: SingleChildScrollView(
+                      physics: AlwaysScrollableScrollPhysics(),
+                      child: Column(
+                        spacing: 12.h,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            spacing: 12.w,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              SizedBox(
+                                width: 100.w,
+                                child: CachedNetworkImage(
+                                  imageUrl: ingredient.path,
+                                  placeholder: (context, url) => ShimmerSkeletonLoader(),
+                                  errorWidget: (context, url, error) => Icon(Icons.error),
+                                  fit: BoxFit.cover,
+                                ),
+                              ),
+                              Expanded(
+                                child: MyText(
+                                  text: 'Name: ${ingredient.name}',
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                            ],
+                          ),
+                          MyText(text: 'Status'), 
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            spacing: 12.h,
+                            children: List.generate(ingredient.actions.length, (index) {
+                              final act = ingredient.actions[index];
+                              return Row(
+                                children: [
+                                  MyText(
+                                    text: '${index + 1}. ${act.action} : ',
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                  MyText(
+                                    text: act.status,
+                                    fontWeight: FontWeight.w500,
+                                    color: switch (act.status) {
+                                      'perfect' => greenLighter,
+                                      'good' => Colors.amber,
+                                      _ => redLighter, 
+                                    },
+                                  ),
+                                ],
+                              );
+                            }),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        );
+      },
     );
   }
 
@@ -261,6 +385,7 @@ class _MyProcedurePlatingPageState extends State<MyProcedurePlatingPage>
       'Actions: ${updatedIngredient.actions.map((e) => e.action).toList()}\n'
       'Statuses: ${updatedIngredient.actions.map((e) => e.status).toList()}\n'
     );
+
   }
 
 
@@ -297,20 +422,6 @@ class _MyProcedurePlatingPageState extends State<MyProcedurePlatingPage>
             );
           },
         )),
-      ),
-    );
-  }
-
-  Widget actionButton({
-    required String text,
-    required void Function() onPressed,
-  }) {
-    return SizedBox(
-      height: 32.h,
-      child: TextButton(
-        style: TextButton.styleFrom(backgroundColor: backgroundColor),
-        onPressed: onPressed,
-        child: MyText(text: text, size: 14.sp),
       ),
     );
   }
