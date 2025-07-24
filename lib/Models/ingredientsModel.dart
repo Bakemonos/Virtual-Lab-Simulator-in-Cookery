@@ -44,13 +44,13 @@ class InventoryModel {
 class IngredientsModel {
   final String name;
   final String path;
-  final String type;
+  final String category;
   final List<ActionsModel> actions;
 
   IngredientsModel({
     required this.name,
     required this.path,
-    required this.type,
+    required this.category,
     this.actions = const [],
   });
 
@@ -58,13 +58,8 @@ class IngredientsModel {
     return IngredientsModel(
       name: map['name'] ?? '',
       path: map['path'] ?? '',
-      type: map['type'] ?? '',
-      actions:
-          map['actions'] != null
-              ? (map['actions'] as List)
-                  .map((item) => ActionsModel.fromJson(item))
-                  .toList()
-              : [],
+      category: map['category'] ?? '',
+      actions: map['actions'] != null ? (map['actions'] as List).map((item) => ActionsModel.fromJson(item)).toList(): [],
     );
   }
 
@@ -72,13 +67,13 @@ class IngredientsModel {
     return {
       'name': name,
       'path': path,
-      'type': path,
+      'category': category,
       'actions': actions.map((item) => item.toJson()).toList(),
     };
   }
 
   factory IngredientsModel.empty() {
-    return IngredientsModel(name: '', path: '', type: '', actions: []);
+    return IngredientsModel(name: '', path: '', category: '', actions: []);
   }
 }
 

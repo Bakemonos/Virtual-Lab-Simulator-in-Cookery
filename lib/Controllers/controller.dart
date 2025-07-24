@@ -11,6 +11,8 @@ import 'package:virtual_lab/Components/customDropdown.dart';
 import 'package:virtual_lab/Components/customSvg.dart';
 import 'package:virtual_lab/Components/customText.dart';
 import 'package:virtual_lab/Components/customTextField.dart';
+import 'package:virtual_lab/Json/coc1.dart';
+import 'package:virtual_lab/Json/tools.dart';
 import 'package:virtual_lab/models/foodMenuModel.dart';
 import 'package:virtual_lab/Models/ingredientsModel.dart';
 import 'package:virtual_lab/Models/userModel.dart';
@@ -68,6 +70,7 @@ class AppController extends GetxController {
   final equipmentToggle = false.obs;
   final actionListToggle = false.obs;
   final actionToggle = false.obs;
+  final toolListToggle = false.obs;
 
   //? TEXT CONTROLLER
   final emailController = TextEditingController();
@@ -86,6 +89,10 @@ class AppController extends GetxController {
   //? DRAG & DROP
   Rx<IngredientsModel> ingredientDragDropData = IngredientsModel.empty().obs;
   final currentActions = <ActionType>[].obs;
+
+  //? DRAG & DROP
+  final selectedTools = <ToolType>[].obs;
+
 
   //? INGREDIENT SELECTION
   final ingredientsData = <IngredientsModel>[].obs;
@@ -109,6 +116,43 @@ class AppController extends GetxController {
   //? HOLD PROCESS INFORMATION
   RxList<IngredientsModel> processData = <IngredientsModel>[].obs;
 
+  
+  //! METHODS ---------------------------------------------------------------------------------------------------------------
+
+  ActionStatus handleTap(BuildContext context) {
+    actionToggle.value = false;
+    final barHeight = context.size?.height ?? 100.h;
+    final greenZoneHeight = 16.h;
+
+    final centerStart = (barHeight / 2) - (greenZoneHeight / 2);
+    final centerEnd = (barHeight / 2) + (greenZoneHeight / 2);
+
+    final cursorY = animation.value * barHeight;
+
+    if (cursorY >= centerStart && cursorY <= centerEnd) {
+      return ActionStatus.perfect;
+    } else if ((cursorY - centerStart).abs() < 10.h || (cursorY - centerEnd).abs() < 10.h) {
+      return ActionStatus.good;
+    } else {
+      return ActionStatus.bad;
+    }
+  }
+
+  void discard() {
+    currentActions.clear();
+    actionToggle.value  = false;
+    actionListToggle.value = false;
+    ingredientActionData.value = IngredientsModel.empty();
+    ingredientDragDropData.value = IngredientsModel.empty();
+  }
+
+  void updateActionsList(IngredientsModel ingredient) {
+    final ingredientType = helper.stringToIngredientType(ingredient.category.toLowerCase());
+
+    final actions = getActionsForIngredient(ingredientType);
+    
+    currentActions.value = actions;
+  }
 
   void exitDialog(BuildContext context) {
     quickAlertDialog(
@@ -138,67 +182,6 @@ class AppController extends GetxController {
         userData.value = UserModel.empty();
         context.go(Routes.signIn);
       },
-    );
-  }
-
-  //! METHODS ---------------------------------------------------------------------------------------------------------------
-
-  Widget actionButton({
-    required String text,
-    required void Function() onPressed,
-  }) {
-    return SizedBox(
-      height: 32.h,
-      child: TextButton(
-        style: TextButton.styleFrom(backgroundColor: backgroundColor),
-        onPressed: onPressed,
-        child: MyText(text: text, size: 14.sp),
-      ),
-    );
-  }
-  
-  ActionStatus handleTap(BuildContext context) {
-    actionToggle.value = false;
-    final barHeight = context.size?.height ?? 100.h;
-    final greenZoneHeight = 16.h;
-
-    final centerStart = (barHeight / 2) - (greenZoneHeight / 2);
-    final centerEnd = (barHeight / 2) + (greenZoneHeight / 2);
-
-    final cursorY = animation.value * barHeight;
-
-    if (cursorY >= centerStart && cursorY <= centerEnd) {
-      return ActionStatus.perfect;
-    } else if ((cursorY - centerStart).abs() < 10.h || (cursorY - centerEnd).abs() < 10.h) {
-      return ActionStatus.good;
-    } else {
-      return ActionStatus.bad;
-    }
-  }
-
-  void discard() {
-    currentActions.clear();
-    actionToggle.value  = false;
-    actionListToggle.value = false;
-    ingredientActionData.value = IngredientsModel.empty();
-    ingredientDragDropData.value = IngredientsModel.empty();
-  }
-
-  void updateActionsList(IngredientsModel ingredient) {
-    final ingredientType = helper.stringToIngredientType(
-      'meat'.toLowerCase(),
-      // ingredient.type.toLowerCase(),
-    );
-    final actions = getActionsForIngredient(ingredientType);
-
-    currentActions.value = actions;
-  }
-
-  BoxDecoration designUI({Color? backGround = lightBrown}) {
-    return BoxDecoration(
-      color: backGround,
-      borderRadius: BorderRadius.circular(8.r),
-      border: Border.all(width: 2.w, color: darkBrown),
     );
   }
 
@@ -315,6 +298,28 @@ class AppController extends GetxController {
 
   //! WIDGET ----------------------------------------------------------------------------------------------------------------
 
+  BoxDecoration designUI({Color? backGround = lightBrown}) {
+    return BoxDecoration(
+      color: backGround,
+      borderRadius: BorderRadius.circular(8.r),
+      border: Border.all(width: 2.w, color: darkBrown),
+    );
+  }
+
+  Widget actionButton({
+    required String text,
+    required void Function() onPressed,
+  }) {
+    return SizedBox(
+      height: 32.h,
+      child: TextButton(
+        style: TextButton.styleFrom(backgroundColor: backgroundColor),
+        onPressed: onPressed,
+        child: MyText(text: text, size: 14.sp),
+      ),
+    );
+  }
+  
   Widget floatingButton({
     required BuildContext context,
     required Function() onTap,
@@ -549,12 +554,34 @@ class AppController extends GetxController {
   }
 
   //? INVENTORY PICKED
-  Future<void> ingredientsCreate(
-    BuildContext context,
-    InventoryModel data,
-  ) async {
+  Future<void> ingredientsCreate(BuildContext context) async {
     loader.value = true;
     try {
+
+      final user = userData.value;
+      ingredientsData.clear();
+
+      for (int i = 0; i < ingredientsCOC1.length; i++) {
+        if (selectedList[i].value) {
+          ingredientsData.add(
+            IngredientsModel(
+              name: ingredientsCOC1[i].name,
+              path: ingredientsCOC1[i].path,
+              category: ingredientsCOC1[i].category,
+            ),
+          );
+        }
+      }
+
+      ingredientsData.refresh();
+
+      final data = InventoryModel(
+        type: typeSelected!.menu ?? '',
+        studentId: user.id ?? '',
+        take: 'take_one',
+        ingredients: ingredientsData,
+      );
+      
       final response = await db.post('inventory/create', data.toJson());
 
       if (response.success!) {
@@ -626,11 +653,36 @@ class AppController extends GetxController {
         debugPrint('Inventory fetch failed: ${response.message}');
       }
 
-    } catch (e, stacktrace) {
+    } catch (e, t) {
       loader.value = false;
       final errorMessage = helper.getErrorMessage(e);
       debugPrint('Error: $errorMessage');
-      debugPrint('STACKTRACE: $stacktrace');
+      debugPrint('STACKTRACE: $t');
+    }
+  }
+
+  Future<void> createDish() async {
+    loader.value = true;
+    try {
+
+      final coc = typeSelected!.menu;
+      final studentId = userData.value.id;
+      
+      Map<String, dynamic> data = {
+        'type': coc,
+        'studentId': studentId,
+        'category': '',
+        'name': '',
+        'ingredients': []
+      };
+
+      final response = await db.post('coc/create', data);
+
+    } catch (e, t) {
+      loader.value = false;
+      final errorMessage = helper.getErrorMessage(e);
+      debugPrint('Error: $errorMessage');
+      debugPrint('STACKTRACE: $t');
     }
   }
 

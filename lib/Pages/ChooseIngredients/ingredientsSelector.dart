@@ -7,7 +7,6 @@ import 'package:virtual_lab/Components/customButton.dart';
 import 'package:virtual_lab/Components/customHeader.dart';
 import 'package:virtual_lab/Components/shimmer.dart';
 import 'package:virtual_lab/Controllers/controller.dart';
-import 'package:virtual_lab/Models/ingredientsModel.dart';
 import 'package:virtual_lab/json/coc1.dart';
 import 'package:virtual_lab/Components/customText.dart';
 import 'package:virtual_lab/utils/helper.dart';
@@ -18,12 +17,10 @@ class MyIngredientsSelectionPage extends StatefulWidget {
   const MyIngredientsSelectionPage({super.key});
 
   @override
-  State<MyIngredientsSelectionPage> createState() =>
-      _MyIngredientsSelectionPageState();
+  State<MyIngredientsSelectionPage> createState() => _MyIngredientsSelectionPageState();
 }
 
-class _MyIngredientsSelectionPageState
-    extends State<MyIngredientsSelectionPage> {
+class _MyIngredientsSelectionPageState extends State<MyIngredientsSelectionPage> {
   final controller = AppController.instance;
   final helper = Helper.instance;
 
@@ -36,12 +33,6 @@ class _MyIngredientsSelectionPageState
     );
     controller.startTimer();
   }
-
-  // @override
-  // void dispose() {
-  //   controller.resetTimer();
-  //   super.dispose();
-  // }
 
   @override
   Widget build(BuildContext context) {
@@ -166,14 +157,9 @@ class _MyIngredientsSelectionPageState
                                             : helper.formatSecondsToMMSS(
                                               controller.seconds.value,
                                             ),
-                                    onTap:
-                                        controller.seconds.value == 0
-                                            ? () {
-                                              pickerCreate();
-                                            }
-                                            : () {
-                                              pickerCreate();
-                                            },
+                                    onTap: () async {
+                                      if(controller.seconds.value == 0) await controller.ingredientsCreate(context);
+                                    },
                                   ),
                                 ),
                               ),
@@ -197,33 +183,5 @@ class _MyIngredientsSelectionPageState
         ],
       ),
     );
-  }
-
-  void pickerCreate() async {
-    final user = controller.userData.value;
-    controller.ingredientsData.clear();
-
-    for (int i = 0; i < ingredientsCOC1.length; i++) {
-      if (controller.selectedList[i].value) {
-        controller.ingredientsData.add(
-          IngredientsModel(
-            name: ingredientsCOC1[i].name,
-            path: ingredientsCOC1[i].path,
-            type: ingredientsCOC1[i].path,
-          ),
-        );
-      }
-    }
-
-    controller.ingredientsData.refresh();
-
-    final data = InventoryModel(
-      type: controller.typeSelected!.menu ?? '',
-      studentId: user.id ?? '',
-      take: 'take_one',
-      ingredients: controller.ingredientsData,
-    );
-
-    await controller.ingredientsCreate(context, data);
   }
 }

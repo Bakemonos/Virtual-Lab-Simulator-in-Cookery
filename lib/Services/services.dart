@@ -57,4 +57,5 @@ class ApiServices extends GetxController {
       throw Exception('POST failed: ${response.body}');
     }
   }
+
 }
