@@ -20,7 +20,7 @@ class MyProcessPage extends StatelessWidget {
       child: Container(
         decoration: controller.designUI(),
         child: Padding(
-          padding: EdgeInsets.all(16.w),
+          padding: EdgeInsets.all(10.w),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: MainAxisAlignment.end,
@@ -32,7 +32,7 @@ class MyProcessPage extends StatelessWidget {
                 builder: (context, candidateData, rejectedData){
                   return SizedBox(
                     width: 180.w,
-                    height: 100.h,
+                    height: 80.h,
                     child: CachedNetworkImage(
                       imageUrl: kaldero,
                       placeholder: (context, url) => ShimmerSkeletonLoader(),

@@ -149,7 +149,7 @@ class _MyProcedurePlatingPageState extends State<MyProcedurePlatingPage>
                                         ),
                                       ),
                                       if(hasIngredient) controller.actionButton(
-                                        text: 'Check', 
+                                        text: 'Check',
                                         onPressed: (){
                                           final ingredient = controller.ingredientActionData.value;
                                           if (ingredient.actions.isNotEmpty) {
@@ -342,17 +342,12 @@ class _MyProcedurePlatingPageState extends State<MyProcedurePlatingPage>
     );
 
     controller.preparedData.value = newInventory;
-
     controller.preparedInventories.add(newInventory);
-
-    debugPrint("✅ Ingredient confirmed: ${controller.ingredientActionData.value.name}");
-    debugPrint("📦 Total Inventories: ${controller.preparedInventories.length}");
 
     controller.ingredientDragDropData.value = IngredientsModel.empty();
     controller.ingredientActionData.value = IngredientsModel.empty();
     controller.selectedActions.clear();
   }
-
 
   void actionPerform() {
     final status = controller.handleTap(context).name;
@@ -377,15 +372,6 @@ class _MyProcedurePlatingPageState extends State<MyProcedurePlatingPage>
 
     controller.pendingAction.value = null;
     controller.actionToggle.value = false;  
-
-    debugPrint(
-      '\nPath: ${updatedIngredient.path}\n'
-      'Name: ${updatedIngredient.name}\n'
-      'Type: ${updatedIngredient.type}\n'
-      'Actions: ${updatedIngredient.actions.map((e) => e.action).toList()}\n'
-      'Statuses: ${updatedIngredient.actions.map((e) => e.status).toList()}\n'
-    );
-
   }
 
 
