@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
-import 'package:virtual_lab/components/customSvg.dart';
-import 'package:virtual_lab/components/customText.dart';
+import 'package:virtual_lab/components/custom_svg.dart';
+import 'package:virtual_lab/components/custom_text.dart';
 import 'package:virtual_lab/controllers/controller.dart';
 import 'package:virtual_lab/utils/properties.dart';
 import 'package:virtual_lab/utils/routes.dart';

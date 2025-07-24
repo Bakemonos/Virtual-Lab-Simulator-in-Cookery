@@ -3,12 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:go_router/go_router.dart';
-import 'package:virtual_lab/components/customSvg.dart';
+import 'package:virtual_lab/components/custom_svg.dart';
 import 'package:virtual_lab/controllers/controller.dart';
 import 'package:virtual_lab/json/tools.dart';
 import 'package:virtual_lab/models/ingredientsModel.dart';
 import 'package:virtual_lab/pages/playUI/actionBarUI.dart';
-import 'package:virtual_lab/components/customText.dart';
+import 'package:virtual_lab/components/custom_text.dart';
 import 'package:virtual_lab/components/shimmer.dart';
 import 'package:virtual_lab/utils/enum.dart';
 import 'package:virtual_lab/utils/helper.dart';
@@ -256,7 +256,7 @@ class _MyProcedurePlatingPageState extends State<MyProcedurePlatingPage>
     final newAction = ActionsModel(
       status: status,
       action: controller.pendingAction.value!.name,
-      tool: ''
+      tool: controller.pendingTool.value!.name,
     );
 
     controller.selectedActions.add(newAction);
@@ -442,6 +442,10 @@ class _MyProcedurePlatingPageState extends State<MyProcedurePlatingPage>
                                       _ => redLighter, 
                                     },
                                   ),
+                                  MyText(
+                                    text: act.tool,
+                                    fontWeight: FontWeight.w500,
+                                  ),
                                 ],
                               );
                             }),
@@ -474,9 +478,10 @@ class _MyProcedurePlatingPageState extends State<MyProcedurePlatingPage>
     controller.toolListToggle.value = false; //* HIDE TOOLS LIST
 
     controller.pendingTool.value = tool;
-    if (!controller.ingredientsCurrentTools.contains(tool)) {
-      controller.ingredientsCurrentTools.add(tool);
-    }
+
+    // if (!controller.ingredientsCurrentTools.contains(tool)) {
+    //   controller.ingredientsCurrentTools.add(tool);
+    // }
   }
 
 }

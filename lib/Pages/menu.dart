@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
-import 'package:virtual_lab/components/customButton.dart';
-import 'package:virtual_lab/components/customHeader.dart';
+import 'package:virtual_lab/components/custom_button.dart';
+import 'package:virtual_lab/components/custom_header.dart';
 import 'package:virtual_lab/controllers/controller.dart';
 import 'package:virtual_lab/pages/foodChoices.dart';
 import 'package:virtual_lab/utils/properties.dart';

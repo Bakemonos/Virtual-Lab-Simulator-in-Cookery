@@ -6,11 +6,11 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:go_router/go_router.dart';
 import 'package:quickalert/models/quickalert_type.dart';
-import 'package:virtual_lab/components/customDialog.dart';
-import 'package:virtual_lab/components/customDropdown.dart';
-import 'package:virtual_lab/components/customSvg.dart';
-import 'package:virtual_lab/components/customText.dart';
-import 'package:virtual_lab/components/customTextField.dart';
+import 'package:virtual_lab/components/custom_dropdown.dart';
+import 'package:virtual_lab/components/custom_svg.dart';
+import 'package:virtual_lab/components/custom_text.dart';
+import 'package:virtual_lab/components/custom_textfield.dart';
+import 'package:virtual_lab/components/custom_dalog.dart';
 import 'package:virtual_lab/json/coc1.dart';
 import 'package:virtual_lab/json/actions.dart';
 import 'package:virtual_lab/models/foodMenuModel.dart';
@@ -101,25 +101,27 @@ class AppController extends GetxController {
 
 
   //? HOLD INGREDIENTS INFORMATION 
-  final ingredientActionData = IngredientsModel.empty().obs;
-  final actionHistory = <ActionsModel>[].obs;
-  final selectedActions = <ActionsModel>[].obs;
+  Rx<IngredientsModel> ingredientActionData = IngredientsModel.empty().obs;
+  RxList<ActionsModel> actionHistory = <ActionsModel>[].obs;
+  RxList<ActionsModel> selectedActions = <ActionsModel>[].obs;
 
   //? HOLD PRERARED INFORMATION
-  final preparedIngredients = <IngredientsModel>[].obs;
-  final preparedData = InventoryModel.empty().obs;
-  final preparedInventories = <InventoryModel>[].obs;
+  RxList<IngredientsModel> preparedIngredients = <IngredientsModel>[].obs;
+  Rx<InventoryModel> preparedData = InventoryModel.empty().obs;
+  RxList<InventoryModel> preparedInventories = <InventoryModel>[].obs;
 
   //? HOLD PROCESS INFORMATION
-  final processData = <IngredientsModel>[].obs;
+  RxList<IngredientsModel> processData = <IngredientsModel>[].obs;
 
   //? HOLD ACTIONS / TOOLS
-  // final ingredientsCurrentActions = <ActionType>[].obs;
-  final pendingAction = Rxn();  
+  // final RxList<ActionType> ingredientsCurrentActions = <ActionType>[].obs;
+  final Rxn<ActionType> pendingAction = Rxn();  
 
-  final ingredientsCurrentTools = <ToolType>[].obs;
-  final pendingTool = Rxn();  
+  // final RxList<ToolType> ingredientsCurrentTools = <ToolType>[].obs;
+  final Rxn<ToolType> pendingTool = Rxn();  
 
+
+  
   //! METHODS ---------------------------------------------------------------------------------------------------------------
 
   ActionStatus handleTap(BuildContext context) {
