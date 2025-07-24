@@ -162,6 +162,13 @@ class _MyProcedurePlatingPageState extends State<MyProcedurePlatingPage>
                                           }
                                         }
                                       ),
+                                      controller.actionButton(
+                                        text: 'Back',
+                                        onPressed: (){
+                                          controller.toolListToggle.value = false;
+                                          controller.actionListToggle.value = true;
+                                        }
+                                      ),
                                     ],
                                   )),
                                 )
