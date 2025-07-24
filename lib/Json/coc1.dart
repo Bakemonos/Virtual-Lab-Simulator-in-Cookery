@@ -1,4 +1,4 @@
-import 'package:virtual_lab/models/ingredientsModel.dart';
+import 'package:virtual_lab/models/ingredients_model.dart';
 
 List<IngredientsModel> ingredientsCOC1 = [
   IngredientsModel(

@@ -6,7 +6,7 @@ import 'package:virtual_lab/components/custom_svg_picture.dart';
 import 'package:virtual_lab/components/custom_text.dart';
 import 'package:virtual_lab/components/shimmer.dart';
 import 'package:virtual_lab/controllers/controller.dart';
-import 'package:virtual_lab/models/ingredientsModel.dart';
+import 'package:virtual_lab/models/ingredients_model.dart';
 import 'package:virtual_lab/utils/properties.dart';
 
 class MyProcessPage extends StatelessWidget {
