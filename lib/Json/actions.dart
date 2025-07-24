@@ -1,30 +1,5 @@
 //? ACTIONS
-import 'package:virtual_lab/Utils/enum.dart';
-
-enum ActionType {
-  chop,
-  peel,
-  boil,
-  stir,
-  cut,
-  marinate,
-  cook,
-  grill,
-  slice,
-  blend,
-  grind,
-  bake,
-  pour,
-  grate,
-  melt,
-  sprinkle,
-  rinse,
-  soak,
-  season,
-  steam,
-  fry,
-  whisk,
-}
+import 'package:virtual_lab/utils/enum.dart';
 
 //? ACTIONS
 List<ActionType> getActionsForIngredient(IngredientType type) {

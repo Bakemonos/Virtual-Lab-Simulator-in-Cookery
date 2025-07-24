@@ -3,11 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:go_router/go_router.dart';
-import 'package:virtual_lab/Components/customSvg.dart';
-import 'package:virtual_lab/Controllers/controller.dart';
-import 'package:virtual_lab/Json/tools.dart';
-import 'package:virtual_lab/Models/ingredientsModel.dart';
-import 'package:virtual_lab/Pages/PlayUI/actionBarUI.dart';
+import 'package:virtual_lab/components/customSvg.dart';
+import 'package:virtual_lab/controllers/controller.dart';
+import 'package:virtual_lab/json/tools.dart';
+import 'package:virtual_lab/models/ingredientsModel.dart';
+import 'package:virtual_lab/pages/playUI/actionBarUI.dart';
 import 'package:virtual_lab/components/customText.dart';
 import 'package:virtual_lab/components/shimmer.dart';
 import 'package:virtual_lab/utils/enum.dart';
@@ -162,7 +162,7 @@ class _MyProcedurePlatingPageState extends State<MyProcedurePlatingPage>
                                           }
                                         }
                                       ),
-                                      controller.actionButton(
+                                      if(controller.toolListToggle.value) controller.actionButton(
                                         text: 'Back',
                                         onPressed: (){
                                           controller.toolListToggle.value = false;
@@ -224,6 +224,120 @@ class _MyProcedurePlatingPageState extends State<MyProcedurePlatingPage>
             ),
           ),
         ],
+      ),
+    );
+  }
+  
+  void confirmIngredient({
+    required String type,
+    required String studentId,
+    required String take,
+  }) {
+    controller.preparedIngredients.add(controller.ingredientActionData.value);
+
+    final newInventory = InventoryModel(
+      type: type,
+      studentId: studentId,
+      take: take,
+      ingredients: controller.preparedIngredients.toList(),
+    );
+
+    controller.preparedData.value = newInventory;
+    controller.preparedInventories.add(newInventory);
+
+    controller.ingredientDragDropData.value = IngredientsModel.empty();
+    controller.ingredientActionData.value = IngredientsModel.empty();
+    controller.selectedActions.clear();
+  }
+
+  void actionPerform() {
+    final status = controller.handleTap(context).name;
+    
+    final newAction = ActionsModel(
+      status: status,
+      action: controller.pendingAction.value!.name,
+      tool: ''
+    );
+
+    controller.selectedActions.add(newAction);
+
+    final ingredient = controller.ingredientDragDropData.value;
+
+    final updatedIngredient = IngredientsModel(
+      name: ingredient.name,
+      path: ingredient.path,
+      category: ingredient.category,
+      actions: controller.selectedActions.toList(), 
+    );
+
+    controller.ingredientActionData.value = updatedIngredient;
+
+    controller.pendingAction.value = null;
+    controller.actionToggle.value = false;  
+  }
+
+  Widget toolListUI() {
+    return Expanded(
+      flex: 2,
+      child: Container(
+        decoration: BoxDecoration(
+          color: darkBrown,
+          border: Border.all(width: 2.w, color: backgroundColor),
+          borderRadius: BorderRadius.circular(4.r),
+        ),
+        child: Obx(() {
+          return ListView.builder(
+            itemCount: controller.selectedTools.length,
+            itemBuilder: (context, i) {
+              final tool = controller.selectedTools[i];
+
+              return InkWell(
+                onTap: ()=> onToolSelected(tool),
+                child: Padding(
+                  padding: EdgeInsets.all(4.w),
+                  child: MyText(
+                    text: tool.name, 
+                    textAlign: TextAlign.center,
+                    color: textLight,
+                    size: 14.sp,
+                  ),
+                ),
+              );
+            },
+          );
+        }),
+      ),
+    );
+  }
+
+  Widget actionListUI() {
+    return Expanded(
+      flex: 2,
+      child: Container(
+        decoration: BoxDecoration(
+          color: darkBrown,
+          border: Border.all(width: 2.w, color: backgroundColor),
+          borderRadius: BorderRadius.circular(4.r),
+        ),
+        child: Obx(() => ListView.builder(
+          itemCount: controller.currentActions.length,
+          itemBuilder: (context, index) {
+            final action = controller.currentActions[index];
+
+            return InkWell(
+              onTap: () => onActionSelected(action),
+              child: Padding(
+                padding: EdgeInsets.all(4.w),
+                child: MyText(
+                  text: action.name,
+                  textAlign: TextAlign.center,
+                  color: textLight,
+                  size: 14.sp,
+                ),
+              ),
+            );
+          },
+        )),
       ),
     );
   }
@@ -345,129 +459,25 @@ class _MyProcedurePlatingPageState extends State<MyProcedurePlatingPage>
     );
   }
 
-  void confirmIngredient({
-    required String type,
-    required String studentId,
-    required String take,
-  }) {
-    controller.preparedIngredients.add(controller.ingredientActionData.value);
-
-    final newInventory = InventoryModel(
-      type: type,
-      studentId: studentId,
-      take: take,
-      ingredients: controller.preparedIngredients.toList(),
-    );
-
-    controller.preparedData.value = newInventory;
-    controller.preparedInventories.add(newInventory);
-
-    controller.ingredientDragDropData.value = IngredientsModel.empty();
-    controller.ingredientActionData.value = IngredientsModel.empty();
-    controller.selectedActions.clear();
-  }
-
-  void actionPerform() {
-    final status = controller.handleTap(context).name;
-    
-    final newAction = ActionsModel(
-      action: controller.pendingAction.value!.name,
-      status: status,
-    );
-
-    controller.selectedActions.add(newAction);
-
-    final ingredient = controller.ingredientDragDropData.value;
-
-    final updatedIngredient = IngredientsModel(
-      name: ingredient.name,
-      path: ingredient.path,
-      category: ingredient.category,
-      actions: controller.selectedActions.toList(), 
-    );
-
-    controller.ingredientActionData.value = updatedIngredient;
-
-    controller.pendingAction.value = null;
-    controller.actionToggle.value = false;  
-  }
-
-  Widget toolListUI() {
-    return Expanded(
-      flex: 2,
-      child: Container(
-        decoration: BoxDecoration(
-          color: darkBrown,
-          border: Border.all(width: 2.w, color: backgroundColor),
-          borderRadius: BorderRadius.circular(4.r),
-        ),
-        child: Obx(() {
-          return ListView.builder(
-            itemCount: controller.selectedTools.length,
-            itemBuilder: (context, i) {
-              final tool = controller.selectedTools[i];
-              return Padding(
-                padding: EdgeInsets.all(4.w),
-                child: MyText(
-                  text: tool.name, 
-                  textAlign: TextAlign.center,
-                  color: textLight,
-                  size: 14.sp,
-                ),
-              );
-            },
-          );
-        }),
-      ),
-    );
-  }
-
-  Widget actionListUI() {
-    return Expanded(
-      flex: 2,
-      child: Container(
-        decoration: BoxDecoration(
-          color: darkBrown,
-          border: Border.all(width: 2.w, color: backgroundColor),
-          borderRadius: BorderRadius.circular(4.r),
-        ),
-        child: Obx(() => ListView.builder(
-          itemCount: controller.currentActions.length,
-          itemBuilder: (context, index) {
-            final action = controller.currentActions[index];
-
-            return InkWell(
-              onTap: () => onActionSelected(action),
-              child: Padding(
-                padding: EdgeInsets.all(4.w),
-                child: MyText(
-                  text: action.name,
-                  textAlign: TextAlign.center,
-                  color: textLight,
-                  size: 14.sp,
-                ),
-              ),
-            );
-          },
-        )),
-      ),
-    );
-  }
-
   void onActionSelected(ActionType action) {
-    controller.pendingAction.value = action;
-    controller.actionToggle.value = true;
-
-    controller.selectedTools.value = getToolsForAction(action);
-
-    controller.actionListToggle.value = false;
     controller.toolListToggle.value = true;
+    controller.pendingAction.value = action;
+    controller.selectedTools.value = getToolsForAction(action);
+    // if (!controller.ingredientsCurrentActions.contains(action)) {
+    //   controller.ingredientsCurrentActions.add(action);
+    // }
+  }
+  
+  void onToolSelected(ToolType tool) {
+    controller.actionListToggle.value = false; //* HIDE ACTION LIST 
+    controller.actionToggle.value = true; //* SHOW ACTION TAP
+    controller.toolListToggle.value = false; //* HIDE TOOLS LIST
 
-    if (!controller.ingredientsCurrentActions.contains(action)) {
-      controller.ingredientsCurrentActions.add(action);
+    controller.pendingTool.value = tool;
+    if (!controller.ingredientsCurrentTools.contains(tool)) {
+      controller.ingredientsCurrentTools.add(tool);
     }
   }
-
 
 }
 

@@ -80,17 +80,22 @@ class IngredientsModel {
 class ActionsModel {
   final String action;
   final String status;
+  final String tool;
 
-  ActionsModel({required this.action, required this.status});
+  ActionsModel({required this.action, required this.status, required this.tool});
 
   factory ActionsModel.fromJson(Map<String, dynamic> map) {
     return ActionsModel(
       action: map['action'] ?? '',
       status: map['status'] ?? '',
+      tool: map['tool'] ?? '',
     );
   }
 
   Map<String, dynamic> toJson() {
-    return {'action': action, 'status': status};
+    return {
+      'action': action, 
+      'status': status,
+    };
   }
 }

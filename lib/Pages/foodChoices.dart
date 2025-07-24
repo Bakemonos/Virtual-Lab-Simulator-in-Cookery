@@ -7,7 +7,7 @@ import 'package:virtual_lab/components/customHeader.dart';
 import 'package:virtual_lab/components/customSvgPicture.dart';
 import 'package:virtual_lab/components/customText.dart';
 import 'package:virtual_lab/components/shimmer.dart';
-import 'package:virtual_lab/Controllers/controller.dart';
+import 'package:virtual_lab/controllers/controller.dart';
 import 'package:virtual_lab/json/foodMenu.dart';
 import 'package:virtual_lab/models/foodMenuModel.dart';
 import 'package:virtual_lab/utils/properties.dart';

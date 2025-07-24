@@ -2,12 +2,12 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
-import 'package:virtual_lab/Components/customButton.dart';
-import 'package:virtual_lab/Components/customHeader.dart';
-import 'package:virtual_lab/Components/customSvg.dart';
-import 'package:virtual_lab/Components/customText.dart';
-import 'package:virtual_lab/Components/shimmer.dart';
-import 'package:virtual_lab/Controllers/controller.dart';
+import 'package:virtual_lab/components/customButton.dart';
+import 'package:virtual_lab/components/customHeader.dart';
+import 'package:virtual_lab/components/customSvg.dart';
+import 'package:virtual_lab/components/customText.dart';
+import 'package:virtual_lab/components/shimmer.dart';
+import 'package:virtual_lab/controllers/controller.dart';
 import 'package:virtual_lab/utils/properties.dart';
 import 'package:virtual_lab/utils/routes.dart';
 

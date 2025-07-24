@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:go_router/go_router.dart';
-import 'package:virtual_lab/Components/customButton.dart';
-import 'package:virtual_lab/Components/customHeader.dart';
-import 'package:virtual_lab/Components/customSvgPicture.dart';
-import 'package:virtual_lab/Controllers/controller.dart';
-import 'package:virtual_lab/Pages/menu.dart';
+import 'package:virtual_lab/components/customButton.dart';
+import 'package:virtual_lab/components/customHeader.dart';
+import 'package:virtual_lab/components/customSvgPicture.dart';
+import 'package:virtual_lab/controllers/controller.dart';
+import 'package:virtual_lab/pages/menu.dart';
 import 'package:virtual_lab/utils/properties.dart';
 import 'package:virtual_lab/utils/routes.dart';
 

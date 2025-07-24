@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
-import 'package:virtual_lab/Components/customHeader.dart';
-import 'package:virtual_lab/Controllers/controller.dart';
+import 'package:virtual_lab/components/customHeader.dart';
+import 'package:virtual_lab/controllers/controller.dart';
 import 'package:virtual_lab/utils/properties.dart';
-import 'package:virtual_lab/Components/customText.dart';
+import 'package:virtual_lab/components/customText.dart';
 
 class MyAboutGamePage extends StatefulWidget {
   const MyAboutGamePage({super.key});

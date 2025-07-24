@@ -1,6 +1,6 @@
 //Flutter Package
 import 'package:get/get.dart';
-import 'package:virtual_lab/Controllers/controller.dart';
+import 'package:virtual_lab/controllers/controller.dart';
 import 'package:virtual_lab/services/services.dart';
 import 'package:virtual_lab/utils/helper.dart';
 

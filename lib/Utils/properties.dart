@@ -62,5 +62,4 @@ const String musicOn = "assets/icons/music_on.svg";
 const String soundOff = "assets/icons/sound_off.svg";
 const String musicOff = "assets/icons/music_off.svg";
 
-const String kaldero =
-    'https://res.cloudinary.com/dhceioavi/image/upload/v1753239395/kaldero_svomeo.png';
+const String kaldero = 'https://res.cloudinary.com/dgvi2di6t/image/upload/v1753361570/pot_obti4v.png';

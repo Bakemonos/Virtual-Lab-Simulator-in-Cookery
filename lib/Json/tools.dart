@@ -1,56 +1,6 @@
 //? TOOLS
 import 'package:virtual_lab/utils/enum.dart';
 
-//? TOOLS
-enum ToolType {
-  knife,
-  chopper,
-  cleaver,
-  peeler,
-  paringKnife,
-  pot,
-  kettle,
-  saucepan,
-  spoon,
-  spatula,
-  whisk,
-  scissors,
-  cutter,
-  bowl,
-  container,
-  ziplocBag,
-  pan,
-  skillet,
-  grill,
-  griddle,
-  tongs,
-  mandolineSlicer,
-  blender,
-  foodProcessor,
-  grinder,
-  mortarAndPestle,
-  mill,
-  oven,
-  bakingPan,
-  tray,
-  fryingPan,
-  measuringCup,
-  pitcher,
-  ladle,
-  grater,
-  zester,
-  microwave,
-  strainer,
-  sink,
-  shaker,
-  hand,
-  steamer,
-  bambooSteamer,
-  deepFryer,
-  fork,
-  mixer,
-}
-
 List<ToolType> getToolsForAction(ActionType action) {
   switch (action) {
     case ActionType.chop:

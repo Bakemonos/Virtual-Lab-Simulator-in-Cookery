@@ -6,16 +6,16 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:go_router/go_router.dart';
 import 'package:quickalert/models/quickalert_type.dart';
-import 'package:virtual_lab/Components/customDialog.dart';
-import 'package:virtual_lab/Components/customDropdown.dart';
-import 'package:virtual_lab/Components/customSvg.dart';
-import 'package:virtual_lab/Components/customText.dart';
-import 'package:virtual_lab/Components/customTextField.dart';
-import 'package:virtual_lab/Json/coc1.dart';
-import 'package:virtual_lab/Json/tools.dart';
+import 'package:virtual_lab/components/customDialog.dart';
+import 'package:virtual_lab/components/customDropdown.dart';
+import 'package:virtual_lab/components/customSvg.dart';
+import 'package:virtual_lab/components/customText.dart';
+import 'package:virtual_lab/components/customTextField.dart';
+import 'package:virtual_lab/json/coc1.dart';
+import 'package:virtual_lab/json/actions.dart';
 import 'package:virtual_lab/models/foodMenuModel.dart';
-import 'package:virtual_lab/Models/ingredientsModel.dart';
-import 'package:virtual_lab/Models/userModel.dart';
+import 'package:virtual_lab/models/ingredientsModel.dart';
+import 'package:virtual_lab/models/userModel.dart';
 import 'package:virtual_lab/services/services.dart';
 import 'package:virtual_lab/utils/enum.dart';
 import 'package:virtual_lab/utils/helper.dart';
@@ -93,7 +93,6 @@ class AppController extends GetxController {
   //? DRAG & DROP
   final selectedTools = <ToolType>[].obs;
 
-
   //? INGREDIENT SELECTION
   final ingredientsData = <IngredientsModel>[].obs;
 
@@ -102,21 +101,25 @@ class AppController extends GetxController {
 
 
   //? HOLD INGREDIENTS INFORMATION 
-  Rx<IngredientsModel> ingredientActionData = IngredientsModel.empty().obs;
-  RxList<ActionsModel> actionHistory = <ActionsModel>[].obs;
-  final RxList<ActionType> ingredientsCurrentActions = <ActionType>[].obs;
-  RxList<ActionsModel> selectedActions = <ActionsModel>[].obs;
-  final Rxn<ActionType> pendingAction = Rxn();  
+  final ingredientActionData = IngredientsModel.empty().obs;
+  final actionHistory = <ActionsModel>[].obs;
+  final selectedActions = <ActionsModel>[].obs;
 
   //? HOLD PRERARED INFORMATION
-  RxList<IngredientsModel> preparedIngredients = <IngredientsModel>[].obs;
-  Rx<InventoryModel> preparedData = InventoryModel.empty().obs;
-  RxList<InventoryModel> preparedInventories = <InventoryModel>[].obs;
+  final preparedIngredients = <IngredientsModel>[].obs;
+  final preparedData = InventoryModel.empty().obs;
+  final preparedInventories = <InventoryModel>[].obs;
 
   //? HOLD PROCESS INFORMATION
-  RxList<IngredientsModel> processData = <IngredientsModel>[].obs;
+  final processData = <IngredientsModel>[].obs;
 
-  
+  //? HOLD ACTIONS / TOOLS
+  // final ingredientsCurrentActions = <ActionType>[].obs;
+  final pendingAction = Rxn();  
+
+  final ingredientsCurrentTools = <ToolType>[].obs;
+  final pendingTool = Rxn();  
+
   //! METHODS ---------------------------------------------------------------------------------------------------------------
 
   ActionStatus handleTap(BuildContext context) {
@@ -139,9 +142,11 @@ class AppController extends GetxController {
   }
 
   void discard() {
-    currentActions.clear();
     actionToggle.value  = false;
     actionListToggle.value = false;
+    toolListToggle.value = false;
+    
+    currentActions.clear();
     ingredientActionData.value = IngredientsModel.empty();
     ingredientDragDropData.value = IngredientsModel.empty();
   }
@@ -661,29 +666,29 @@ class AppController extends GetxController {
     }
   }
 
-  Future<void> createDish() async {
-    loader.value = true;
-    try {
+  // Future<void> createDish() async {
+  //   loader.value = true;
+  //   try {
 
-      final coc = typeSelected!.menu;
-      final studentId = userData.value.id;
+  //     final coc = typeSelected!.menu;
+  //     final studentId = userData.value.id;
       
-      Map<String, dynamic> data = {
-        'type': coc,
-        'studentId': studentId,
-        'category': '',
-        'name': '',
-        'ingredients': []
-      };
+  //     Map<String, dynamic> data = {
+  //       'type': coc,
+  //       'studentId': studentId,
+  //       'category': '',
+  //       'name': '',
+  //       'ingredients': []
+  //     };
 
-      final response = await db.post('coc/create', data);
+  //     final response = await db.post('coc/create', data);
 
-    } catch (e, t) {
-      loader.value = false;
-      final errorMessage = helper.getErrorMessage(e);
-      debugPrint('Error: $errorMessage');
-      debugPrint('STACKTRACE: $t');
-    }
-  }
+  //   } catch (e, t) {
+  //     loader.value = false;
+  //     final errorMessage = helper.getErrorMessage(e);
+  //     debugPrint('Error: $errorMessage');
+  //     debugPrint('STACKTRACE: $t');
+  //   }
+  // }
 
 }
