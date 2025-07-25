@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:go_router/go_router.dart';
 import 'package:virtual_lab/components/custom_svg_picture.dart';
 import 'package:virtual_lab/components/custom_text.dart';
 import 'package:virtual_lab/components/shimmer.dart';
@@ -22,7 +23,8 @@ class MyProcessPage extends StatelessWidget {
         child: Padding(
           padding: EdgeInsets.all(10.w),
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+            spacing: 8.h,
+            crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
               DragTarget<List<IngredientsModel>>(
@@ -31,8 +33,7 @@ class MyProcessPage extends StatelessWidget {
                 },
                 builder: (context, candidateData, rejectedData){
                   return SizedBox(
-                    width: 180.w,
-                    height: 80.h,
+                    width: 100.w, height: 100.h,
                     child: CachedNetworkImage(
                       imageUrl: kaldero,
                       placeholder: (context, url) => ShimmerSkeletonLoader(),
@@ -42,7 +43,13 @@ class MyProcessPage extends StatelessWidget {
                   );
                 },
               ),
-              controller.actionButton(text: 'Check', onPressed: (){}),
+              Row(
+                spacing: 8.w,
+                children: [
+                  controller.actionButton(text: 'Check', onPressed: (){}),
+                  controller.actionButton(text: 'Submit', onPressed: ()=> submitCreateDish(context, controller)),
+                ],
+              ),
               const Spacer(),
               Obx(
                 () => controller.equipmentToggle.value ? preparedIngredients(controller)
@@ -174,5 +181,67 @@ class MyProcessPage extends StatelessWidget {
       ),
     );
   }
-  
+
+  void submitCreateDish(BuildContext context, AppController controller) {
+
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          contentPadding: EdgeInsets.zero,
+          content: Container(
+            width: 360.w,
+            decoration: BoxDecoration(
+              color: backgroundColor,
+              borderRadius: BorderRadius.circular(16.r),
+            ),
+            child: Padding(
+              padding: EdgeInsets.all(16.w),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                spacing: 16.h,
+                children: [
+                  Row(
+                    spacing: 14.w,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Image.asset(logo, width: 32.w),
+                      MyText(text: 'Submit dish'),
+                      const Spacer(),
+                      IconButton(
+                        style: ButtonStyle(
+                          shape: WidgetStatePropertyAll(
+                            BeveledRectangleBorder(
+                              borderRadius: BorderRadiusGeometry.circular(4.r),
+                            ),
+                          ),
+                        ),
+                        onPressed: () => context.pop(),
+                        icon: Container(
+                          width: 32.w,
+                          height: 32.h,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(4.r),
+                            color: lightButtonBackground.withValues(alpha: 0.3),
+                          ),
+                          child: Center(
+                            child: MySvgPicture(
+                              path: close,
+                              iconColor: darkBrown,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  controller.repeatedTextInput(label: 'Dish name')  
+                ],
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
+
 }

@@ -186,6 +186,7 @@ class AppController extends GetxController {
       confirmBtnText: 'Logout',
       showCancelBtn: true,
       onConfirmBtnTap: () {
+        loader.value = false;
         userData.value = UserModel.empty();
         context.go(Routes.signIn);
       },
@@ -355,8 +356,8 @@ class AppController extends GetxController {
 
   Widget repeatedTextInput({
     required String label,
-    required TextEditingController controller,
-    required RxString errorText,
+    RxString? errorText,
+    TextEditingController? controller,
     bool obscureText = false,
   }) {
     return Column(
@@ -369,12 +370,12 @@ class AppController extends GetxController {
               () => MyText(
                 text: label,
                 fontWeight: FontWeight.w600,
-                color: errorText.value.isNotEmpty ? redLighter : lightBrown,
+                color: errorText!.value.isNotEmpty ? redLighter : lightBrown,
               ),
             ),
             Obx(
               () =>
-                  errorText.value.isNotEmpty
+                  errorText!.value.isNotEmpty
                       ? Padding(
                         padding: EdgeInsets.only(top: 4.h),
                         child: MyText(
@@ -394,7 +395,7 @@ class AppController extends GetxController {
             controller: controller,
             hint: 'Enter $label',
             obscureText: obscureText,
-            error: errorText.value.isNotEmpty,
+            error: errorText!.value.isNotEmpty,
           ),
         ),
       ],
@@ -538,6 +539,7 @@ class AppController extends GetxController {
             title: 'Login Successful!',
             message: response.message.toString(),
             onConfirmBtnTap: () {
+              loader.value = false;
               resetSignin();
               userData.value = UserModel.fromJson(response.data!);
               context.go(Routes.menu);
@@ -668,29 +670,52 @@ class AppController extends GetxController {
     }
   }
 
-  // Future<void> createDish() async {
-  //   loader.value = true;
-  //   try {
+  Future<void> createDish() async {
+    loader.value = true;
+    try {
 
-  //     final coc = typeSelected!.menu;
-  //     final studentId = userData.value.id;
-      
-  //     Map<String, dynamic> data = {
-  //       'type': coc,
-  //       'studentId': studentId,
-  //       'category': '',
-  //       'name': '',
-  //       'ingredients': []
-  //     };
+      final coc = typeSelected!.menu;
+      final studentId = userData.value.id;
 
-  //     final response = await db.post('coc/create', data);
+      Map<String, dynamic> data = {
+        'type': coc,
+        'studentId': studentId,
+        'category': 'sauce',
+        'name': 'The king sauce',
+        'ingredients': preparedData.value.ingredients,
+        'equipments': [
+          {
+            'name': 'kaldero',
+            'image': 'sample.url',
+          }
+        ]
+      };
 
-  //   } catch (e, t) {
-  //     loader.value = false;
-  //     final errorMessage = helper.getErrorMessage(e);
-  //     debugPrint('Error: $errorMessage');
-  //     debugPrint('STACKTRACE: $t');
-  //   }
-  // }
+      // for (var ingredient in preparedData.value.ingredients) {
+      //   print('Ingredient: ${ingredient.name}');
+      //   print(' - Path: ${ingredient.path}');
+      //   print(' - Category: ${ingredient.category}');
+      //   print(' - Actions:');
+      //   for (var action in ingredient.actions) {
+      //     print('   • Action: ${action.action}');
+      //     print('     Status: ${action.status}');
+      //     print('     Tool: ${action.tool}');
+      //   }
+      // }
+
+      final response = await db.post('coc/create', data);
+
+      if(response.success!){
+        
+      }
+
+    } catch (e, t) {
+      loader.value = false;
+      final errorMessage = helper.getErrorMessage(e);
+      debugPrint('Error: $errorMessage');
+      debugPrint('STACKTRACE: $t');
+    }
+  }
+
 
 }

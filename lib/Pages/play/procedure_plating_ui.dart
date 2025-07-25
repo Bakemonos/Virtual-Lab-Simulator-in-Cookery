@@ -7,7 +7,7 @@ import 'package:virtual_lab/components/custom_svg.dart';
 import 'package:virtual_lab/controllers/controller.dart';
 import 'package:virtual_lab/json/tools.dart';
 import 'package:virtual_lab/models/ingredients_model.dart';
-import 'package:virtual_lab/pages/playui/action_bar_ui.dart';
+import 'package:virtual_lab/pages/play/action_bar_ui.dart';
 import 'package:virtual_lab/components/custom_text.dart';
 import 'package:virtual_lab/components/shimmer.dart';
 import 'package:virtual_lab/utils/enum.dart';
@@ -21,8 +21,7 @@ class MyProcedurePlatingPage extends StatefulWidget {
   State<MyProcedurePlatingPage> createState() => _MyProcedurePlatingPageState();
 }
 
-class _MyProcedurePlatingPageState extends State<MyProcedurePlatingPage>
-    with TickerProviderStateMixin {
+class _MyProcedurePlatingPageState extends State<MyProcedurePlatingPage> with TickerProviderStateMixin {
   final controller = AppController.instance;
   final helper = Helper.instance;
 
@@ -233,6 +232,9 @@ class _MyProcedurePlatingPageState extends State<MyProcedurePlatingPage>
     required String studentId,
     required String take,
   }) {
+
+    
+
     controller.preparedIngredients.add(controller.ingredientActionData.value);
 
     final newInventory = InventoryModel(
@@ -240,7 +242,8 @@ class _MyProcedurePlatingPageState extends State<MyProcedurePlatingPage>
       studentId: studentId,
       take: take,
       ingredients: controller.preparedIngredients.toList(),
-    );
+    );  
+
 
     controller.preparedData.value = newInventory;
     controller.preparedInventories.add(newInventory);
@@ -467,21 +470,13 @@ class _MyProcedurePlatingPageState extends State<MyProcedurePlatingPage>
     controller.toolListToggle.value = true;
     controller.pendingAction.value = action;
     controller.selectedTools.value = getToolsForAction(action);
-    // if (!controller.ingredientsCurrentActions.contains(action)) {
-    //   controller.ingredientsCurrentActions.add(action);
-    // }
   }
   
   void onToolSelected(ToolType tool) {
     controller.actionListToggle.value = false; //* HIDE ACTION LIST 
     controller.actionToggle.value = true; //* SHOW ACTION TAP
     controller.toolListToggle.value = false; //* HIDE TOOLS LIST
-
     controller.pendingTool.value = tool;
-
-    // if (!controller.ingredientsCurrentTools.contains(tool)) {
-    //   controller.ingredientsCurrentTools.add(tool);
-    // }
   }
 
 }

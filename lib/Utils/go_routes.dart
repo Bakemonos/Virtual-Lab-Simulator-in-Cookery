@@ -12,7 +12,7 @@ import 'package:virtual_lab/pages/Setup/login.dart';
 import 'package:virtual_lab/pages/forgotPassword/change_password.dart';
 import 'package:virtual_lab/pages/forgotPassword/enter_email.dart';
 import 'package:virtual_lab/pages/menu.dart';
-import 'package:virtual_lab/pages/playUI/play_ui.dart';
+import 'package:virtual_lab/pages/play/play_ui.dart';
 import 'package:virtual_lab/pages/settings.dart';
 import 'package:virtual_lab/pages/Setup/signup.dart';
 import 'package:virtual_lab/utils/routes.dart';

@@ -51,6 +51,9 @@ class ApiServices extends GetxController {
       body: jsonEncode(data),
     );
 
+    print('BODY : ${response.body}\n');
+
+
     if (response.statusCode == 200 || response.statusCode == 201) {
       return ApiResponse.fromJson(jsonDecode(response.body));
     } else {

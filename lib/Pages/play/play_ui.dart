@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:virtual_lab/controllers/controller.dart';
-import 'package:virtual_lab/pages/playui/inventory_ui.dart';
-import 'package:virtual_lab/pages/playui/procedure_plating_ui.dart';
-import 'package:virtual_lab/pages/PlayUI/processUI.dart';
+import 'package:virtual_lab/pages/play/inventory_ui.dart';
+import 'package:virtual_lab/pages/play/procedure_plating_ui.dart';
+import 'package:virtual_lab/pages/play/process_ui.dart';
 import 'package:virtual_lab/utils/properties.dart';
 import 'package:virtual_lab/utils/routes.dart';
 

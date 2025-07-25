@@ -19,10 +19,7 @@ class InventoryModel {
       type: map['type'] ?? '',
       studentId: map['studentId'] ?? '',
       take: map['take'] ?? '',
-      ingredients:
-          (map['ingredients'] as List)
-              .map((item) => IngredientsModel.fromJson(item))
-              .toList(),
+      ingredients: (map['ingredients'] as List).map((item) => IngredientsModel.fromJson(item)).toList(),
     );
   }
 
@@ -96,6 +93,8 @@ class ActionsModel {
     return {
       'action': action, 
       'status': status,
+      'tool': tool,
     };
   }
+  
 }
