@@ -9,6 +9,7 @@ class MyDropDown extends StatelessWidget {
   final void Function(String?)? onChanged;
   final Color? fillColor;
   final bool hasError;
+  final Color? defaultBorderColor;
 
   const MyDropDown({
     super.key,
@@ -18,6 +19,7 @@ class MyDropDown extends StatelessWidget {
     this.onChanged,
     this.fillColor = backgroundColor,
     this.hasError = false,
+    this.defaultBorderColor,
   });
 
   @override
@@ -36,7 +38,9 @@ class MyDropDown extends StatelessWidget {
       fontWeight: FontWeight.w400,
     );
 
-    Color borderColor = hasError ? redLighter : Colors.transparent;
+    Color borderColor = hasError
+        ? redLighter
+        : (defaultBorderColor ?? Colors.transparent);
 
     return SizedBox(
       height: 48.h,
@@ -63,39 +67,44 @@ class MyDropDown extends StatelessWidget {
             borderRadius: BorderRadius.circular(12.r),
             borderSide: BorderSide(
               color: borderColor,
-              width: hasError ? 1.5 : 0,
+              width: hasError || defaultBorderColor != null ? 1.5 : 0,
             ),
           ),
           focusedBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(12.r),
             borderSide: BorderSide(
-              color: hasError ? redLighter : darkBrown,
+              color: hasError
+                  ? redLighter
+                  : (defaultBorderColor ?? darkBrown),
               width: 1.5,
             ),
           ),
         ),
         hint: Center(
-          child: Text(hintText, style: hintStyle, textAlign: TextAlign.center),
+          child: Text(
+            hintText,
+            style: hintStyle,
+            textAlign: TextAlign.center,
+          ),
         ),
         dropdownColor: fillColor,
         iconEnabledColor: darkBrown,
         style: textStyle,
         validator: (value) => null,
-        items:
-            items
-                .map(
-                  (value) => DropdownMenuItem<String>(
-                    value: value,
-                    child: Center(
-                      child: Text(
-                        value,
-                        style: textStyle,
-                        textAlign: TextAlign.center,
-                      ),
-                    ),
+        items: items
+            .map(
+              (value) => DropdownMenuItem<String>(
+                value: value,
+                child: Center(
+                  child: Text(
+                    value,
+                    style: textStyle,
+                    textAlign: TextAlign.center,
                   ),
-                )
-                .toList(),
+                ),
+              ),
+            )
+            .toList(),
         onChanged: onChanged,
       ),
     );

@@ -14,6 +14,7 @@ class MyTextfield extends StatelessWidget {
   final bool? enabled;
   final List<TextInputFormatter>? inputFormatters;
   final void Function(String)? onChanged;
+  final Color? defaultBorderColor;
 
   const MyTextfield({
     super.key,
@@ -27,6 +28,7 @@ class MyTextfield extends StatelessWidget {
     this.enabled = true,
     this.inputFormatters,
     this.onChanged,
+    this.defaultBorderColor,
   });
 
   @override
@@ -64,12 +66,16 @@ class MyTextfield extends StatelessWidget {
           filled: true,
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(12.r),
-            borderSide: BorderSide.none,
+            borderSide: defaultBorderColor == null
+                ? BorderSide.none
+                : BorderSide(color: defaultBorderColor!, width: 2.w),
           ),
           enabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(12.r),
             borderSide: BorderSide(
-              color: error == true ? redLighter : Colors.transparent,
+              color: error == true
+                  ? redLighter
+                  : (defaultBorderColor ?? Colors.transparent),
               width: 1.5,
             ),
           ),

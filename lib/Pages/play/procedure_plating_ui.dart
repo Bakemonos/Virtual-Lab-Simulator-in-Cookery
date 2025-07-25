@@ -61,9 +61,16 @@ class _MyProcedurePlatingPageState extends State<MyProcedurePlatingPage> with Ti
             child: Container(
               width: double.infinity,
               decoration: controller.designUI(),
-              child: Column(
-                children: [
-                ],
+              child: Padding(
+                padding: EdgeInsets.all(10.w),
+                child: Column(
+                  children: [
+                    Align(
+                      alignment: Alignment.topLeft,
+                      child: controller.actionButton(text: 'View Instruction', onPressed: ()=> controller.instruction(context, controller.typeSelected!)),
+                    )
+                  ],
+                ),
               ),
             ),
           ),

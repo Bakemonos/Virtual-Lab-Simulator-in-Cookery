@@ -99,15 +99,9 @@ class MySignUpPage extends StatelessWidget {
                                           ),
                                           Obx(
                                             () => controller.repeatedDropdown(
-                                              hasError:
-                                                  controller
-                                                      .genderErrorText
-                                                      .value
-                                                      .isNotEmpty,
-                                              errorText:
-                                                  controller.genderErrorText,
-                                              selectedValue:
-                                                  controller.gender.value,
+                                              hasError: controller.genderErrorText.value.isNotEmpty,
+                                              errorText: controller.genderErrorText,
+                                              selectedValue: controller.gender.value,
                                               label: 'Gender',
                                               hint: 'Select Gender',
                                               items: [
@@ -116,8 +110,7 @@ class MySignUpPage extends StatelessWidget {
                                                 'Rather not say',
                                               ],
                                               onChanged: (value) {
-                                                controller.gender.value =
-                                                    value!;
+                                                controller.gender.value = value!;
                                               },
                                             ),
                                           ),

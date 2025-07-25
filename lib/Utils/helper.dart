@@ -55,4 +55,19 @@ class Helper extends GetxController {
         throw Exception('Unknown IngredientType: $type');
     }
   }
+
+  String toCamelCase(String input) {
+    final words = input
+        .toLowerCase()
+        .split(RegExp(r'[\s_-]+'))
+        .where((word) => word.isNotEmpty)
+        .toList();
+
+    if (words.isEmpty) return '';
+
+    return words.first + words.skip(1).map((word) {
+      return word[0].toUpperCase() + word.substring(1);
+    }).join();
+  }
+
 }

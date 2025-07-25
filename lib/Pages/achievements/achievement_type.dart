@@ -48,7 +48,7 @@ class _MyAchievementTypePageState extends State<MyAchievementTypePage> {
                         child: Row(
                           mainAxisSize: MainAxisSize.min,
                           children: List.generate(3, (index) {
-                            var data = food_menu[index];
+                            var data = foodMenu[index];
                             return Padding(
                               padding: EdgeInsets.only(
                                 right: index != 2 ? 24.w : 0,

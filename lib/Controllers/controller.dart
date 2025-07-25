@@ -1,5 +1,7 @@
 import 'dart:async';
 import 'package:audioplayers/audioplayers.dart';
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -11,6 +13,7 @@ import 'package:virtual_lab/components/custom_svg.dart';
 import 'package:virtual_lab/components/custom_text.dart';
 import 'package:virtual_lab/components/custom_textfield.dart';
 import 'package:virtual_lab/components/custom_dalog.dart';
+import 'package:virtual_lab/components/shimmer.dart';
 import 'package:virtual_lab/json/coc1.dart';
 import 'package:virtual_lab/json/actions.dart';
 import 'package:virtual_lab/models/food_menu_model.dart';
@@ -42,6 +45,7 @@ class AppController extends GetxController {
   Timer? _timer;
 
   //? RX VARIABLE
+  final category = ''.obs;
   final gender = ''.obs;
   final gradeLevel = ''.obs;
 
@@ -79,6 +83,7 @@ class AppController extends GetxController {
   final lrnController = TextEditingController();
   final passwordController = TextEditingController();
   final changePasswordController = TextEditingController();
+  final nameDishController = TextEditingController();
 
   //? USER DATA
   Rx<UserModel> userData = UserModel.empty().obs;
@@ -359,44 +364,58 @@ class AppController extends GetxController {
     RxString? errorText,
     TextEditingController? controller,
     bool obscureText = false,
+    Color? defaultBorderColor,
   }) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Row(
-          spacing: 8.w,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Obx(
-              () => MyText(
+            if (errorText != null) Obx(() {
+              final hasError = errorText.value.isNotEmpty;
+              return MyText(
                 text: label,
                 fontWeight: FontWeight.w600,
-                color: errorText!.value.isNotEmpty ? redLighter : lightBrown,
-              ),
+                color: hasError ? redLighter : lightBrown,
+              );
+            })
+            else MyText(
+              text: label,
+              fontWeight: FontWeight.w600,
+              color: lightBrown,
             ),
-            Obx(
-              () =>
-                  errorText!.value.isNotEmpty
-                      ? Padding(
-                        padding: EdgeInsets.only(top: 4.h),
-                        child: MyText(
-                          text: '* ${errorText.value}',
-                          color: redLighter,
-                          fontWeight: FontWeight.w400,
-                          size: 14.sp,
-                        ),
-                      )
-                      : SizedBox.shrink(),
-            ),
+            if (errorText != null) Obx(() {
+              final hasError = errorText.value.isNotEmpty;
+              return hasError ? Padding(
+                  padding: EdgeInsets.only(top: 4.h, left: 8.w),
+                  child: MyText(
+                    text: '* ${errorText.value}',
+                    color: redLighter,
+                    fontWeight: FontWeight.w400,
+                    size: 14.sp,
+                  ),
+                )
+              : SizedBox.shrink();
+            }),
           ],
         ),
         SizedBox(height: 4.h),
-        Obx(
-          () => MyTextfield(
+        if (errorText != null) Obx(() {
+          final hasError = errorText.value.isNotEmpty;
+          return MyTextfield(
             controller: controller,
             hint: 'Enter $label',
             obscureText: obscureText,
-            error: errorText!.value.isNotEmpty,
-          ),
+            error: hasError,
+            defaultBorderColor: defaultBorderColor,
+          );
+        }) else MyTextfield(
+          controller: controller,
+          hint: 'Enter $label',
+          obscureText: obscureText,
+          error: false,
+          defaultBorderColor: defaultBorderColor,
         ),
       ],
     );
@@ -406,29 +425,39 @@ class AppController extends GetxController {
     required String label,
     required List<String> items,
     required String hint,
-    required RxString errorText,
-    required String? selectedValue,
+    RxString? errorText,
+    String? selectedValue,
     required void Function(String?) onChanged,
-    bool? hasError = false,
+    bool hasError = false,
+    Color? defaultBorderColor, // <-- new
   }) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Row(
-          spacing: 8.w,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Obx(
-              () => MyText(
+            if (errorText != null)
+              Obx(() {
+                final isError = errorText.value.isNotEmpty;
+                return MyText(
+                  text: label,
+                  fontWeight: FontWeight.w600,
+                  color: isError ? redLighter : lightBrown,
+                );
+              })
+            else
+              MyText(
                 text: label,
                 fontWeight: FontWeight.w600,
-                color: errorText.value.isNotEmpty ? redLighter : lightBrown,
+                color: lightBrown,
               ),
-            ),
-            Obx(
-              () =>
-                  errorText.value.isNotEmpty
-                      ? Padding(
-                        padding: EdgeInsets.only(top: 4.h, bottom: 4.h),
+            if (errorText != null)
+              Obx(() {
+                final isError = errorText.value.isNotEmpty;
+                return isError
+                    ? Padding(
+                        padding: EdgeInsets.only(top: 4.h, bottom: 4.h, left: 8.w),
                         child: MyText(
                           text: errorText.value,
                           fontWeight: FontWeight.w400,
@@ -436,16 +465,18 @@ class AppController extends GetxController {
                           size: 14.sp,
                         ),
                       )
-                      : SizedBox.shrink(),
-            ),
+                    : SizedBox.shrink();
+              }),
           ],
         ),
+        SizedBox(height: 4.h),
         MyDropDown(
-          hasError: hasError!,
+          hasError: hasError,
           items: items,
           hintText: hint,
           value: selectedValue,
           onChanged: onChanged,
+          defaultBorderColor: defaultBorderColor, // <-- forward to dropdown
         ),
       ],
     );
@@ -458,6 +489,130 @@ class AppController extends GetxController {
         MyText(text: '$label :', fontWeight: FontWeight.w600),
         MyText(text: value, fontWeight: FontWeight.w400),
       ],
+    );
+  }
+
+  void instruction(BuildContext context, FoodMenuModel data) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          contentPadding: EdgeInsets.zero,
+          content: Container(
+            width: 360.w,
+            decoration: BoxDecoration(
+              color: backgroundColor,
+              borderRadius: BorderRadius.circular(16.r),
+            ),
+            child: Padding(
+              padding: EdgeInsets.all(16.w),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                spacing: 16.h,
+                children: [
+                  Row(
+                    spacing: 14.w,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Image.asset(logo, width: 32.w),
+                      MyText(text: 'Instruction'),
+                      const Spacer(),
+                      IconButton(
+                        style: ButtonStyle(
+                          shape: WidgetStatePropertyAll(
+                            BeveledRectangleBorder(
+                              borderRadius: BorderRadiusGeometry.circular(4.r),
+                            ),
+                          ),
+                        ),
+                        onPressed: () => context.pop(),
+                        icon: Container(
+                          width: 32.w,
+                          height: 32.h,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(4.r),
+                            color: lightButtonBackground.withValues(alpha: 0.3),
+                          ),
+                          child: Center(
+                            child: MySvgPicture(
+                              path: close,
+                              iconColor: darkBrown,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  Expanded(
+                    child: SingleChildScrollView(
+                      physics: AlwaysScrollableScrollPhysics(),
+                      child: Column(
+                        spacing: 12.h,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            spacing: 12.w,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              SizedBox(
+                                width: 100.w,
+                                child: CachedNetworkImage(
+                                  imageUrl: data.path,
+                                  placeholder: (context, url) => ShimmerSkeletonLoader(),
+                                  errorWidget: (context, url, error) => Icon(Icons.error),
+                                  fit: BoxFit.cover,
+                                ),
+                              ),
+                              Expanded(
+                                child: MyText(
+                                  text: 'Prepare, Present ${data.title}',
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                            ],
+                          ),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            spacing: 12.h,
+                            children: [
+                              ...data.instructions.map(
+                                (ins) => Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    MyText(
+                                      text: ins.name,
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                    ...ins.list.asMap().entries.map(
+                                      (entry) => Padding(
+                                        padding: EdgeInsets.only(left: 12.w),
+                                        child: MyText(
+                                          text:
+                                              '${entry.key + 1}. ${entry.value}',
+                                          fontWeight: FontWeight.w400,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              MyText(
+                                text: data.description,
+                                fontWeight: FontWeight.w400,
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  MyText(text: 'Have Fun!', fontWeight: FontWeight.w500),
+                ],
+              ),
+            ),
+          ),
+        );
+      },
     );
   }
 
@@ -680,8 +835,8 @@ class AppController extends GetxController {
       Map<String, dynamic> data = {
         'type': coc,
         'studentId': studentId,
-        'category': 'sauce',
-        'name': 'The king sauce',
+        'category': helper.toCamelCase(category.value),
+        'name': nameDishController.text,
         'ingredients': preparedData.value.ingredients,
         'equipments': [
           {

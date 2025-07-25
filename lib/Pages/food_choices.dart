@@ -9,7 +9,6 @@ import 'package:virtual_lab/components/custom_text.dart';
 import 'package:virtual_lab/components/shimmer.dart';
 import 'package:virtual_lab/controllers/controller.dart';
 import 'package:virtual_lab/json/food_menu.dart';
-import 'package:virtual_lab/models/food_menu_model.dart';
 import 'package:virtual_lab/utils/properties.dart';
 import 'package:virtual_lab/utils/routes.dart';
 
@@ -50,14 +49,17 @@ class _MyFoodChoicesPageState extends State<MyFoodChoicesPage> {
                         child: Row(
                           mainAxisSize: MainAxisSize.min,
                           children: List.generate(3, (index) {
-                            var data = food_menu[index];
+                            var data = foodMenu[index];
+
                             return Padding(
                               padding: EdgeInsets.only(
                                 right: index != 2 ? 24.w : 0,
                               ),
                               child: foodChoices(
-                                instructionFunction: () => instruction(data),
+                                instructionFunction: () => controller.instruction(context, data),
                                 onTap: () async {
+
+                                  debugPrint('\n SELECTED : ${data.menu}\n');
                                   controller.typeSelected = data;
                                   await controller.getInventory(context);
                                 },
@@ -92,133 +94,6 @@ class _MyFoodChoicesPageState extends State<MyFoodChoicesPage> {
           ),
         ],
       ),
-    );
-  }
-
-  void instruction(FoodMenuModel data) {
-    showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          contentPadding: EdgeInsets.zero,
-          content: Container(
-            width: 360.w,
-            decoration: BoxDecoration(
-              color: backgroundColor,
-              borderRadius: BorderRadius.circular(16.r),
-            ),
-            child: Padding(
-              padding: EdgeInsets.all(16.w),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                spacing: 16.h,
-                children: [
-                  Row(
-                    spacing: 14.w,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Image.asset(logo, width: 32.w),
-                      MyText(text: 'Instruction'),
-                      const Spacer(),
-                      IconButton(
-                        style: ButtonStyle(
-                          shape: WidgetStatePropertyAll(
-                            BeveledRectangleBorder(
-                              borderRadius: BorderRadiusGeometry.circular(4.r),
-                            ),
-                          ),
-                        ),
-                        onPressed: () => context.pop(),
-                        icon: Container(
-                          width: 32.w,
-                          height: 32.h,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(4.r),
-                            color: lightButtonBackground.withValues(alpha: 0.3),
-                          ),
-                          child: Center(
-                            child: MySvgPicture(
-                              path: close,
-                              iconColor: darkBrown,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                  Expanded(
-                    child: SingleChildScrollView(
-                      physics: AlwaysScrollableScrollPhysics(),
-                      child: Column(
-                        spacing: 12.h,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            spacing: 12.w,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              SizedBox(
-                                width: 100.w,
-                                child: CachedNetworkImage(
-                                  imageUrl: data.path,
-                                  placeholder:
-                                      (context, url) => ShimmerSkeletonLoader(),
-                                  errorWidget:
-                                      (context, url, error) =>
-                                          Icon(Icons.error),
-                                  fit: BoxFit.cover,
-                                ),
-                              ),
-                              Expanded(
-                                child: MyText(
-                                  text: 'Prepare, Present ${data.title}',
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              ),
-                            ],
-                          ),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            spacing: 12.h,
-                            children: [
-                              ...data.instructions.map(
-                                (ins) => Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    MyText(
-                                      text: ins.name,
-                                      fontWeight: FontWeight.w500,
-                                    ),
-                                    ...ins.list.asMap().entries.map(
-                                      (entry) => Padding(
-                                        padding: EdgeInsets.only(left: 12.w),
-                                        child: MyText(
-                                          text:
-                                              '${entry.key + 1}. ${entry.value}',
-                                          fontWeight: FontWeight.w400,
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              MyText(
-                                text: data.description,
-                                fontWeight: FontWeight.w400,
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                  MyText(text: 'Have Fun!', fontWeight: FontWeight.w500),
-                ],
-              ),
-            ),
-          ),
-        );
-      },
     );
   }
 

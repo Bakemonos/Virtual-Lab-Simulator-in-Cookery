@@ -86,8 +86,8 @@ class MyProcessPage extends StatelessWidget {
           ),
           onPressed: controller.equipmentOntap,
           icon: Container(
-            width: 48.w,
-            height: 48.h,
+            width: 36.w,
+            height: 36.h,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(4.r),
               color: lightGridColor.withValues(alpha: 0.5),
@@ -98,7 +98,7 @@ class MyProcessPage extends StatelessWidget {
           ),
         ),
         SizedBox(
-          height: 100.h,
+          height: 80.h,
           child: Obx((){
             final prepared = controller.preparedData.value.ingredients;
 
@@ -183,65 +183,85 @@ class MyProcessPage extends StatelessWidget {
   }
 
   void submitCreateDish(BuildContext context, AppController controller) {
-
+    final borderColor = lightBrown.withValues(alpha: 0.3);
     showDialog(
       context: context,
       builder: (context) {
-        return AlertDialog(
-          contentPadding: EdgeInsets.zero,
-          content: Container(
-            width: 360.w,
-            decoration: BoxDecoration(
-              color: backgroundColor,
-              borderRadius: BorderRadius.circular(16.r),
-            ),
-            child: Padding(
-              padding: EdgeInsets.all(16.w),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                spacing: 16.h,
-                children: [
-                  Row(
-                    spacing: 14.w,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Image.asset(logo, width: 32.w),
-                      MyText(text: 'Submit dish'),
-                      const Spacer(),
-                      IconButton(
-                        style: ButtonStyle(
-                          shape: WidgetStatePropertyAll(
-                            BeveledRectangleBorder(
-                              borderRadius: BorderRadiusGeometry.circular(4.r),
-                            ),
-                          ),
-                        ),
-                        onPressed: () => context.pop(),
-                        icon: Container(
-                          width: 32.w,
-                          height: 32.h,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(4.r),
-                            color: lightButtonBackground.withValues(alpha: 0.3),
-                          ),
-                          child: Center(
-                            child: MySvgPicture(
-                              path: close,
-                              iconColor: darkBrown,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
+        return Dialog(
+          insetPadding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 24.h),
+          backgroundColor: Colors.transparent,
+          child: LayoutBuilder(
+            builder: (context, constraints) {
+              return SingleChildScrollView(
+                child: ConstrainedBox(
+                  constraints: BoxConstraints(
+                    maxWidth: 360.w,
+                    minWidth: 360.w,
+                    maxHeight: MediaQuery.of(context).size.height * 0.9,
                   ),
-                  controller.repeatedTextInput(label: 'Dish name')  
-                ],
-              ),
-            ),
+                  child: Material(
+                    borderRadius: BorderRadius.circular(16.r),
+                    color: backgroundColor,
+                    child: Padding(
+                      padding: EdgeInsets.all(16.w),
+                      child: Column(
+                        spacing: 8.h,
+                        mainAxisSize: MainAxisSize.min,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Image.asset(logo, width: 32.w),
+                              SizedBox(width: 14.w),
+                              MyText(text: 'Submit dish'),
+                              const Spacer(),
+                              IconButton(
+                                onPressed: () => context.pop(),
+                                icon: Container(
+                                  width: 32.w,
+                                  height: 32.h,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(4.r),
+                                    color: lightButtonBackground.withAlpha(77),
+                                  ),
+                                  child: Center(
+                                    child: MySvgPicture(
+                                      path: close,
+                                      iconColor: darkBrown,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                          controller.repeatedDropdown(
+                            label: 'Type',
+                            hint: 'Select Type', 
+                            items: ['Sauce', 'Main dish', 'Soup'],
+                            selectedValue: controller.category.value,
+                            defaultBorderColor: borderColor, 
+                            onChanged: (value) {
+                              controller.category.value = value!;
+                            },
+                          ),
+                          controller.repeatedTextInput(
+                            label: 'Dish name', 
+                            controller: controller.nameDishController,
+                            defaultBorderColor: borderColor,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              );
+            },
           ),
         );
       },
     );
   }
+
 
 }

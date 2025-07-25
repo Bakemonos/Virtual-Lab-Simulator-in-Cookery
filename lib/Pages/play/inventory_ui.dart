@@ -183,24 +183,39 @@ class _MyInventoryPageState extends State<MyInventoryPage> {
                     ),
                     child: Center(child: MyText(text: data.name)),
                   ),
-                  child: AnimatedContainer(
-                    duration: Duration(milliseconds: 200),
-                    curve: Curves.easeInOut,
-                    alignment: Alignment.center,
-                    decoration: BoxDecoration(
-                      color: lightGridColor,
-                      borderRadius: BorderRadius.circular(8.r),
-                    ),
-                    child: Padding(
-                      padding: EdgeInsets.all(8.w),
-                      child: CachedNetworkImage(
-                        imageUrl: data.path,
-                        placeholder: (context, url) => ShimmerSkeletonLoader(),
-                        errorWidget: (context, url, error) =>
-                            Icon(Icons.error),
-                        fit: BoxFit.contain,
+                  child: Stack(
+                    children: [
+                      AnimatedContainer(
+                        duration: Duration(milliseconds: 200),
+                        curve: Curves.easeInOut,
+                        alignment: Alignment.center,
+                        decoration: BoxDecoration(
+                          color: lightGridColor,
+                          borderRadius: BorderRadius.circular(8.r),
+                        ),
+                        child: Padding(
+                          padding: EdgeInsets.all(8.w),
+                          child: CachedNetworkImage(
+                            imageUrl: data.path,
+                            placeholder: (context, url) => ShimmerSkeletonLoader(),
+                            errorWidget: (context, url, error) =>
+                                Icon(Icons.error),
+                            fit: BoxFit.contain,
+                          ),
+                        ),
                       ),
-                    ),
+                      Align(
+                        alignment: Alignment.bottomCenter,
+                        child: Container(
+                          width: double.infinity,
+                          decoration: BoxDecoration(
+                            color: lightBrown.withValues(alpha: 0.4),
+                            borderRadius: BorderRadius.only(bottomLeft: Radius.circular(8.r), bottomRight: Radius.circular(8.r))
+                          ),
+                          child: MyText(text: data.name, textAlign: TextAlign.center, color: textLight, size: 16.sp,),
+                        ),
+                      ),
+                    ],
                   ),
                 );
               },

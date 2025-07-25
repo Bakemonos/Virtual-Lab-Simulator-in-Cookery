@@ -71,32 +71,23 @@ class _MyIngredientsSelectionPageState extends State<MyIngredientsSelectionPage>
                             Expanded(
                               child: GridView.builder(
                                 padding: EdgeInsets.all(8.w),
-                                gridDelegate:
-                                    const SliverGridDelegateWithFixedCrossAxisCount(
-                                      crossAxisCount: 6,
-                                      crossAxisSpacing: 8,
-                                      mainAxisSpacing: 8,
-                                      childAspectRatio: 1,
-                                    ),
+                                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                                  crossAxisCount: 6,
+                                  crossAxisSpacing: 8,
+                                  mainAxisSpacing: 8,
+                                  childAspectRatio: 1,
+                                ),
                                 itemCount: ingredientsCOC1.length,
                                 itemBuilder: (context, index) {
                                   var data = ingredientsCOC1[index];
-                                  var isSelected =
-                                      controller.selectedList[index];
+                                  var isSelected = controller.selectedList[index];
 
                                   return InkWell(
                                     onTap: () {
                                       setState(() {
-                                        final selectedCount =
-                                            controller.selectedList
-                                                .where((item) => item.value)
-                                                .length;
+                                        final selectedCount = controller.selectedList.where((item) => item.value).length;
 
-                                        if (!isSelected.value &&
-                                            selectedCount >=
-                                                controller
-                                                    .ingredientLimit
-                                                    .value) {
+                                        if (!isSelected.value && selectedCount >= controller.ingredientLimit.value) {
                                           debugPrint(
                                             'Limit Reached'
                                             'You can only select up to 10 ingredients.',
@@ -109,35 +100,36 @@ class _MyIngredientsSelectionPageState extends State<MyIngredientsSelectionPage>
                                         });
                                       });
                                     },
-                                    child: Container(
-                                      alignment: Alignment.center,
-                                      decoration: BoxDecoration(
-                                        color:
-                                            isSelected.value
-                                                ? lightGridColor
-                                                : lightGridColor.withValues(
-                                                  alpha: 0.5,
-                                                ),
-                                        borderRadius: BorderRadius.circular(
-                                          8.r,
+                                    child: Stack(
+                                      children: [
+                                        Container(
+                                          alignment: Alignment.center,
+                                          decoration: BoxDecoration(
+                                            color: isSelected.value ? lightGridColor : lightGridColor.withValues(alpha: 0.5),
+                                            borderRadius: BorderRadius.circular(8.r),
+                                          ),
+                                          child: Padding(
+                                            padding: EdgeInsets.all(8.w),
+                                            child: data.path == ''? SizedBox() : CachedNetworkImage(
+                                              imageUrl: data.path,
+                                              placeholder: (context, url) => ShimmerSkeletonLoader(),
+                                              errorWidget: (context, url, error) => Icon(Icons.error),
+                                              fit: BoxFit.contain,
+                                            ),
+                                          ),
                                         ),
-                                      ),
-                                      child: Padding(
-                                        padding: EdgeInsets.all(8.w),
-                                        child:
-                                            data.path == ''
-                                                ? SizedBox()
-                                                : CachedNetworkImage(
-                                                  imageUrl: data.path,
-                                                  placeholder:
-                                                      (context, url) =>
-                                                          ShimmerSkeletonLoader(),
-                                                  errorWidget:
-                                                      (context, url, error) =>
-                                                          Icon(Icons.error),
-                                                  fit: BoxFit.contain,
-                                                ),
-                                      ),
+                                        Align(
+                                          alignment: Alignment.bottomCenter,
+                                          child: Container(
+                                            width: double.infinity,
+                                            decoration: BoxDecoration(
+                                              color: lightBrown.withValues(alpha: 0.6),
+                                              borderRadius: BorderRadius.only(bottomLeft: Radius.circular(8.r), bottomRight: Radius.circular(8.r))
+                                            ),
+                                            child: MyText(text: data.name, textAlign: TextAlign.center, color: textLight, size: 11.sp, overflow: TextOverflow.ellipsis),
+                                          ),
+                                        ),
+                                      ],
                                     ),
                                   );
                                 },
@@ -151,12 +143,7 @@ class _MyIngredientsSelectionPageState extends State<MyIngredientsSelectionPage>
                                     horizontal: 60.w,
                                   ),
                                   child: MyButton(
-                                    text:
-                                        controller.seconds.value == 0
-                                            ? 'CONFIRM'
-                                            : helper.formatSecondsToMMSS(
-                                              controller.seconds.value,
-                                            ),
+                                    text: controller.seconds.value == 0 ? 'CONFIRM' : helper.formatSecondsToMMSS(controller.seconds.value),
                                     onTap: () async {
                                       if(controller.seconds.value == 0) await controller.ingredientsCreate(context);
                                     },

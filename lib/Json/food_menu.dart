@@ -1,6 +1,6 @@
 import 'package:virtual_lab/models/food_menu_model.dart';
 
-List<FoodMenuModel> food_menu = [
+List<FoodMenuModel> foodMenu = [
   FoodMenuModel(
     menu: 'coc1',
     title: 'Hot Meal',
