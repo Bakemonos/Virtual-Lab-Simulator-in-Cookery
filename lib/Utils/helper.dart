@@ -70,4 +70,10 @@ class Helper extends GetxController {
     }).join();
   }
 
+  String formatLine(String label, List<String> items) {
+    final text = items.join(', ');
+    final suffix = items.length > 1 ? 's' : '';
+    return '• $label$suffix: $text';
+  }
+
 }

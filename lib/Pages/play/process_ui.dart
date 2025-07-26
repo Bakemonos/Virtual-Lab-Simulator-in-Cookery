@@ -23,47 +23,52 @@ class MyProcessPage extends StatelessWidget {
         child: Padding(
           padding: EdgeInsets.all(10.w),
           child: Column(
-            spacing: 8.h,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.end,
             children: [
-              DragTarget<List<IngredientsModel>>(
+              DragTarget<IngredientsModel>(
+                onWillAcceptWithDetails: (details) => details.data.dragKey == 'submit',
                 onAcceptWithDetails: (details) {
-                  controller.processData.value = details.data;
+                  confirmIngredient(
+                    controller: controller,
+                    type: controller.typeSelected!.menu ?? '',
+                    studentId: controller.userData.value.id!,
+                    take: 'take_one',
+                  );
                 },
                 builder: (context, candidateData, rejectedData){
-                  return SizedBox(
-                    width: 100.w, height: 100.h,
-                    child: CachedNetworkImage(
-                      imageUrl: kaldero,
-                      placeholder: (context, url) => ShimmerSkeletonLoader(),
-                      errorWidget: (context, url, error) => Icon(Icons.error),
-                      fit: BoxFit.contain,
+                  return Container(
+                    decoration: BoxDecoration(
+                      color: candidateData.isEmpty ? darkBrown.withValues(alpha: 0.6) : greenLighter.withValues(alpha: 0.8) ,
+                      borderRadius: BorderRadius.circular(8.r)
+                    ),
+                    width: 200.w, height: 200.h,
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: CachedNetworkImage(
+                        imageUrl: kaldero,
+                        placeholder: (context, url) => ShimmerSkeletonLoader(),
+                        errorWidget: (context, url, error) => Icon(Icons.error),
+                        fit: BoxFit.contain,
+                      ),
                     ),
                   );
                 },
               ),
-              Row(
-                spacing: 8.w,
-                children: [
-                  controller.actionButton(text: 'Check', onPressed: (){}),
-                  controller.actionButton(text: 'Submit', onPressed: ()=> submitCreateDish(context, controller)),
-                ],
-              ),
               const Spacer(),
-              Obx(
-                () => controller.equipmentToggle.value ? preparedIngredients(controller)
-                : SizedBox(
-                  width: double.infinity,
-                  child: Column(
-                    spacing: 12.h,
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    children: [
-                      equipToggler(controller: controller, iconPath: box, label: 'Inventory'),
-                      equipToggler(controller: controller, iconPath: basket, label: 'Basket'),
-                    ],
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Spacer(),
+                  SizedBox(
+                    width: 80.w,
+                    child: Column(
+                      spacing: 8.h,
+                      children: [
+                        controller.actionButton(text: 'Check', onPressed: ()=> checkStatus(context, controller)),
+                        controller.actionButton(text: 'Submit', onPressed: ()=> submitCreateDish(context, controller)),
+                      ],
+                    ),
                   ),
-                ),
+                ],
               ),
             ],
           ),
@@ -182,6 +187,116 @@ class MyProcessPage extends StatelessWidget {
     );
   }
 
+  void checkStatus(BuildContext context, AppController controller) {
+    Row repeatedUI(String label, String value) {
+      return Row(
+        children: [
+          MyText(text: '$label: ', fontWeight: FontWeight.w500),
+          MyText(text: value),
+        ],
+      );
+    }
+
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          contentPadding: EdgeInsets.zero,
+          content: Container(
+            width: 360.w,
+            decoration: BoxDecoration(
+              color: backgroundColor,
+              borderRadius: BorderRadius.circular(16.r),
+            ),
+            child: Padding(
+              padding: EdgeInsets.all(16.w),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                spacing: 16.h,
+                children: [
+                  Row(
+                    spacing: 14.w,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Image.asset(logo, width: 32.w),
+                      MyText(text: 'Ingredient Status'),
+                      const Spacer(),
+                      IconButton(
+                        style: ButtonStyle(
+                          shape: WidgetStatePropertyAll(
+                            BeveledRectangleBorder(
+                              borderRadius: BorderRadiusGeometry.circular(4.r),
+                            ),
+                          ),
+                        ),
+                        onPressed: () => context.pop(),
+                        icon: Container(
+                          width: 32.w,
+                          height: 32.h,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(4.r),
+                            color: lightButtonBackground.withValues(alpha: 0.3),
+                          ),
+                          child: Center(
+                            child: MySvgPicture(
+                              path: close,
+                              iconColor: darkBrown,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  Obx(() {
+                    final preparedData = controller.preparedData.value.ingredients;
+
+                    return Expanded(
+                      child: SingleChildScrollView(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            ...preparedData.asMap().entries.map((entry) {
+                              final index = entry.key + 1; 
+                              final ingredient = entry.value;
+                              final actions = ingredient.actions;
+
+                              return Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  repeatedUI('$index: Ingredient', ingredient.name),  
+                                  repeatedUI('Category', ingredient.category),
+                                  if (actions.isNotEmpty)
+                                    ...actions.asMap().entries.map((entry){
+                                      final index = entry.key + 1; 
+                                      final a = entry.value;
+
+                                      return Container(
+                                        margin: EdgeInsetsGeometry.only(left: 16.w),
+                                        child: MyText(
+                                            text: '$index Action: ${a.action}, Tool: ${a.tool}, Status: ${a.status}',
+                                            fontWeight: FontWeight.w500,
+                                            size: 16.sp,
+                                        ),
+                                      );
+                                    }),
+                                  SizedBox(height: 16.h),
+                                ],
+                              );
+                            }),
+                          ],
+                        ),
+                      ),
+                    );
+                  })
+                ],
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
+
   void submitCreateDish(BuildContext context, AppController controller) {
     final borderColor = lightBrown.withValues(alpha: 0.3);
     showDialog(
@@ -263,5 +378,45 @@ class MyProcessPage extends StatelessWidget {
     );
   }
 
+  void confirmIngredient({
+    required AppController controller,
+    required String type,
+    required String studentId,
+    required String take,
+  }) {
+
+    controller.preparedIngredients.add(controller.ingredientActionData.value);
+
+    final newInventory = InventoryModel(
+      type: type,
+      studentId: studentId,
+      take: take,
+      ingredients: controller.preparedIngredients.toList(),
+    );  
+
+    controller.preparedData.value = newInventory;
+    controller.preparedInventories.add(newInventory);
+
+    controller.ingredientDragDropData.value = IngredientsModel.empty();
+    controller.ingredientActionData.value = IngredientsModel.empty();
+    controller.selectedActions.clear();
+  }
 
 }
+
+
+// const Spacer(),
+// Obx(
+//   () => controller.equipmentToggle.value ? preparedIngredients(controller)
+//   : SizedBox(
+//     width: double.infinity,
+//     child: Column(
+//       spacing: 12.h,
+//       crossAxisAlignment: CrossAxisAlignment.end,
+//       children: [
+//         equipToggler(controller: controller, iconPath: box, label: 'Inventory'),
+//         equipToggler(controller: controller, iconPath: basket, label: 'Basket'),
+//       ],
+//     ),
+//   ),
+// ),

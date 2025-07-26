@@ -7,8 +7,7 @@ List<FoodMenuModel> foodMenu = [
     name: 'Soup\'s',
     label: 'Soup, Sauce',
     description: 'Create name for Soup, Main Dish and Sauce',
-    path:
-        'https://res.cloudinary.com/dgvi2di6t/image/upload/v1751199001/soup_ovutke.png',
+    path: 'https://res.cloudinary.com/dgvi2di6t/image/upload/v1751199001/soup_ovutke.png',
     instructions: [
       FoodDesciptionModel(
         name: 'Soup',
@@ -29,10 +28,8 @@ List<FoodMenuModel> foodMenu = [
     title: 'Cold Meal',
     name: 'Appetizer\'s',
     label: 'Appetizer, Sandwich, salad',
-    description:
-        'Create name for your Appetizers, Sandwich and Salad & Salad Dressing',
-    path:
-        'https://res.cloudinary.com/dgvi2di6t/image/upload/v1751199001/appetizer_jhtehu.png',
+    description: 'Create name for your Appetizers, Sandwich and Salad & Salad Dressing',
+    path: 'https://res.cloudinary.com/dgvi2di6t/image/upload/v1751199001/appetizer_jhtehu.png',
     instructions: [
       FoodDesciptionModel(
         name: 'Appetizer',
@@ -51,8 +48,7 @@ List<FoodMenuModel> foodMenu = [
     name: 'Desserts',
     label: 'Desserts',
     description: 'Create name for desserts',
-    path:
-        'https://res.cloudinary.com/dgvi2di6t/image/upload/v1751199000/dessert_yzcyrl.png',
+    path: 'https://res.cloudinary.com/dgvi2di6t/image/upload/v1751199000/dessert_yzcyrl.png',
     instructions: [
       FoodDesciptionModel(
         name: 'Desserts',

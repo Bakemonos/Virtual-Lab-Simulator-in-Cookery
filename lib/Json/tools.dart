@@ -15,8 +15,6 @@ List<ToolType> getToolsForAction(ActionType action) {
       return [ToolType.knife, ToolType.scissors, ToolType.cutter];
     case ActionType.marinate:
       return [ToolType.bowl, ToolType.container, ToolType.ziplocBag];
-    case ActionType.cook:
-      return [ToolType.pan, ToolType.pot, ToolType.skillet];
     case ActionType.grill:
       return [ToolType.grill, ToolType.griddle, ToolType.tongs];
     case ActionType.slice:

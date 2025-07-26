@@ -51,7 +51,6 @@ class _MyProcedurePlatingPageState extends State<MyProcedurePlatingPage> with Ti
 
   @override
   Widget build(BuildContext context) {
-
     return SizedBox(
       width: 320.w,
       child: Column(
@@ -64,21 +63,40 @@ class _MyProcedurePlatingPageState extends State<MyProcedurePlatingPage> with Ti
               child: Padding(
                 padding: EdgeInsets.all(10.w),
                 child: Column(
+                  spacing: 4.h,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Align(
                       alignment: Alignment.topLeft,
                       child: controller.actionButton(text: 'View Instruction', onPressed: ()=> controller.instruction(context, controller.typeSelected!)),
-                    )
+                    ),
+                    SizedBox(height: 4.h),
+                    ...controller.typeSelected!.instructions.asMap().entries.map((entry){
+                      final index = entry.key + 1; 
+                      final goal = entry.value;
+
+                      return  MyText(
+                        text: '$index. ${goal.name}',
+                        fontWeight: FontWeight.w500,
+                        color: textLight,
+                        size: 16.sp,
+                      );
+                    })
                   ],
                 ),
               ),
             ),
           ),
+
+
+          //? PROCEDURE
           Expanded(
             child: DragTarget<IngredientsModel>(
+              onWillAcceptWithDetails: (details) => details.data.dragKey == 'procedure',
               onAcceptWithDetails: (details) {
                 controller.actionListToggle.value = false;
-                controller.actionToggle.value = false;
+                controller.actionToggle.value = false; 
                 controller.ingredientDragDropData.value = details.data;
                 controller.selectedActions.clear();
               },
@@ -108,40 +126,45 @@ class _MyProcedurePlatingPageState extends State<MyProcedurePlatingPage> with Ti
                                     alignment: Alignment.center,
                                     children: [
                                       MySvgPicture(path: board1, iconSize: 160.h),
-                                      if (hasIngredient)
-                                        Draggable(
-                                          data: ingredient,
-                                          onDragStarted: () {
-                                            controller.bagToggle.value= false;
-                                          },
-                                          feedback: SizedBox(
-                                            height: 80.h, width: 80.w,
-                                            child: Padding(
-                                              padding: EdgeInsets.all(8.w),
-                                              child: CachedNetworkImage(
-                                                imageUrl: ingredient.path,
-                                                placeholder: (context, url) => const ShimmerSkeletonLoader(),
-                                                errorWidget: (context, url, error) => const Icon(Icons.error),
-                                                fit: BoxFit.contain,
-                                              ),
-                                            ),
-                                          ),
-                                          childWhenDragging: Center(
-                                            child: MyText(text: ingredient.name),
-                                          ),
-                                          child: InkWell(
-                                            onTap: () => controller.actionOnTap(ingredient),
-                                            child: SizedBox(
-                                              height: 80.h, width: 80.w,
-                                              child: CachedNetworkImage(
-                                                imageUrl: ingredient.path,
-                                                placeholder: (context, url) => const ShimmerSkeletonLoader(),
-                                                errorWidget: (context, url, error) => const Icon(Icons.error),
-                                                fit: BoxFit.contain,
-                                              ),
+                                      if (hasIngredient) Draggable<IngredientsModel >(
+                                        data: IngredientsModel(
+                                          name: ingredient.name, 
+                                          path: ingredient.path, 
+                                          category: ingredient.category,
+                                          actions: ingredient.actions,
+                                          dragKey: 'submit'
+                                        ),
+                                        onDragStarted: () {
+                                          controller.bagToggle.value= false;
+                                        },
+                                        feedback: SizedBox(
+                                          height: 80.h, width: 80.w,
+                                          child: Padding(
+                                            padding: EdgeInsets.all(8.w),
+                                            child: CachedNetworkImage(
+                                              imageUrl: ingredient.path,
+                                              placeholder: (context, url) => const ShimmerSkeletonLoader(),
+                                              errorWidget: (context, url, error) => const Icon(Icons.error),
+                                              fit: BoxFit.contain,
                                             ),
                                           ),
                                         ),
+                                        childWhenDragging: Center(
+                                          child: MyText(text: ingredient.name),
+                                        ),
+                                        child: InkWell(
+                                          onTap: () => controller.actionOnTap(ingredient),
+                                          child: SizedBox(
+                                            height: 80.h, width: 80.w,
+                                            child: CachedNetworkImage(
+                                              imageUrl: ingredient.path,
+                                              placeholder: (context, url) => const ShimmerSkeletonLoader(),
+                                              errorWidget: (context, url, error) => const Icon(Icons.error),
+                                              fit: BoxFit.contain,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
                                     ],
                                   ),
                                 ),
@@ -150,14 +173,6 @@ class _MyProcedurePlatingPageState extends State<MyProcedurePlatingPage> with Ti
                                   child: Obx(()=> Row(
                                     spacing: 8.w,
                                     children: [
-                                      if(controller.selectedActions.isNotEmpty) controller.actionButton(
-                                        text: 'Confirm',
-                                        onPressed: () => confirmIngredient(
-                                          type: controller.typeSelected!.menu ?? '',
-                                          studentId: controller.userData.value.id!,
-                                          take: 'take_one',
-                                        ),
-                                      ),
                                       if(hasIngredient) controller.actionButton(
                                         text: 'Check',
                                         onPressed: (){
@@ -234,31 +249,6 @@ class _MyProcedurePlatingPageState extends State<MyProcedurePlatingPage> with Ti
     );
   }
   
-  void confirmIngredient({
-    required String type,
-    required String studentId,
-    required String take,
-  }) {
-
-    
-
-    controller.preparedIngredients.add(controller.ingredientActionData.value);
-
-    final newInventory = InventoryModel(
-      type: type,
-      studentId: studentId,
-      take: take,
-      ingredients: controller.preparedIngredients.toList(),
-    );  
-
-
-    controller.preparedData.value = newInventory;
-    controller.preparedInventories.add(newInventory);
-
-    controller.ingredientDragDropData.value = IngredientsModel.empty();
-    controller.ingredientActionData.value = IngredientsModel.empty();
-    controller.selectedActions.clear();
-  }
 
   void actionPerform() {
     final status = controller.handleTap(context).name;
@@ -415,7 +405,7 @@ class _MyProcedurePlatingPageState extends State<MyProcedurePlatingPage> with Ti
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               SizedBox(
-                                width: 100.w,
+                                width: 100.w, height: 100.h,
                                 child: CachedNetworkImage(
                                   imageUrl: ingredient.path,
                                   placeholder: (context, url) => ShimmerSkeletonLoader(),

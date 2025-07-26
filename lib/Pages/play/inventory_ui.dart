@@ -51,7 +51,7 @@ class _MyInventoryPageState extends State<MyInventoryPage> {
             ),
             child: controller.bagToggle.value ? SizedBox.shrink(key: ValueKey('trashBagClosed'))
             : DragTarget<IngredientsModel>(
-              onAcceptWithDetails: (details) {
+              onAcceptWithDetails: (details) { 
                 controller.discard();
               },
               builder: (context, candidateData, rejectedData) {
@@ -160,9 +160,14 @@ class _MyInventoryPageState extends State<MyInventoryPage> {
               itemCount: ingredients.length,
               itemBuilder: (context, index) {
                 var data = ingredients[index];
-                
                 return LongPressDraggable(
-                  data: data,
+                  data: IngredientsModel(
+                    name: data.name,
+                    path: data.path,
+                    category: data.category,
+                    actions: data.actions,
+                    dragKey: 'procedure', 
+                  ),
                   feedback: SizedBox(
                     height: 80.h,
                     child: Padding(

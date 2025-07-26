@@ -21,7 +21,6 @@ List<ActionType> getActionsForIngredient(IngredientType type) {
         ActionType.cut,
         ActionType.marinate,
         ActionType.grill,
-        ActionType.cook,
         ActionType.fry,
         ActionType.season,
       ];

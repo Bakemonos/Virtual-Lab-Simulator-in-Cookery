@@ -58,10 +58,15 @@ class _MyFoodChoicesPageState extends State<MyFoodChoicesPage> {
                               child: foodChoices(
                                 instructionFunction: () => controller.instruction(context, data),
                                 onTap: () async {
+                                  if (controller.tap) return;
 
+                                  controller.tap = true;
                                   debugPrint('\n SELECTED : ${data.menu}\n');
                                   controller.typeSelected = data;
+
                                   await controller.getInventory(context);
+
+                                  controller.tap = false; 
                                 },
                                 unlocked: unlocked[index],
                                 path: data.path,

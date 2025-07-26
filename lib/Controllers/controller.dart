@@ -75,6 +75,7 @@ class AppController extends GetxController {
   final actionListToggle = false.obs;
   final actionToggle = false.obs;
   final toolListToggle = false.obs;
+  bool tap = false;
 
   //? TEXT CONTROLLER
   final emailController = TextEditingController();
@@ -116,7 +117,7 @@ class AppController extends GetxController {
   RxList<InventoryModel> preparedInventories = <InventoryModel>[].obs;
 
   //? HOLD PROCESS INFORMATION
-  RxList<IngredientsModel> processData = <IngredientsModel>[].obs;
+  // RxList<IngredientsModel> processData = <IngredientsModel>[].obs;
 
   //? HOLD ACTIONS / TOOLS
   // final RxList<ActionType> ingredientsCurrentActions = <ActionType>[].obs;
@@ -587,8 +588,7 @@ class AppController extends GetxController {
                                       (entry) => Padding(
                                         padding: EdgeInsets.only(left: 12.w),
                                         child: MyText(
-                                          text:
-                                              '${entry.key + 1}. ${entry.value}',
+                                          text: '${entry.key + 1}. ${entry.value}',
                                           fontWeight: FontWeight.w400,
                                         ),
                                       ),

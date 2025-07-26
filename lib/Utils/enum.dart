@@ -9,7 +9,6 @@ enum ActionType {
   stir,
   cut,
   marinate,
-  cook,
   grill,
   slice,
   blend,

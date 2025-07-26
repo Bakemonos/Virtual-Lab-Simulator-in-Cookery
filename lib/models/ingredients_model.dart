@@ -39,12 +39,14 @@ class InventoryModel {
 }
 
 class IngredientsModel {
+  final String? dragKey;
   final String name;
   final String path;
   final String category;
   final List<ActionsModel> actions;
 
   IngredientsModel({
+    this.dragKey,
     required this.name,
     required this.path,
     required this.category,
@@ -57,6 +59,7 @@ class IngredientsModel {
       path: map['path'] ?? '',
       category: map['category'] ?? '',
       actions: map['actions'] != null ? (map['actions'] as List).map((item) => ActionsModel.fromJson(item)).toList(): [],
+      dragKey: map['dragKey'], 
     );
   }
 
@@ -66,11 +69,12 @@ class IngredientsModel {
       'path': path,
       'category': category,
       'actions': actions.map((item) => item.toJson()).toList(),
+      'dragKey': dragKey,
     };
   }
 
   factory IngredientsModel.empty() {
-    return IngredientsModel(name: '', path: '', category: '', actions: []);
+    return IngredientsModel(dragKey: '', name: '', path: '', category: '', actions: []);
   }
 }
 
