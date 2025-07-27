@@ -16,6 +16,7 @@ import 'package:virtual_lab/components/custom_dalog.dart';
 import 'package:virtual_lab/components/shimmer.dart';
 import 'package:virtual_lab/json/coc1.dart';
 import 'package:virtual_lab/json/actions.dart';
+import 'package:virtual_lab/json/food_menu.dart';
 import 'package:virtual_lab/models/food_menu_model.dart';
 import 'package:virtual_lab/models/ingredients_model.dart';
 import 'package:virtual_lab/models/user_model.dart';
@@ -64,7 +65,7 @@ class AppController extends GetxController {
   final buildNumber = ''.obs;
 
   var isSelectedList = <RxBool>[].obs;
-  final ingredientLimit = 10.obs;
+  final ingredientLimit = 15.obs;
   var seconds = 30.obs;
 
   final soundToggle = true.obs;
@@ -76,6 +77,15 @@ class AppController extends GetxController {
   final actionToggle = false.obs;
   final toolListToggle = false.obs;
   bool tap = false;
+
+  
+  RxList<bool> foodLoading = List.generate(foodMenu.length, (_) => false).obs;
+
+  void resetLoading() {
+    for (int i = 0; i < foodLoading.length; i++) {
+      foodLoading[i] = false;
+    }
+  }
 
   //? TEXT CONTROLLER
   final emailController = TextEditingController();
@@ -861,7 +871,10 @@ class AppController extends GetxController {
       final response = await db.post('coc/create', data);
 
       if(response.success!){
-        
+        debugPrint('SUCCESS : ${response.message}');
+      }{
+        debugPrint('FAILED : ${response.message}');
+
       }
 
     } catch (e, t) {

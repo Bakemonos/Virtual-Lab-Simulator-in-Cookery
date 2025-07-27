@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/state_manager.dart';
 import 'package:go_router/go_router.dart';
 import 'package:virtual_lab/components/custom_button.dart';
 import 'package:virtual_lab/components/custom_header.dart';
@@ -56,9 +57,12 @@ class _MyFoodChoicesPageState extends State<MyFoodChoicesPage> {
                                 right: index != 2 ? 24.w : 0,
                               ),
                               child: foodChoices(
+                                index: index,
                                 instructionFunction: () => controller.instruction(context, data),
                                 onTap: () async {
-                                  if (controller.tap) return;
+                                  if (controller.foodLoading[index]) return;
+
+                                  controller.foodLoading[index] = true;
 
                                   controller.tap = true;
                                   debugPrint('\n SELECTED : ${data.menu}\n');
@@ -66,7 +70,8 @@ class _MyFoodChoicesPageState extends State<MyFoodChoicesPage> {
 
                                   await controller.getInventory(context);
 
-                                  controller.tap = false; 
+                                  controller.tap = false;
+                                  controller.foodLoading[index] = false;
                                 },
                                 unlocked: unlocked[index],
                                 path: data.path,
@@ -108,6 +113,7 @@ class _MyFoodChoicesPageState extends State<MyFoodChoicesPage> {
     required bool unlocked,
     required Function() onTap,
     required Function() instructionFunction,
+    required int index,
   }) {
     return SizedBox(
       width: 180.w,
@@ -196,13 +202,13 @@ class _MyFoodChoicesPageState extends State<MyFoodChoicesPage> {
               padding: EdgeInsets.symmetric(horizontal: 12.w),
               child: SizedBox(
                 height: 48.h,
-                child: MyButton(
-                  loading: controller.loader.value,
+                child: Obx(()=> MyButton(
+                  loading: controller.foodLoading[index],
                   borderColor: unlocked ? null : redDark,
                   gradientColor: unlocked ? null : [redLighter, redLighter],
                   text: unlocked ? 'Play' : 'Locked',
                   onTap: unlocked ? onTap : () {},
-                ),
+                ))
               ),
             ),
           ),

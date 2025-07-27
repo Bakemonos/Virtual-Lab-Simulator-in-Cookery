@@ -3,6 +3,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:go_router/go_router.dart';
+import 'package:virtual_lab/components/custom_button.dart';
 import 'package:virtual_lab/components/custom_svg_picture.dart';
 import 'package:virtual_lab/components/custom_text.dart';
 import 'package:virtual_lab/components/shimmer.dart';
@@ -25,7 +26,7 @@ class MyProcessPage extends StatelessWidget {
           child: Column(
             children: [
               DragTarget<IngredientsModel>(
-                onWillAcceptWithDetails: (details) => details.data.dragKey == 'submit',
+                onWillAcceptWithDetails: (details) => details.data.dragKey == 'submit' && details.data.actions.isEmpty,
                 onAcceptWithDetails: (details) {
                   confirmIngredient(
                     controller: controller,
@@ -319,53 +320,66 @@ class MyProcessPage extends StatelessWidget {
                     color: backgroundColor,
                     child: Padding(
                       padding: EdgeInsets.all(16.w),
-                      child: Column(
-                        spacing: 8.h,
-                        mainAxisSize: MainAxisSize.min,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Image.asset(logo, width: 32.w),
-                              SizedBox(width: 14.w),
-                              MyText(text: 'Submit dish'),
-                              const Spacer(),
-                              IconButton(
-                                onPressed: () => context.pop(),
-                                icon: Container(
-                                  width: 32.w,
-                                  height: 32.h,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(4.r),
-                                    color: lightButtonBackground.withAlpha(77),
-                                  ),
-                                  child: Center(
-                                    child: MySvgPicture(
-                                      path: close,
-                                      iconColor: darkBrown,
+                      child: SingleChildScrollView(
+                        child: Column(
+                          spacing: 8.h,
+                          mainAxisSize: MainAxisSize.min,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Image.asset(logo, width: 32.w),
+                                SizedBox(width: 14.w),
+                                MyText(text: 'Submit dish'),
+                                const Spacer(),
+                                IconButton(
+                                  onPressed: () => context.pop(),
+                                  icon: Container(
+                                    width: 32.w,
+                                    height: 32.h,
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(4.r),
+                                      color: lightButtonBackground.withAlpha(77),
+                                    ),
+                                    child: Center(
+                                      child: MySvgPicture(
+                                        path: close,
+                                        iconColor: darkBrown,
+                                      ),
                                     ),
                                   ),
                                 ),
-                              ),
-                            ],
-                          ),
-                          controller.repeatedDropdown(
-                            label: 'Type',
-                            hint: 'Select Type', 
-                            items: ['Sauce', 'Main dish', 'Soup'],
-                            selectedValue: controller.category.value,
-                            defaultBorderColor: borderColor, 
-                            onChanged: (value) {
-                              controller.category.value = value!;
-                            },
-                          ),
-                          controller.repeatedTextInput(
-                            label: 'Dish name', 
-                            controller: controller.nameDishController,
-                            defaultBorderColor: borderColor,
-                          ),
-                        ],
+                              ],
+                            ),
+                            controller.repeatedDropdown(
+                              label: 'Type',
+                              hint: 'Select Type', 
+                              items: ['Sauce', 'Main dish', 'Soup'],
+                              selectedValue: controller.category.value,
+                              defaultBorderColor: borderColor, 
+                              onChanged: (value) {
+                                controller.category.value = value!;
+                              },
+                            ),
+                            controller.repeatedTextInput(
+                              label: 'Dish name', 
+                              controller: controller.nameDishController,
+                              defaultBorderColor: borderColor,
+                            ),
+                            SizedBox(height: 16.h),
+                            MyButton(
+                              text: 'Submit', 
+                              onTap: () async {
+                                if (controller.tap) return;
+                                controller.tap = true;
+                                await controller.createDish();
+                                if(context.mounted) context.pop();
+                                controller.tap = false; 
+                              },
+                            )
+                          ],
+                        ),
                       ),
                     ),
                   ),
@@ -384,23 +398,30 @@ class MyProcessPage extends StatelessWidget {
     required String studentId,
     required String take,
   }) {
+    final currentIngredient = controller.ingredientActionData.value;
 
-    controller.preparedIngredients.add(controller.ingredientActionData.value);
+    if (currentIngredient.name.isEmpty) return; // prevents submitting empty ingredient
+
+    if (!controller.preparedIngredients.contains(currentIngredient)) {
+      controller.preparedIngredients.add(currentIngredient);
+    }
 
     final newInventory = InventoryModel(
       type: type,
       studentId: studentId,
       take: take,
       ingredients: controller.preparedIngredients.toList(),
-    );  
+    );
 
     controller.preparedData.value = newInventory;
     controller.preparedInventories.add(newInventory);
 
+    // Clear data only after processing
     controller.ingredientDragDropData.value = IngredientsModel.empty();
     controller.ingredientActionData.value = IngredientsModel.empty();
     controller.selectedActions.clear();
   }
+
 
 }
 
