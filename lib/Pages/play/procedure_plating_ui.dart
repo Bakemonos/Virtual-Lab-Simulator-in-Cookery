@@ -43,8 +43,6 @@ class _MyProcedurePlatingPageState extends State<MyProcedurePlatingPage> with Ti
 
   @override
   void dispose() {
-    controller.discard();
-    controller.preparedData.value = InventoryModel.empty();
     animationController.dispose();
     super.dispose();
   }
@@ -69,26 +67,42 @@ class _MyProcedurePlatingPageState extends State<MyProcedurePlatingPage> with Ti
                   children: [
                     Align(
                       alignment: Alignment.topLeft,
-                      child: controller.actionButton(text: 'View Instruction', onPressed: ()=> controller.instruction(context, controller.typeSelected!)),
+                      child: Row(
+                        children: [
+                          controller.actionButton(text: 'View Instruction', onPressed: ()=> controller.instruction(context, controller.typeSelected!)),
+                          controller.actionButton(text: 'Get', onPressed: ()=> controller.getCoc(context)),
+                        ],
+                      ),
                     ),
                     SizedBox(height: 4.h),
-                    ...controller.typeSelected!.instructions.asMap().entries.map((entry){
-                      final index = entry.key + 1; 
-                      final goal = entry.value;
+                    Obx(() {
+                      return Obx(()=> Column(
+                        spacing: 4.h,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: controller.typeSelected!.instructions.asMap().entries.map((entry) {
+                          final index = entry.key + 1;
+                          final goal = entry.value;
+                          final goalCategory = goal.name;
 
-                      return  MyText(
-                        text: '$index. ${goal.name}',
-                        fontWeight: FontWeight.w500,
-                        color: textLight,
-                        size: 16.sp,
-                      );
+                          final alreadySubmitted = controller.submittedCocList.any((item) {
+                            return item.category == helper.toCamelCase(goalCategory);
+                          });
+
+                          return MyText(
+                            text: '$index. ${goal.name}',
+                            fontWeight: FontWeight.w500,
+                            color: textLight,
+                            size: 16.sp,
+                            decoration: alreadySubmitted ? TextDecoration.lineThrough : TextDecoration.none,
+                          );
+                        }).toList(),
+                      ));
                     })
                   ],
                 ),
               ),
             ),
           ),
-
 
           //? PROCEDURE
           Expanded(
@@ -217,7 +231,7 @@ class _MyProcedurePlatingPageState extends State<MyProcedurePlatingPage> with Ti
                             mainAxisAlignment: MainAxisAlignment.end,
                             children: [
                               InkWell(
-                                onTap: actionPerform,
+                                onTap: ()=> controller.actionPerform(context),
                                 child: Container(
                                   width: 48.w, height: 48.h,
                                   decoration: BoxDecoration(
@@ -249,33 +263,6 @@ class _MyProcedurePlatingPageState extends State<MyProcedurePlatingPage> with Ti
     );
   }
   
-
-  void actionPerform() {
-    final status = controller.handleTap(context).name;
-    
-    final newAction = ActionsModel(
-      status: status,
-      action: controller.pendingAction.value!.name,
-      tool: controller.pendingTool.value!.name,
-    );
-
-    controller.selectedActions.add(newAction);
-
-    final ingredient = controller.ingredientDragDropData.value;
-
-    final updatedIngredient = IngredientsModel(
-      name: ingredient.name,
-      path: ingredient.path,
-      category: ingredient.category,
-      actions: controller.selectedActions.toList(), 
-    );
-
-    controller.ingredientActionData.value = updatedIngredient;
-
-    controller.pendingAction.value = null;
-    controller.actionToggle.value = false;  
-  }
-
   Widget toolListUI() {
     return Expanded(
       flex: 2,
@@ -410,7 +397,7 @@ class _MyProcedurePlatingPageState extends State<MyProcedurePlatingPage> with Ti
                                   imageUrl: ingredient.path,
                                   placeholder: (context, url) => ShimmerSkeletonLoader(),
                                   errorWidget: (context, url, error) => Icon(Icons.error),
-                                  fit: BoxFit.cover,
+                                  fit: BoxFit.contain,
                                 ),
                               ),
                               Expanded(
@@ -423,33 +410,38 @@ class _MyProcedurePlatingPageState extends State<MyProcedurePlatingPage> with Ti
                           ),
                           MyText(text: 'Status'), 
                           Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
                             spacing: 12.h,
                             children: List.generate(ingredient.actions.length, (index) {
                               final act = ingredient.actions[index];
-                              return Row(
+                              return Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  MyText(
-                                    text: '${index + 1}. ${act.action} : ',
-                                    fontWeight: FontWeight.w500,
+                                  Row(
+                                    children: [
+                                      MyText(
+                                        text: '${index + 1}. ${act.action} : ',
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                      MyText(
+                                        text: act.status,
+                                        fontWeight: FontWeight.w500,
+                                        color: switch (act.status) {
+                                          'perfect' => greenLighter,
+                                          'good' => Colors.amber,
+                                          _ => redLighter, 
+                                        },
+                                      ),
+                                    ],
                                   ),
                                   MyText(
-                                    text: act.status,
-                                    fontWeight: FontWeight.w500,
-                                    color: switch (act.status) {
-                                      'perfect' => greenLighter,
-                                      'good' => Colors.amber,
-                                      _ => redLighter, 
-                                    },
-                                  ),
-                                  MyText(
-                                    text: act.tool,
+                                    text: '   Tool : ${act.tool}',
                                     fontWeight: FontWeight.w500,
                                   ),
                                 ],
                               );
                             }),
                           ),
+
                         ],
                       ),
                     ),

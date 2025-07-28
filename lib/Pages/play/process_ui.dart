@@ -28,8 +28,7 @@ class MyProcessPage extends StatelessWidget {
               DragTarget<IngredientsModel>(
                 onWillAcceptWithDetails: (details) => details.data.dragKey == 'submit' && details.data.actions.isEmpty,
                 onAcceptWithDetails: (details) {
-                  confirmIngredient(
-                    controller: controller,
+                  controller.acceptIngredient(
                     type: controller.typeSelected!.menu ?? '',
                     studentId: controller.userData.value.id!,
                     take: 'take_one',
@@ -374,6 +373,7 @@ class MyProcessPage extends StatelessWidget {
                                 if (controller.tap) return;
                                 controller.tap = true;
                                 await controller.createDish();
+                                if(context.mounted) await controller.getCoc(context);
                                 if(context.mounted) context.pop();
                                 controller.tap = false; 
                               },
@@ -392,35 +392,7 @@ class MyProcessPage extends StatelessWidget {
     );
   }
 
-  void confirmIngredient({
-    required AppController controller,
-    required String type,
-    required String studentId,
-    required String take,
-  }) {
-    final currentIngredient = controller.ingredientActionData.value;
-
-    if (currentIngredient.name.isEmpty) return; // prevents submitting empty ingredient
-
-    if (!controller.preparedIngredients.contains(currentIngredient)) {
-      controller.preparedIngredients.add(currentIngredient);
-    }
-
-    final newInventory = InventoryModel(
-      type: type,
-      studentId: studentId,
-      take: take,
-      ingredients: controller.preparedIngredients.toList(),
-    );
-
-    controller.preparedData.value = newInventory;
-    controller.preparedInventories.add(newInventory);
-
-    // Clear data only after processing
-    controller.ingredientDragDropData.value = IngredientsModel.empty();
-    controller.ingredientActionData.value = IngredientsModel.empty();
-    controller.selectedActions.clear();
-  }
+  
 
 
 }

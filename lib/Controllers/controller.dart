@@ -96,6 +96,9 @@ class AppController extends GetxController {
   final changePasswordController = TextEditingController();
   final nameDishController = TextEditingController();
 
+  //? SUBMITTED COC DATA
+  RxList<SubmitedCocModel> submittedCocList = <SubmitedCocModel>[].obs;
+
   //? USER DATA
   Rx<UserModel> userData = UserModel.empty().obs;
 
@@ -115,30 +118,95 @@ class AppController extends GetxController {
   //? TYPE
   FoodMenuModel? typeSelected;
 
-
   //? HOLD INGREDIENTS INFORMATION 
   Rx<IngredientsModel> ingredientActionData = IngredientsModel.empty().obs;
   RxList<ActionsModel> actionHistory = <ActionsModel>[].obs;
   RxList<ActionsModel> selectedActions = <ActionsModel>[].obs;
 
   //? HOLD PRERARED INFORMATION
-  RxList<IngredientsModel> preparedIngredients = <IngredientsModel>[].obs;
   Rx<InventoryModel> preparedData = InventoryModel.empty().obs;
-  RxList<InventoryModel> preparedInventories = <InventoryModel>[].obs;
-
-  //? HOLD PROCESS INFORMATION
-  // RxList<IngredientsModel> processData = <IngredientsModel>[].obs;
+  RxList<IngredientsModel> preparedIngredients = <IngredientsModel>[].obs;
 
   //? HOLD ACTIONS / TOOLS
-  // final RxList<ActionType> ingredientsCurrentActions = <ActionType>[].obs;
   final Rxn<ActionType> pendingAction = Rxn();  
-
-  // final RxList<ToolType> ingredientsCurrentTools = <ToolType>[].obs;
   final Rxn<ToolType> pendingTool = Rxn();  
-
 
   
   //! METHODS ---------------------------------------------------------------------------------------------------------------
+
+  //? ADD INGREDIENTS ACTIONS 
+  void actionPerform(BuildContext context) {
+    final status = handleTap(context).name;
+
+    final newAction = ActionsModel(
+      status: status,
+      action: pendingAction.value!.name,
+      tool: pendingTool.value!.name,
+    );
+
+    final alreadyExists = selectedActions.any((action) =>
+      action.status == newAction.status &&
+      action.action == newAction.action &&
+      action.tool == newAction.tool
+    );
+
+    if (!alreadyExists) {
+      selectedActions.add(newAction);
+    }
+
+    final ingredient = ingredientDragDropData.value;
+
+    final updatedIngredient = IngredientsModel(
+      name: ingredient.name,
+      path: ingredient.path,
+      category: ingredient.category,
+      actions: selectedActions.toList(),
+    );
+
+    ingredientActionData.value = updatedIngredient;
+
+    debugPrint('\nACTIONS (${updatedIngredient.name}): ${updatedIngredient.actions.length}\n');
+
+    pendingAction.value = null;
+    actionToggle.value = false;
+  }
+
+
+  //? ACCEPT INGREDIENTS 
+  void acceptIngredient({
+    required String type,
+    required String studentId,
+    required String take,
+  }) {
+    final currentIngredient = ingredientActionData.value;
+
+    if (currentIngredient.name.isEmpty) return;
+
+    preparedIngredients.removeWhere((i) =>
+      i.name == currentIngredient.name && i.path == currentIngredient.path);
+
+    preparedIngredients.add(currentIngredient.copyWith());
+
+    final newData = InventoryModel(
+      type: type,
+      studentId: studentId,
+      take: take,
+      ingredients: preparedIngredients.toList(),
+    );
+
+    preparedData.value = newData;
+
+    debugPrint('\n✅ ACCEPTED INGREDIENT: ${currentIngredient.name} with ${currentIngredient.actions.length} actions');
+    debugPrint('📦 Total accepted ingredients: ${preparedData.value.ingredients.length}\n');
+
+
+
+    ingredientDragDropData.value = IngredientsModel.empty();
+    ingredientActionData.value = IngredientsModel.empty();
+    selectedActions.clear();
+  }
+
+
 
   ActionStatus handleTap(BuildContext context) {
     actionToggle.value = false;
@@ -160,11 +228,11 @@ class AppController extends GetxController {
   }
 
   void discard() {
-    actionToggle.value  = false;
-    actionListToggle.value = false;
-    toolListToggle.value = false;
+    actionToggle.value  = false; //? HIDE ACTION
+    actionListToggle.value = false; //? HIDE ACTION LIST
+    toolListToggle.value = false; //? HIDE TOOL LIST
     
-    currentActions.clear();
+    currentActions.clear(); //?
     ingredientActionData.value = IngredientsModel.empty();
     ingredientDragDropData.value = IngredientsModel.empty();
   }
@@ -835,6 +903,46 @@ class AppController extends GetxController {
     }
   }
 
+  Future<void> getCoc(BuildContext context) async {
+    loader.value = true;
+
+    try {
+      final studentId = userData.value.id;
+
+      final response = await db.get('coc/read/$studentId');
+      loader.value = false;
+
+      if (!context.mounted) return;
+
+      if (response.success == true && response.data != null) {
+        try {
+          if (response.data is List) {
+            final List<dynamic> list = response.data as List<dynamic>;
+
+            submittedCocList.value = list.map((e) => SubmitedCocModel.fromJson(e)).toList();
+
+            // debugPrint('DATA : ${response.data}');
+          } else {
+            debugPrint('Expected list but got: ${response.data.runtimeType}');
+            submittedCocList.clear();
+          }
+        } catch (e) {
+          debugPrint('PARSING ERROR: $e');
+          submittedCocList.clear();
+        }
+      } else {
+        submittedCocList.clear();
+        debugPrint('Inventory fetch failed: ${response.message}');
+      }
+    } catch (e, t) {
+      loader.value = false;
+      final errorMessage = helper.getErrorMessage(e);
+      debugPrint('Error: $errorMessage');
+      debugPrint('STACKTRACE: $t');
+    }
+  }
+
+
   Future<void> createDish() async {
     loader.value = true;
     try {
@@ -850,28 +958,29 @@ class AppController extends GetxController {
         'ingredients': preparedData.value.ingredients,
         'equipments': [
           {
-            'name': 'kaldero',
-            'image': 'sample.url',
+            'name': 'pot',
+            'image': 'pot.url'
+          },
+          {
+            'name': 'apron',
+            'image': 'apron.url',
+          },
+          {
+            'name': 'hair net',
+            'image': 'hair.url',
+          },
+          {
+            'name': 'gloves',
+            'image': 'gloves.url',
           }
         ]
       };
-
-      // for (var ingredient in preparedData.value.ingredients) {
-      //   print('Ingredient: ${ingredient.name}');
-      //   print(' - Path: ${ingredient.path}');
-      //   print(' - Category: ${ingredient.category}');
-      //   print(' - Actions:');
-      //   for (var action in ingredient.actions) {
-      //     print('   • Action: ${action.action}');
-      //     print('     Status: ${action.status}');
-      //     print('     Tool: ${action.tool}');
-      //   }
-      // }
 
       final response = await db.post('coc/create', data);
 
       if(response.success!){
         debugPrint('SUCCESS : ${response.message}');
+        debugPrint('BODY : ${response.data}');
       }{
         debugPrint('FAILED : ${response.message}');
 
@@ -884,6 +993,5 @@ class AppController extends GetxController {
       debugPrint('STACKTRACE: $t');
     }
   }
-
 
 }

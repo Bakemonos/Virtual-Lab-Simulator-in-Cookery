@@ -16,11 +16,7 @@ class ApiServices extends GetxController {
     print('\nENDPOINT : $apiKey/$endpoint\n');
 
     try {
-      final response = await http
-          .get(Uri.parse('$apiKey/$endpoint'))
-          .timeout(Duration(seconds: 15));
-
-          print('\nDATA : ${response.body}\n');
+      final response = await http.get(Uri.parse('$apiKey/$endpoint')).timeout(Duration(seconds: 15));
 
       if (response.statusCode == 200 || response.statusCode == 201) {
         return ApiResponse.fromJson(jsonDecode(response.body));
@@ -50,9 +46,6 @@ class ApiServices extends GetxController {
       headers: {'Content-Type': 'application/json'},
       body: jsonEncode(data),
     );
-
-    print('BODY : ${response.body}\n');
-
 
     if (response.statusCode == 200 || response.statusCode == 201) {
       return ApiResponse.fromJson(jsonDecode(response.body));

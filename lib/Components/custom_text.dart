@@ -36,6 +36,8 @@ class MyText extends StatelessWidget {
         height: textHeight,
         overflow: overflow,
         decoration: decoration,
+        decorationColor: textLight,
+        decorationThickness: 2.h,
       ),
     );
   }

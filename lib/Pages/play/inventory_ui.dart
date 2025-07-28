@@ -100,7 +100,7 @@ class _MyInventoryPageState extends State<MyInventoryPage> {
                         child: child,
                       ),
                     ),
-                    child: controller.bagToggle.value ? inventoryToggle(controller) : inventory(controller),
+                    child: controller.bagToggle.value ? inventory(controller) : inventoryToggle(controller),
                   ),
                 ),
               ),
@@ -111,7 +111,7 @@ class _MyInventoryPageState extends State<MyInventoryPage> {
     );
   }
 
-  Widget inventory(AppController controller) {
+  Widget inventoryToggle(AppController controller) {
     return InkWell(
       key: ValueKey('inventoryClosed'),
       onTap: controller.bagOntap,
@@ -126,7 +126,7 @@ class _MyInventoryPageState extends State<MyInventoryPage> {
     );
   }
 
-  Widget inventoryToggle(AppController controller) {
+  Widget inventory(AppController controller) {
     return Column(
       key: ValueKey('inventoryOpened'),
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -153,9 +153,9 @@ class _MyInventoryPageState extends State<MyInventoryPage> {
               physics: AlwaysScrollableScrollPhysics(),
               gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 1,
+                childAspectRatio: 1,
                 crossAxisSpacing: 8,
                 mainAxisSpacing: 8,
-                childAspectRatio: 1,
               ),
               itemCount: ingredients.length,
               itemBuilder: (context, index) {
@@ -230,4 +230,82 @@ class _MyInventoryPageState extends State<MyInventoryPage> {
       ],
     );
   }
+
+  Widget equipment(AppController controller) {
+    return Column(
+      key: ValueKey('equipmentOpened'),
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        IconButton(
+          onPressed: controller.bagOntap,
+          icon: Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(4.r),
+              color: lightGridColor.withValues(alpha: 0.5),
+            ),
+            padding: EdgeInsets.all(10.w),
+            child: Center(
+              child: MySvgPicture(path: back, iconColor: textLight),
+            ),
+          ),
+        ),
+        SizedBox(height: 16.h),
+        Expanded(
+          child: Obx(() {
+            final ingredients = controller.typeInventory.value.ingredients;
+            return GridView.builder(
+              padding: EdgeInsets.zero,
+              physics: AlwaysScrollableScrollPhysics(),
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 1,
+                childAspectRatio: 1,
+                crossAxisSpacing: 8,
+                mainAxisSpacing: 8,
+              ),
+              itemCount: ingredients.length,
+              itemBuilder: (context, index) {
+                var data = ingredients[index];
+                return Stack(
+                  children: [
+                    AnimatedContainer(
+                      duration: Duration(milliseconds: 200),
+                      curve: Curves.easeInOut,
+                      alignment: Alignment.center,
+                      decoration: BoxDecoration(
+                        color: lightGridColor,
+                        borderRadius: BorderRadius.circular(8.r),
+                      ),
+                      child: Padding(
+                        padding: EdgeInsets.all(8.w),
+                        child: CachedNetworkImage(
+                          imageUrl: data.path,
+                          placeholder: (context, url) => ShimmerSkeletonLoader(),
+                          errorWidget: (context, url, error) =>
+                              Icon(Icons.error),
+                          fit: BoxFit.contain,
+                        ),
+                      ),
+                    ),
+                    Align(
+                      alignment: Alignment.bottomCenter,
+                      child: Container(
+                        width: double.infinity,
+                        decoration: BoxDecoration(
+                          color: lightBrown.withValues(alpha: 0.4),
+                          borderRadius: BorderRadius.only(bottomLeft: Radius.circular(8.r), bottomRight: Radius.circular(8.r))
+                        ),
+                        child: MyText(text: data.name, textAlign: TextAlign.center, color: textLight, size: 16.sp,),
+                      ),
+                    ),
+                  ],
+                );
+              },
+            );
+          }),
+        ),
+      ],
+    );
+  }
+
 }
+

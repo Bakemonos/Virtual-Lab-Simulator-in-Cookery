@@ -1,6 +1,6 @@
 class ApiResponse {
   final String? message;
-  final Map<String, dynamic>? data;
+  final dynamic data;
   final String? token;
   final bool? success;
 
@@ -9,7 +9,7 @@ class ApiResponse {
   factory ApiResponse.fromJson(Map<String, dynamic> map) {
     return ApiResponse(
       message: map['message'],
-      data: map['data'] != null ? Map<String, dynamic>.from(map['data']) : null,
+      data: map['data'], 
       token: map['token'],
       success: map['success'],
     );
