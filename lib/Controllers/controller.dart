@@ -16,6 +16,7 @@ import 'package:virtual_lab/components/custom_dalog.dart';
 import 'package:virtual_lab/components/shimmer.dart';
 import 'package:virtual_lab/json/coc1.dart';
 import 'package:virtual_lab/json/actions.dart';
+import 'package:virtual_lab/json/coc1_combination.dart';
 import 'package:virtual_lab/json/food_menu.dart';
 import 'package:virtual_lab/models/food_menu_model.dart';
 import 'package:virtual_lab/models/ingredients_model.dart';
@@ -943,7 +944,6 @@ class AppController extends GetxController {
     }
   }
 
-
   Future<void> createDish() async {
     loader.value = true;
     try {
@@ -951,12 +951,18 @@ class AppController extends GetxController {
       final coc = typeSelected!.menu;
       final studentId = userData.value.id;
 
+      final matchedDish = getBestMatchedDish(
+        preparedData.value.ingredients,
+        helper.toCamelCase(category.value),
+      );
+
       Map<String, dynamic> data = {
         'type': coc,
         'studentId': studentId,
         'category': helper.toCamelCase(category.value),
         'name': nameDishController.text,
         'ingredients': preparedData.value.ingredients,
+        'image': matchedDish?['image'] ?? '',
         'equipments': [
           {
             'name': 'pot',

@@ -108,7 +108,7 @@ class _MySliderOptionPageState extends State<MySliderOptionPage> {
                                               height: 90.h,
                                               width: 90.w,
                                               child: CachedNetworkImage(
-                                                imageUrl: 'https://res.cloudinary.com/dgvi2di6t/image/upload/v1753612872/beef_qcitkg.png',
+                                                imageUrl: 'https://res.cloudinary.com/dgvi2di6t/image/upload/v1753802663/beef_soup_ihgwhv.png',
                                                 placeholder: (context, url) => ShimmerSkeletonLoader(),
                                                 errorWidget: (context, url, error) => Icon(Icons.error),
                                                 fit: BoxFit.contain,

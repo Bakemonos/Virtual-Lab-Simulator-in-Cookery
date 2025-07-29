@@ -4,7 +4,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:virtual_lab/components/custom_button.dart';
 import 'package:virtual_lab/components/custom_header.dart';
-import 'package:virtual_lab/components/custom_svg.dart';
 import 'package:virtual_lab/components/custom_text.dart';
 import 'package:virtual_lab/components/shimmer.dart';
 import 'package:virtual_lab/controllers/controller.dart';
@@ -64,7 +63,7 @@ class _MyViewAchievementPageState extends State<MyViewAchievementPage> {
                                         height: 100.h,
                                         width: 100.w,
                                         child: CachedNetworkImage(
-                                          imageUrl: 'https://res.cloudinary.com/dgvi2di6t/image/upload/v1753612872/beef_qcitkg.png',
+                                          imageUrl: 'https://res.cloudinary.com/dgvi2di6t/image/upload/v1753802663/beef_soup_ihgwhv.png',
                                           placeholder: (context, url) => ShimmerSkeletonLoader(),
                                           errorWidget: (context, url, error) => Icon(Icons.error),
                                           fit: BoxFit.contain,
