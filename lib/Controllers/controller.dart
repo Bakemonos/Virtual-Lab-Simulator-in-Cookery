@@ -105,6 +105,9 @@ class AppController extends GetxController {
   //? USER INVENTORY DATA
   Rx<InventoryModel> typeInventory = InventoryModel.empty().obs;
 
+  //? DISH
+  Rx<SubmitedCocModel> selectedDish = SubmitedCocModel.empty().obs;
+
   //? DRAG & DROP
   Rx<IngredientsModel> ingredientDragDropData = IngredientsModel.empty().obs;
   final currentActions = <ActionType>[].obs;
@@ -903,13 +906,12 @@ class AppController extends GetxController {
     }
   }
 
-  Future<void> getCoc(BuildContext context) async {
+  Future<void> getDish(BuildContext context, {String? type}) async {
     loader.value = true;
 
-    try {
+    try { 
       final studentId = userData.value.id;
-
-      final response = await db.get('coc/read/$studentId');
+      final response = await db.get('coc/read/$studentId${(type == null || type.isEmpty) ? '' : '?type=$type'}');
       loader.value = false;
 
       if (!context.mounted) return;
@@ -921,7 +923,6 @@ class AppController extends GetxController {
 
             submittedCocList.value = list.map((e) => SubmitedCocModel.fromJson(e)).toList();
 
-            // debugPrint('DATA : ${response.data}');
           } else {
             debugPrint('Expected list but got: ${response.data.runtimeType}');
             submittedCocList.clear();

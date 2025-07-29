@@ -70,34 +70,32 @@ class _MyProcedurePlatingPageState extends State<MyProcedurePlatingPage> with Ti
                       child: Row(
                         children: [
                           controller.actionButton(text: 'View Instruction', onPressed: ()=> controller.instruction(context, controller.typeSelected!)),
-                          controller.actionButton(text: 'Get', onPressed: ()=> controller.getCoc(context)),
+                          controller.actionButton(text: 'Get', onPressed: ()=> controller.getDish(context)),
                         ],
                       ),
                     ),
                     SizedBox(height: 4.h),
-                    Obx(() {
-                      return Obx(()=> Column(
-                        spacing: 4.h,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: controller.typeSelected!.instructions.asMap().entries.map((entry) {
-                          final index = entry.key + 1;
-                          final goal = entry.value;
-                          final goalCategory = goal.name;
+                    Obx(()=> Column(
+                      spacing: 4.h,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: controller.typeSelected!.instructions.asMap().entries.map((entry) {
+                        final index = entry.key + 1;
+                        final goal = entry.value;
+                        final goalCategory = goal.name;
 
-                          final alreadySubmitted = controller.submittedCocList.any((item) {
-                            return item.category == helper.toCamelCase(goalCategory);
-                          });
+                        final alreadySubmitted = controller.submittedCocList.any((item) {
+                          return item.category == helper.toCamelCase(goalCategory);
+                        });
 
-                          return MyText(
-                            text: '$index. ${goal.name}',
-                            fontWeight: FontWeight.w500,
-                            color: textLight,
-                            size: 16.sp,
-                            decoration: alreadySubmitted ? TextDecoration.lineThrough : TextDecoration.none,
-                          );
-                        }).toList(),
-                      ));
-                    })
+                        return MyText(
+                          text: '$index. ${goal.name}',
+                          fontWeight: FontWeight.w500,
+                          color: textLight,
+                          size: 16.sp,
+                          decoration: alreadySubmitted ? TextDecoration.lineThrough : TextDecoration.none,
+                        );
+                      }).toList(),
+                    ))
                   ],
                 ),
               ),

@@ -146,11 +146,8 @@ class _MyFoodChoicesPageState extends State<MyFoodChoicesPage> {
                               child: Center(
                                 child: CachedNetworkImage(
                                   imageUrl: path,
-                                  placeholder:
-                                      (context, url) => ShimmerSkeletonLoader(),
-                                  errorWidget:
-                                      (context, url, error) =>
-                                          Icon(Icons.error),
+                                  placeholder: (context, url) => ShimmerSkeletonLoader(),
+                                  errorWidget: (context, url, error) => Icon(Icons.error),
                                   fit: BoxFit.cover,
                                 ),
                               ),

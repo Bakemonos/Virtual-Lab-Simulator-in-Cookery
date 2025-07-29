@@ -23,6 +23,8 @@ class _MyViewAchievementPageState extends State<MyViewAchievementPage> {
 
   @override
   Widget build(BuildContext context) {
+    var dish = controller.selectedDish.value;
+
     return Scaffold(
       resizeToAvoidBottomInset: false,
       body: Stack(
@@ -41,10 +43,7 @@ class _MyViewAchievementPageState extends State<MyViewAchievementPage> {
                         borderRadius: BorderRadius.circular(30.r),
                       ),
                       child: Padding(
-                        padding: EdgeInsets.symmetric(
-                          horizontal: 24.w,
-                          vertical: 48.h,
-                        ),
+                        padding: EdgeInsets.symmetric(horizontal: 24.w,vertical: 48.h),
                         child: Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
@@ -61,38 +60,26 @@ class _MyViewAchievementPageState extends State<MyViewAchievementPage> {
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     spacing: 4.h,
                                     children: [
-                                      MySvgPicture(
-                                        path: burger,
-                                        iconSize: 100.w,
+                                      SizedBox(
+                                        height: 100.h,
+                                        width: 100.w,
+                                        child: CachedNetworkImage(
+                                          imageUrl: 'https://res.cloudinary.com/dgvi2di6t/image/upload/v1753612872/beef_qcitkg.png',
+                                          placeholder: (context, url) => ShimmerSkeletonLoader(),
+                                          errorWidget: (context, url, error) => Icon(Icons.error),
+                                          fit: BoxFit.contain,
+                                        ),
                                       ),
                                       Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.end,
+                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        crossAxisAlignment: CrossAxisAlignment.end,
                                         children: [
-                                          Icon(
-                                            Icons.star,
-                                            color: darkBrown,
-                                            size: 32.w,
-                                          ),
-                                          Icon(
-                                            Icons.star,
-                                            color: darkBrown,
-                                            size: 40.w,
-                                          ),
-                                          Icon(
-                                            Icons.star,
-                                            color: darkBrown,
-                                            size: 32.w,
-                                          ),
+                                          Icon(Icons.star,color: darkBrown,size: 32.w),
+                                          Icon(Icons.star,color: darkBrown,size: 40.w),
+                                          Icon(Icons.star,color: darkBrown,size: 32.w),
                                         ],
                                       ),
-                                      MyText(
-                                        text: 'BURGER',
-                                        size: 24.sp,
-                                        color: darkBrown,
-                                      ),
+                                      MyText(text: dish.name, size: 24.sp,color: darkBrown),
                                     ],
                                   ),
                                 ),
@@ -116,8 +103,7 @@ class _MyViewAchievementPageState extends State<MyViewAchievementPage> {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     MyText(
-                                      text:
-                                          'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industrys standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum',
+                                      text: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industrys standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum',
                                       color: textLight,
                                     ),
                                   ],
@@ -191,10 +177,8 @@ class _MyViewAchievementPageState extends State<MyViewAchievementPage> {
                         child: Center(
                           child: CachedNetworkImage(
                             imageUrl: path,
-                            placeholder:
-                                (context, url) => ShimmerSkeletonLoader(),
-                            errorWidget:
-                                (context, url, error) => Icon(Icons.error),
+                            placeholder: (context, url) => ShimmerSkeletonLoader(),
+                            errorWidget: (context, url, error) => Icon(Icons.error),
                             fit: BoxFit.cover,
                           ),
                         ),

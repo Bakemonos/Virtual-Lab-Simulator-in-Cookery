@@ -373,7 +373,7 @@ class MyProcessPage extends StatelessWidget {
                                 if (controller.tap) return;
                                 controller.tap = true;
                                 await controller.createDish();
-                                if(context.mounted) await controller.getCoc(context);
+                                if(context.mounted) await controller.getDish(context);
                                 if(context.mounted) context.pop();
                                 controller.tap = false; 
                               },

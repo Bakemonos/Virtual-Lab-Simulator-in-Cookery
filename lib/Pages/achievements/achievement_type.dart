@@ -54,7 +54,10 @@ class _MyAchievementTypePageState extends State<MyAchievementTypePage> {
                                 right: index != 2 ? 24.w : 0,
                               ),
                               child: foodChoices(
-                                onTap: playFunction(index),
+                                onTap: () async {
+                                  context.push(Routes.sliderOption);
+                                  await controller.getDish(context, type: 'coc1');
+                                },
                                 unlocked: unlocked[index],
                                 path: data.path,
                                 label: data.label,
