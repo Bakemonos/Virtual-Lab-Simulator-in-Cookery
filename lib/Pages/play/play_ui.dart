@@ -53,25 +53,22 @@ class _MyPlayUIPageState extends State<MyPlayUIPage> {
                 ),
               ),
             ),
-            Positioned(
-              top: 6.h,
-              right: 8.w,
+            Align(
+              alignment: Alignment.topRight,
               child: Container(
-                height: 60.h,
-                width: 60.w,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
                   color: backgroundColor,
+                  border: Border.all(width: 8.w, color: backgroundColor)
+                ),
+                child: controller.floatingButton(
+                  context: context,
+                  icon: menu,
+                  onTap: () {
+                    context.go(Routes.menu);
+                  },
                 ),
               ),
-            ),
-            controller.floatingButton(
-              context: context,
-              icon: menu,
-              isLeft: false,
-              onTap: () {
-                context.go(Routes.menu);
-              },
             ),
           ],
         ),

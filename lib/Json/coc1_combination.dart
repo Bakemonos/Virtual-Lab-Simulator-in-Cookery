@@ -1,7 +1,6 @@
 import 'package:virtual_lab/models/ingredients_model.dart';
 
 final List<Map<String, dynamic>> dishCombinations = [
-  // 🥣 Soup
   {
     'name': 'fish soup',
     'type': 'soup',
@@ -40,7 +39,6 @@ final List<Map<String, dynamic>> dishCombinations = [
   },
 
 
-  // 🍛 Main Dishes
   {
     'name': 'fried rice',
     'type': 'mainDish',
@@ -84,7 +82,6 @@ final List<Map<String, dynamic>> dishCombinations = [
     'image': 'https://res.cloudinary.com/dgvi2di6t/image/upload/v1753804253/mushroom_rice_anxlez.png',
   },
 
-  // 🥫 Sauce
   {
     'name': 'sweet and sour sauce',
     'type': 'sauce',

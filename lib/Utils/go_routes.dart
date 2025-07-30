@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:riverpod/riverpod.dart';
+import 'package:virtual_lab/Pages/plating/plating_ui.dart';
 import 'package:virtual_lab/pages/Information/information.dart';
 import 'package:virtual_lab/pages/about_game.dart';
 import 'package:virtual_lab/pages/achievements/achievement_type.dart';
@@ -88,6 +89,13 @@ final myRoutesProvider = Provider<GoRouter>((ref) {
         path: Routes.information,
         builder: (context, state) => const MyInformationPage(),
       ),
+
+      GoRoute(
+        path: Routes.plating,
+        builder: (context, state) => const MyPlatingUI(),
+      ),
+
+      
     ],
   );
 });

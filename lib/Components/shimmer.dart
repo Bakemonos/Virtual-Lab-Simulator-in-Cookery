@@ -9,15 +9,34 @@ class ShimmerSkeletonLoader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-          decoration: BoxDecoration(
-            color: backgroundColor.withValues(alpha: 0.5),
-            borderRadius: BorderRadius.circular(6.r),
-          ),
-        )
-        .animate(
-          delay: Duration(milliseconds: 300),
-          onPlay: (controller) => controller.repeat(),
-        )
-        .shimmer(duration: Duration(seconds: 1), color: darkBrown);
+      decoration: BoxDecoration(
+        color: backgroundColor.withValues(alpha: 0.5),
+        borderRadius: BorderRadius.circular(6.r),
+      ),
+    )
+    .animate(
+      delay: Duration(milliseconds: 300),
+      onPlay: (controller) => controller.repeat(),
+    )
+    .shimmer(duration: Duration(seconds: 1), color: darkBrown);
+  }
+}
+
+class ShimmerLightLoader extends StatelessWidget {
+  const ShimmerLightLoader({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        color: backgroundColor.withValues(alpha: 0.5),
+      ),
+    )
+    .animate(
+      delay: Duration(milliseconds: 300),
+      onPlay: (controller) => controller.repeat(),
+    )
+    .shimmer(duration: Duration(seconds: 1), color: darkBrown);
   }
 }

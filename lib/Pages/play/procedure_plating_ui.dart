@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:go_router/go_router.dart';
+import 'package:virtual_lab/Utils/routes.dart';
 import 'package:virtual_lab/components/custom_svg.dart';
 import 'package:virtual_lab/controllers/controller.dart';
 import 'package:virtual_lab/json/tools.dart';
@@ -68,9 +69,11 @@ class _MyProcedurePlatingPageState extends State<MyProcedurePlatingPage> with Ti
                     Align(
                       alignment: Alignment.topLeft,
                       child: Row(
+                        spacing: 8.w,
                         children: [
                           controller.actionButton(text: 'View Instruction', onPressed: ()=> controller.instruction(context, controller.typeSelected!)),
                           controller.actionButton(text: 'Get', onPressed: ()=> controller.getDish(context)),
+                          controller.actionButton(text: 'Proceed', onPressed: ()=> context.push(Routes.plating)),
                         ],
                       ),
                     ),
