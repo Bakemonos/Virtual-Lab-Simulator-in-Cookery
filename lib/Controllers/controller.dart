@@ -175,7 +175,6 @@ class AppController extends GetxController {
     actionToggle.value = false;
   }
 
-
   //? ACCEPT INGREDIENTS 
   void acceptIngredient({
     required String type,
@@ -209,8 +208,6 @@ class AppController extends GetxController {
     ingredientActionData.value = IngredientsModel.empty();
     selectedActions.clear();
   }
-
-
 
   ActionStatus handleTap(BuildContext context) {
     actionToggle.value = false;
@@ -700,7 +697,6 @@ class AppController extends GetxController {
 
   //! SERVICES METHOD -------------------------------------------------------------------------------------------------------
 
-  //? SIGN UP
   Future<void> signup(BuildContext context) async {
     loader.value = true;
     try {
@@ -754,7 +750,6 @@ class AppController extends GetxController {
     }
   }
 
-  //? SIGN IN
   Future<void> signin(BuildContext context) async {
     loader.value = true;
     try {
@@ -799,7 +794,6 @@ class AppController extends GetxController {
     }
   }
 
-  //? INVENTORY PICKED
   Future<void> ingredientsCreate(BuildContext context) async {
     loader.value = true;
     try {
@@ -860,6 +854,63 @@ class AppController extends GetxController {
         );
       }
       debugPrint('Error: $e');
+    }
+  }
+
+  Future<void> createDish() async {
+    loader.value = true;
+    try {
+
+      final coc = typeSelected!.menu;
+      final studentId = userData.value.id;
+
+      final matchedDish = getBestMatchedDish(
+        preparedData.value.ingredients,
+        helper.toCamelCase(category.value),
+      ); 
+
+      Map<String, dynamic> data = {
+        'type': coc,
+        'studentId': studentId,
+        'category': helper.toCamelCase(category.value),
+        'name': nameDishController.text,
+        'ingredients': preparedData.value.ingredients,
+        'image': matchedDish?['image'] ?? '',
+        'equipments': [
+          {
+            'name': 'pot',
+            'image': 'pot.url'
+          },
+          {
+            'name': 'apron',
+            'image': 'apron.url',
+          },
+          {
+            'name': 'hair net',
+            'image': 'hair.url',
+          },
+          {
+            'name': 'gloves',
+            'image': 'gloves.url',
+          }
+        ]
+      };
+
+      final response = await db.post('coc/create', data);
+
+      if(response.success!){
+        debugPrint('SUCCESS : ${response.message}');
+        debugPrint('BODY : ${response.data}');
+      }{
+        debugPrint('FAILED : ${response.message}');
+
+      }
+
+    } catch (e, t) {
+      loader.value = false;
+      final errorMessage = helper.getErrorMessage(e);
+      debugPrint('Error: $errorMessage');
+      debugPrint('STACKTRACE: $t');
     }
   }
 
@@ -944,61 +995,4 @@ class AppController extends GetxController {
     }
   }
 
-  Future<void> createDish() async {
-    loader.value = true;
-    try {
-
-      final coc = typeSelected!.menu;
-      final studentId = userData.value.id;
-
-      final matchedDish = getBestMatchedDish(
-        preparedData.value.ingredients,
-        helper.toCamelCase(category.value),
-      );
-
-      Map<String, dynamic> data = {
-        'type': coc,
-        'studentId': studentId,
-        'category': helper.toCamelCase(category.value),
-        'name': nameDishController.text,
-        'ingredients': preparedData.value.ingredients,
-        'image': matchedDish?['image'] ?? '',
-        'equipments': [
-          {
-            'name': 'pot',
-            'image': 'pot.url'
-          },
-          {
-            'name': 'apron',
-            'image': 'apron.url',
-          },
-          {
-            'name': 'hair net',
-            'image': 'hair.url',
-          },
-          {
-            'name': 'gloves',
-            'image': 'gloves.url',
-          }
-        ]
-      };
-
-      final response = await db.post('coc/create', data);
-
-      if(response.success!){
-        debugPrint('SUCCESS : ${response.message}');
-        debugPrint('BODY : ${response.data}');
-      }{
-        debugPrint('FAILED : ${response.message}');
-
-      }
-
-    } catch (e, t) {
-      loader.value = false;
-      final errorMessage = helper.getErrorMessage(e);
-      debugPrint('Error: $errorMessage');
-      debugPrint('STACKTRACE: $t');
-    }
-  }
-
-}
+} 

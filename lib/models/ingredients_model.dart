@@ -3,7 +3,7 @@ class SubmitedCocModel {
   final String type;
   final String category;
   final String name;
-  // final String image;
+  final String image;
   final String studentId;
   final String procedureStatus;
   final List<String> invalidReasons;
@@ -15,7 +15,7 @@ class SubmitedCocModel {
     required this.type,
     required this.category,
     required this.name,
-    // required this.image,
+    required this.image,
     required this.studentId,
     required this.procedureStatus,
     required this.invalidReasons,
@@ -29,7 +29,7 @@ class SubmitedCocModel {
       type: map['type'] ?? '',
       category: map['category'] ?? '',
       name: map['name'] ?? '',
-      // image: map['image'] ?? '',
+      image: map['image'] ?? '',
       studentId: map['studentId'] ?? '',
       procedureStatus: map['procedureStatus'] ?? '',
       invalidReasons: List<String>.from(map['invalidReasons'] ?? []),
@@ -44,7 +44,7 @@ class SubmitedCocModel {
       'type': type,
       'category': category,
       'name': name,
-      // 'image': image,
+      'image': image,
       'studentId': studentId,
       'procedureStatus': procedureStatus,
       'invalidReasons': invalidReasons,
@@ -59,7 +59,7 @@ class SubmitedCocModel {
       type: '',
       category: '',
       name: '',
-      // image: '',
+      image: '',
       studentId: '',
       procedureStatus: '',
       invalidReasons: [],

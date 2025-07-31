@@ -86,31 +86,31 @@ final List<Map<String, dynamic>> dishCombinations = [
     'name': 'sweet and sour sauce',
     'type': 'sauce',
     'contains': ['vinegar', 'sugar', 'tomato paste'],
-    'image': 'assets/images/sweet_sour_sauce.png',
+    'image': 'https://res.cloudinary.com/dhceioavi/image/upload/v1753927779/sauce_n4syhg.png',
   },
   {
     'name': 'soy garlic sauce',
     'type': 'sauce',
     'contains': ['soy sauce', 'garlic', 'sugar'],
-    'image': 'assets/images/soy_garlic_sauce.png',
+    'image': 'https://res.cloudinary.com/dhceioavi/image/upload/v1753927779/sauce_n4syhg.png',
   },
   {
     'name': 'spicy chili sauce',
     'type': 'sauce',
     'contains': ['chili flakes', 'garlic', 'vinegar'],
-    'image': 'assets/images/spicy_chili_sauce.png',
+    'image': 'https://res.cloudinary.com/dhceioavi/image/upload/v1753927779/sauce_n4syhg.png',
   },
   {
     'name': 'butter sauce',
     'type': 'sauce',
     'contains': ['butter', 'garlic', 'onion'],
-    'image': 'assets/images/butter_sauce.png',
+    'image': 'https://res.cloudinary.com/dhceioavi/image/upload/v1753927779/sauce_n4syhg.png',
   },
   {
     'name': 'tomato-based sauce',
     'type': 'sauce',
     'contains': ['tomato paste', 'garlic', 'onion', 'sugar'],
-    'image': 'assets/images/tomato_sauce.png',
+    'image': 'https://res.cloudinary.com/dhceioavi/image/upload/v1753927779/sauce_n4syhg.png',
   },
 ];
 

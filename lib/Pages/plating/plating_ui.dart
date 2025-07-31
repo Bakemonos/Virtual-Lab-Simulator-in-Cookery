@@ -7,7 +7,6 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:virtual_lab/Components/shimmer.dart';
-import 'package:virtual_lab/Json/coc1.dart';
 import 'package:virtual_lab/controllers/controller.dart';
 import 'package:virtual_lab/utils/properties.dart';
 
@@ -21,10 +20,8 @@ class MyPlatingUI extends StatefulWidget {
 class _MyPlatingUIState extends State<MyPlatingUI> {
   final controller = AppController.instance;
   final GlobalKey _repaintKey = GlobalKey();
-
   List<_DraggableItem> items = [];
   Uint8List? capturedImageBytes;
-  final int itemCount = 5;
 
   @override
   void initState() {
@@ -34,16 +31,17 @@ class _MyPlatingUIState extends State<MyPlatingUI> {
 
   void _generateRandomItemsFromIngredients() {
     final rand = Random();
-    items = ingredientsCOC1.take(itemCount).map((ingredient) {
+    items = controller.submittedCocList.map((coc) {
       double dx = rand.nextDouble() * 250;
       double dy = rand.nextDouble() * 350;
       return _DraggableItem(
-        name: ingredient.name,
-        imageUrl: ingredient.path,
+        name: coc.name,
+        imageUrl: coc.image,
         offset: Offset(dx, dy),
       );
     }).toList();
   }
+
 
   Future<void> _capturePlatingImage() async {
     try {
