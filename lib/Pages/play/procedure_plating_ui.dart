@@ -52,9 +52,10 @@ class _MyProcedurePlatingPageState extends State<MyProcedurePlatingPage> with Ti
   Widget build(BuildContext context) {
     return SizedBox(
       width: 320.w,
+      height: 1.sh, 
       child: Column(
-        spacing: 16.h,
         children: [
+          //? DISPLAY DATA
           Expanded(
             child: Container(
               width: double.infinity,
@@ -62,46 +63,47 @@ class _MyProcedurePlatingPageState extends State<MyProcedurePlatingPage> with Ti
               child: Padding(
                 padding: EdgeInsets.all(10.w),
                 child: Column(
-                  spacing: 4.h,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Align(
                       alignment: Alignment.topLeft,
                       child: Row(
-                        spacing: 8.w,
                         children: [
-                          controller.actionButton(text: 'View Instruction', onPressed: ()=> controller.instruction(context, controller.typeSelected!)),
-                          controller.actionButton(text: 'Get', onPressed: ()=> controller.getDish(context)),
-                          Obx((){
+                          controller.actionButton(
+                            text: 'View Instruction',
+                            onPressed: () => controller.instruction(context, controller.typeSelected!),
+                          ),
+                          SizedBox(width: 8.w),
+                          controller.actionButton(
+                            text: 'Get',
+                            onPressed: () => controller.getDish(context),
+                          ),
+                          SizedBox(width: 8.w),
+                          Obx(() {
+                            final requiredNames = controller.typeSelected!.instructions.map((req) => helper.toCamelCase(req.name)).toList();
+                            final submittedCategories = controller.submittedCocList.map((dish) => dish.category).toList();
+                            final requireDish = requiredNames.every((name) => submittedCategories.contains(name));
 
-                           final requiredNames = controller.typeSelected!.instructions
-                              .map((req) => helper.toCamelCase(req.name)).toList();
-
-                            final submittedCategories = controller.submittedCocList
-                                .map((dish) => dish.category).toList();
-
-                            final requireDish = requiredNames.every(
-                              (name) => submittedCategories.contains(name),
+                            return controller.actionButton(
+                              text: 'Proceed',
+                              onPressed: () {
+                                if (!requireDish) {
+                                  context.push(Routes.plating);
+                                } else {
+                                  controller.showFloatingSnackbar(
+                                    context: context,
+                                    message: 'All dish must be prepared',
+                                  );
+                                }
+                              },
                             );
-
-                            return controller.actionButton(text: 'Proceed', onPressed: (){
-                              if(!requireDish){
-                                context.push(Routes.plating);
-                              }else{
-                                controller.showFloatingSnackbar(
-                                  context: context,
-                                  message: 'All dish must be prepared',
-                                );
-                              }
-                            });
-                          })
+                          }),
                         ],
                       ),
                     ),
                     SizedBox(height: 4.h),
-                    Obx(()=> Column(
-                      spacing: 4.h,
+                    Obx(() => Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: controller.typeSelected!.instructions.asMap().entries.map((entry) {
                         final index = entry.key + 1;
@@ -112,28 +114,31 @@ class _MyProcedurePlatingPageState extends State<MyProcedurePlatingPage> with Ti
                           return item.category == helper.toCamelCase(goalCategory);
                         });
 
-                        return MyText(
-                          text: '$index. ${goal.name}',
-                          fontWeight: FontWeight.w500,
-                          color: textLight,
-                          size: 16.sp,
-                          decoration: alreadySubmitted ? TextDecoration.lineThrough : TextDecoration.none,
+                        return Padding(
+                          padding: EdgeInsets.symmetric(vertical: 2.h),
+                          child: MyText(
+                            text: '$index. ${goal.name}',
+                            fontWeight: FontWeight.w500,
+                            color: textLight,
+                            size: 16.sp,
+                            decoration: alreadySubmitted ? TextDecoration.lineThrough : TextDecoration.none,
+                          ),
                         );
                       }).toList(),
-                    ))
+                    )),
                   ],
                 ),
               ),
             ),
           ),
-
-          //? PROCEDURE
+          SizedBox(height: 16.h),
+          //? PROCEDURE AREA
           Expanded(
             child: DragTarget<IngredientsModel>(
               onWillAcceptWithDetails: (details) => details.data.dragKey == 'procedure',
               onAcceptWithDetails: (details) {
                 controller.actionListToggle.value = false;
-                controller.actionToggle.value = false; 
+                controller.actionToggle.value = false;
                 controller.ingredientDragDropData.value = details.data;
                 controller.selectedActions.clear();
               },
@@ -144,15 +149,12 @@ class _MyProcedurePlatingPageState extends State<MyProcedurePlatingPage> with Ti
 
                   return Container(
                     decoration: controller.designUI(
-                      backGround: candidateData.isEmpty ? acceptedColor : greenLighter.withValues(alpha: 0.8),
+                      backGround: candidateData.isEmpty ? acceptedColor : greenLighter.withOpacity(0.8),
                     ),
                     child: Padding(
                       padding: EdgeInsets.all(8.w),
                       child: Row(
-                        spacing: 16.w,
                         children: [
-
-                          //? PROCEDURE AREA
                           SizedBox(
                             height: double.infinity,
                             child: Stack(
@@ -163,100 +165,103 @@ class _MyProcedurePlatingPageState extends State<MyProcedurePlatingPage> with Ti
                                     alignment: Alignment.center,
                                     children: [
                                       MySvgPicture(path: board1, iconSize: 160.h),
-                                      if (hasIngredient) Draggable<IngredientsModel >(
-                                        data: IngredientsModel(
-                                          name: ingredient.name, 
-                                          path: ingredient.path, 
-                                          category: ingredient.category,
-                                          actions: ingredient.actions,
-                                          dragKey: 'submit'
-                                        ),
-                                        onDragStarted: () {
-                                          controller.bagToggle.value= false;
-                                        },
-                                        feedback: SizedBox(
-                                          height: 80.h, width: 80.w,
-                                          child: Padding(
-                                            padding: EdgeInsets.all(8.w),
-                                            child: CachedNetworkImage(
-                                              imageUrl: ingredient.path,
-                                              placeholder: (context, url) => const ShimmerSkeletonLoader(),
-                                              errorWidget: (context, url, error) => const Icon(Icons.error),
-                                              fit: BoxFit.contain,
+                                      if (hasIngredient)
+                                        Draggable<IngredientsModel>(
+                                          data: IngredientsModel(
+                                            name: ingredient.name,
+                                            path: ingredient.path,
+                                            category: ingredient.category,
+                                            actions: ingredient.actions,
+                                            dragKey: 'submit',
+                                          ),
+                                          onDragStarted: () {
+                                            controller.bagToggle.value = false;
+                                          },
+                                          feedback: SizedBox(
+                                            height: 80.h,
+                                            width: 80.w,
+                                            child: Padding(
+                                              padding: EdgeInsets.all(8.w),
+                                              child: CachedNetworkImage(
+                                                imageUrl: ingredient.path,
+                                                placeholder: (context, url) => const ShimmerSkeletonLoader(),
+                                                errorWidget: (context, url, error) => const Icon(Icons.error),
+                                                fit: BoxFit.contain,
+                                              ),
+                                            ),
+                                          ),
+                                          childWhenDragging: Center(child: MyText(text: ingredient.name)),
+                                          child: InkWell(
+                                            onTap: () => controller.actionOnTap(ingredient),
+                                            child: SizedBox(
+                                              height: 80.h,
+                                              width: 80.w,
+                                              child: CachedNetworkImage(
+                                                imageUrl: ingredient.path,
+                                                placeholder: (context, url) => const ShimmerSkeletonLoader(),
+                                                errorWidget: (context, url, error) => const Icon(Icons.error),
+                                                fit: BoxFit.contain,
+                                              ),
                                             ),
                                           ),
                                         ),
-                                        childWhenDragging: Center(
-                                          child: MyText(text: ingredient.name),
-                                        ),
-                                        child: InkWell(
-                                          onTap: () => controller.actionOnTap(ingredient),
-                                          child: SizedBox(
-                                            height: 80.h, width: 80.w,
-                                            child: CachedNetworkImage(
-                                              imageUrl: ingredient.path,
-                                              placeholder: (context, url) => const ShimmerSkeletonLoader(),
-                                              errorWidget: (context, url, error) => const Icon(Icons.error),
-                                              fit: BoxFit.contain,
-                                            ),
-                                          ),
-                                        ),
-                                      ),
                                     ],
                                   ),
                                 ),
                                 Align(
                                   alignment: Alignment.bottomLeft,
-                                  child: Obx(()=> Row(
-                                    spacing: 8.w,
+                                  child: Obx(() => Row(
                                     children: [
-                                      if(hasIngredient) controller.actionButton(
-                                        text: 'Check',
-                                        onPressed: (){
-                                          final ingredient = controller.ingredientActionData.value;
-                                          if (ingredient.actions.isNotEmpty) {
-                                            controller.preparedIngredients.add(ingredient);
-                                            checkStatus(ingredient);
-                                          }
-                                        }
-                                      ),
-                                      if(controller.toolListToggle.value) controller.actionButton(
-                                        text: 'Back',
-                                        onPressed: (){
-                                          controller.toolListToggle.value = false;
-                                          controller.actionListToggle.value = true;
-                                        }
-                                      ),
+                                      if (hasIngredient)
+                                        controller.actionButton(
+                                          text: 'Check',
+                                          onPressed: () {
+                                            final ingredient = controller.ingredientActionData.value;
+                                            if (ingredient.actions.isNotEmpty) {
+                                              controller.preparedIngredients.add(ingredient);
+                                              checkStatus(ingredient);
+                                            }
+                                          },
+                                        ),
+                                      SizedBox(width: 8.w),
+                                      if (controller.toolListToggle.value)
+                                        controller.actionButton(
+                                          text: 'Back',
+                                          onPressed: () {
+                                            controller.toolListToggle.value = false;
+                                            controller.actionListToggle.value = true;
+                                          },
+                                        ),
                                     ],
                                   )),
                                 )
                               ],
                             ),
                           ),
-                          
-                          if(controller.actionToggle.value) const Spacer(),
 
-                          //? ACTION / TOOL LIST
+                          SizedBox(width: 16.w),
+
+                          //? TOOL OR ACTION LIST
                           Obx(() {
                             final hasIngredient = controller.ingredientDragDropData.value.path.isNotEmpty;
                             if (!hasIngredient) return const SizedBox();
-                            if (controller.toolListToggle.value) {
-                              return toolListUI();
-                            }
-                            if (controller.actionListToggle.value) {
-                              return actionListUI();
-                            }
+                            if (controller.toolListToggle.value) return toolListUI();
+                            if (controller.actionListToggle.value) return actionListUI();
                             return const SizedBox();
                           }),
 
+                          if (controller.actionToggle.value) const Spacer(),
+
                           //? ACTION TAPPER
-                          if (controller.actionToggle.value) Column(
+                          if (controller.actionToggle.value)
+                          Column(
                             mainAxisAlignment: MainAxisAlignment.end,
                             children: [
                               InkWell(
-                                onTap: ()=> controller.actionPerform(context),
+                                onTap: () => controller.actionPerform(context),
                                 child: Container(
-                                  width: 48.w, height: 48.h,
+                                  width: 48.w,
+                                  height: 48.h,
                                   decoration: BoxDecoration(
                                     color: darkBrown,
                                     borderRadius: BorderRadius.circular(4.r),
@@ -268,8 +273,9 @@ class _MyProcedurePlatingPageState extends State<MyProcedurePlatingPage> with Ti
                             ],
                           ),
 
-                          //? ACTION BAR
-                          if (controller.actionToggle.value) TimingHitBar(
+                          //? TIMING BAR
+                          if (controller.actionToggle.value)
+                          TimingHitBar(
                             animation: controller.animation,
                             controller: animationController,
                           ),
@@ -285,10 +291,9 @@ class _MyProcedurePlatingPageState extends State<MyProcedurePlatingPage> with Ti
       ),
     );
   }
-  
+
   Widget toolListUI() {
     return Expanded(
-      flex: 2,
       child: Container(
         decoration: BoxDecoration(
           color: darkBrown,
@@ -300,13 +305,12 @@ class _MyProcedurePlatingPageState extends State<MyProcedurePlatingPage> with Ti
             itemCount: controller.selectedTools.length,
             itemBuilder: (context, i) {
               final tool = controller.selectedTools[i];
-
               return InkWell(
-                onTap: ()=> onToolSelected(tool),
+                onTap: () => onToolSelected(tool),
                 child: Padding(
                   padding: EdgeInsets.all(4.w),
                   child: MyText(
-                    text: tool.name, 
+                    text: tool.name,
                     textAlign: TextAlign.center,
                     color: textLight,
                     size: 14.sp,
@@ -322,7 +326,6 @@ class _MyProcedurePlatingPageState extends State<MyProcedurePlatingPage> with Ti
 
   Widget actionListUI() {
     return Expanded(
-      flex: 2,
       child: Container(
         decoration: BoxDecoration(
           color: darkBrown,
@@ -330,24 +333,23 @@ class _MyProcedurePlatingPageState extends State<MyProcedurePlatingPage> with Ti
           borderRadius: BorderRadius.circular(4.r),
         ),
         child: Obx(() => ListView.builder(
-          itemCount: controller.currentActions.length,
-          itemBuilder: (context, index) {
-            final action = controller.currentActions[index];
-
-            return InkWell(
-              onTap: () => onActionSelected(action),
-              child: Padding(
-                padding: EdgeInsets.all(4.w),
-                child: MyText(
-                  text: action.name,
-                  textAlign: TextAlign.center,
-                  color: textLight,
-                  size: 14.sp,
-                ),
-              ),
-            );
-          },
-        )),
+              itemCount: controller.currentActions.length,
+              itemBuilder: (context, index) {
+                final action = controller.currentActions[index];
+                return InkWell(
+                  onTap: () => onActionSelected(action),
+                  child: Padding(
+                    padding: EdgeInsets.all(4.w),
+                    child: MyText(
+                      text: action.name,
+                      textAlign: TextAlign.center,
+                      color: textLight,
+                      size: 14.sp,
+                    ),
+                  ),
+                );
+              },
+            )),
       ),
     );
   }
@@ -368,107 +370,79 @@ class _MyProcedurePlatingPageState extends State<MyProcedurePlatingPage> with Ti
               padding: EdgeInsets.all(16.w),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
-                spacing: 16.h,
                 children: [
                   Row(
-                    spacing: 14.w,
-                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       Image.asset(logo, width: 32.w),
+                      SizedBox(width: 14.w),
                       MyText(text: 'Ingredient Status'),
                       const Spacer(),
                       IconButton(
-                        style: ButtonStyle(
-                          shape: WidgetStatePropertyAll(
-                            BeveledRectangleBorder(
-                              borderRadius: BorderRadiusGeometry.circular(4.r),
-                            ),
-                          ),
-                        ),
                         onPressed: () => context.pop(),
                         icon: Container(
                           width: 32.w,
                           height: 32.h,
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(4.r),
-                            color: lightButtonBackground.withValues(alpha: 0.3),
+                            color: lightButtonBackground.withOpacity(0.3),
                           ),
-                          child: Center(
-                            child: MySvgPicture(
-                              path: close,
-                              iconColor: darkBrown,
-                            ),
-                          ),
+                          child: Center(child: MySvgPicture(path: close, iconColor: darkBrown)),
                         ),
                       ),
                     ],
                   ),
-                  Expanded(
-                    child: SingleChildScrollView(
-                      physics: AlwaysScrollableScrollPhysics(),
+                  SizedBox(height: 16.h),
+                  Row(
+                    children: [
+                      SizedBox(
+                        width: 100.w,
+                        height: 100.h,
+                        child: CachedNetworkImage(
+                          imageUrl: ingredient.path,
+                          placeholder: (context, url) => ShimmerSkeletonLoader(),
+                          errorWidget: (context, url, error) => Icon(Icons.error),
+                          fit: BoxFit.contain,
+                        ),
+                      ),
+                      SizedBox(width: 12.w),
+                      Expanded(
+                        child: MyText(
+                          text: 'Name: ${ingredient.name}',
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 16.h),
+                  MyText(text: 'Status'),
+                  ...ingredient.actions.asMap().entries.map((entry) {
+                    final index = entry.key + 1;
+                    final act = entry.value;
+                    final color = switch (act.status) {
+                      'perfect' => greenLighter,
+                      'good' => Colors.amber,
+                      _ => redLighter,
+                    };
+
+                    return Padding(
+                      padding: EdgeInsets.symmetric(vertical: 6.h),
                       child: Column(
-                        spacing: 12.h,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Row(
-                            spacing: 12.w,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              SizedBox(
-                                width: 100.w, height: 100.h,
-                                child: CachedNetworkImage(
-                                  imageUrl: ingredient.path,
-                                  placeholder: (context, url) => ShimmerSkeletonLoader(),
-                                  errorWidget: (context, url, error) => Icon(Icons.error),
-                                  fit: BoxFit.contain,
-                                ),
-                              ),
-                              Expanded(
-                                child: MyText(
-                                  text: 'Name: ${ingredient.name}',
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              ),
-                            ],
+                          MyText(
+                            text: '$index. ${act.action} : ',
+                            fontWeight: FontWeight.w500,
                           ),
-                          MyText(text: 'Status'), 
-                          Column(
-                            spacing: 12.h,
-                            children: List.generate(ingredient.actions.length, (index) {
-                              final act = ingredient.actions[index];
-                              return Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Row(
-                                    children: [
-                                      MyText(
-                                        text: '${index + 1}. ${act.action} : ',
-                                        fontWeight: FontWeight.w500,
-                                      ),
-                                      MyText(
-                                        text: act.status,
-                                        fontWeight: FontWeight.w500,
-                                        color: switch (act.status) {
-                                          'perfect' => greenLighter,
-                                          'good' => Colors.amber,
-                                          _ => redLighter, 
-                                        },
-                                      ),
-                                    ],
-                                  ),
-                                  MyText(
-                                    text: '   Tool : ${act.tool}',
-                                    fontWeight: FontWeight.w500,
-                                  ),
-                                ],
-                              );
-                            }),
+                          MyText(
+                            text: act.status,
+                            fontWeight: FontWeight.w500,
+                            color: color,
                           ),
-
+                          MyText(text: '   Tool : ${act.tool}', fontWeight: FontWeight.w500),
                         ],
                       ),
-                    ),
-                  ),
+                    );
+                  }),
                 ],
               ),
             ),
@@ -483,13 +457,12 @@ class _MyProcedurePlatingPageState extends State<MyProcedurePlatingPage> with Ti
     controller.pendingAction.value = action;
     controller.selectedTools.value = getToolsForAction(action);
   }
-  
+
   void onToolSelected(ToolType tool) {
-    controller.actionListToggle.value = false; //* HIDE ACTION LIST 
-    controller.actionToggle.value = true; //* SHOW ACTION TAP
-    controller.toolListToggle.value = false; //* HIDE TOOLS LIST
+    controller.actionListToggle.value = false;
+    controller.actionToggle.value = true;
+    controller.toolListToggle.value = false;
     controller.pendingTool.value = tool;
   }
 
 }
-
