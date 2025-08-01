@@ -21,7 +21,7 @@ class TimingHitBar extends StatelessWidget {
     
         final centerStart = (barHeight / 2) - (greenZoneHeight / 2);
         // final centerEnd = (barHeight / 2) + (greenZoneHeight / 2);
-    
+        
         return Stack(
           alignment: Alignment.center,
           children: [

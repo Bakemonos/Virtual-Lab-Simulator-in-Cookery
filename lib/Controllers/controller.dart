@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/foundation.dart';
@@ -7,6 +8,8 @@ import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:go_router/go_router.dart';
+import 'package:http/http.dart' as http;
+import 'package:http_parser/http_parser.dart';
 import 'package:quickalert/models/quickalert_type.dart';
 import 'package:virtual_lab/components/custom_dropdown.dart';
 import 'package:virtual_lab/components/custom_svg.dart';
@@ -45,6 +48,8 @@ class AppController extends GetxController {
   late Animation<double> animation;
   late List<RxBool> selectedList;
   Timer? _timer;
+
+  final platingImageUrl = ''.obs;
 
   //? RX VARIABLE
   final category = ''.obs;
@@ -390,6 +395,21 @@ class AppController extends GetxController {
   }
 
   //! WIDGET ----------------------------------------------------------------------------------------------------------------
+
+  void showFloatingSnackbar({required BuildContext context, required String message}) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        backgroundColor: textLight,
+        behavior: SnackBarBehavior.floating,
+        duration: const Duration(seconds: 3),
+        content: MyText(text: message, fontWeight: FontWeight.w400),
+        margin: EdgeInsets.symmetric(horizontal: 24.w, vertical: 24.h),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12.r),
+        ),
+      ),
+    );
+  }
 
   BoxDecoration designUI({Color? backGround = lightBrown}) {
     return BoxDecoration(
@@ -868,42 +888,68 @@ class AppController extends GetxController {
         preparedData.value.ingredients,
         helper.toCamelCase(category.value),
       ); 
+      final data = SubmitedCocModel(
+        type: coc!, 
+        category: helper.toCamelCase(category.value), 
+        name: nameDishController.text, 
+        image: matchedDish?['image'] ?? '', 
+        studentId: studentId!, 
+        ingredients: preparedData.value.ingredients, 
+        equipments: [
+          EquipmentsModel(
+            name: 'pot', 
+            image: 'pot.url',
+          ),
+          EquipmentsModel(
+            name: 'hair net', 
+            image: 'hair.url',
+          ),
+          EquipmentsModel(
+            name: 'gloves', 
+            image: 'gloves.url',
+          ),
+          EquipmentsModel(
+            name: 'apron', 
+            image: 'apron.url',
+          ),
+        ],
+      );
 
-      Map<String, dynamic> data = {
-        'type': coc,
-        'studentId': studentId,
-        'category': helper.toCamelCase(category.value),
-        'name': nameDishController.text,
-        'ingredients': preparedData.value.ingredients,
-        'image': matchedDish?['image'] ?? '',
-        'equipments': [
-          {
-            'name': 'pot',
-            'image': 'pot.url'
-          },
-          {
-            'name': 'apron',
-            'image': 'apron.url',
-          },
-          {
-            'name': 'hair net',
-            'image': 'hair.url',
-          },
-          {
-            'name': 'gloves',
-            'image': 'gloves.url',
-          }
-        ]
-      };
-
-      final response = await db.post('coc/create', data);
+      final response = await db.post('coc/create', data.toJson());
 
       if(response.success!){
         debugPrint('SUCCESS : ${response.message}');
-        debugPrint('BODY : ${response.data}');
       }{
         debugPrint('FAILED : ${response.message}');
+      }
 
+    } catch (e, t) {
+      loader.value = false;
+      final errorMessage = helper.getErrorMessage(e);
+      debugPrint('Error: $errorMessage');
+      debugPrint('STACKTRACE: $t');
+    }
+  }
+
+  Future<void> submitCoc() async {
+    loader.value = true;
+    try {
+
+      final coc = typeSelected!.menu;
+      final studentId = userData.value.id;
+
+      Map<String, dynamic> data = {
+        'image': platingImageUrl.value,
+        'studentId': studentId,
+        'type': coc,
+      }; 
+
+      final response = await db.post('plating/create', data);
+
+      if(response.success!){
+        debugPrint('SUCCESS : ${response.message}');
+      }{
+        debugPrint('FAILED : ${response.message}');
       }
 
     } catch (e, t) {
@@ -992,6 +1038,36 @@ class AppController extends GetxController {
       final errorMessage = helper.getErrorMessage(e);
       debugPrint('Error: $errorMessage');
       debugPrint('STACKTRACE: $t');
+    }
+  }
+
+  Future<String?> uploadImageToCloudinary(Uint8List imageBytes) async {
+    const String cloudName = 'dhceioavi';
+    const String uploadPreset = 'ml_default';
+
+    final uri = Uri.parse('https://api.cloudinary.com/v1_1/$cloudName/image/upload');
+
+    final request = http.MultipartRequest('POST', uri)
+      ..fields['upload_preset'] = uploadPreset
+      ..files.add(
+        http.MultipartFile.fromBytes(
+          'file',
+          imageBytes,
+          filename: 'screenshot.png',
+          contentType: MediaType('image', 'png'),
+        ),
+      );
+
+    final response = await request.send();
+    final responseData = await response.stream.bytesToString();
+    print('Cloudinary response: $responseData');
+
+    if (response.statusCode == 200) {
+      final data = json.decode(responseData);
+      return data['secure_url'];
+    } else {
+      debugPrint('Cloudinary upload failed: ${response.statusCode}');
+      return null;
     }
   }
 

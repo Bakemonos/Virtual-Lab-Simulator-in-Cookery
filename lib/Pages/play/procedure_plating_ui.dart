@@ -73,7 +73,29 @@ class _MyProcedurePlatingPageState extends State<MyProcedurePlatingPage> with Ti
                         children: [
                           controller.actionButton(text: 'View Instruction', onPressed: ()=> controller.instruction(context, controller.typeSelected!)),
                           controller.actionButton(text: 'Get', onPressed: ()=> controller.getDish(context)),
-                          controller.actionButton(text: 'Proceed', onPressed: ()=> context.push(Routes.plating)),
+                          Obx((){
+
+                           final requiredNames = controller.typeSelected!.instructions
+                              .map((req) => helper.toCamelCase(req.name)).toList();
+
+                            final submittedCategories = controller.submittedCocList
+                                .map((dish) => dish.category).toList();
+
+                            final requireDish = requiredNames.every(
+                              (name) => submittedCategories.contains(name),
+                            );
+
+                            return controller.actionButton(text: 'Proceed', onPressed: (){
+                              if(!requireDish){
+                                context.push(Routes.plating);
+                              }else{
+                                controller.showFloatingSnackbar(
+                                  context: context,
+                                  message: 'All dish must be prepared',
+                                );
+                              }
+                            });
+                          })
                         ],
                       ),
                     ),

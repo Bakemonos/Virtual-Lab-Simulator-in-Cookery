@@ -7,6 +7,7 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:virtual_lab/Components/shimmer.dart';
+import 'package:virtual_lab/Json/coc1.dart';
 import 'package:virtual_lab/controllers/controller.dart';
 import 'package:virtual_lab/utils/properties.dart';
 
@@ -26,12 +27,13 @@ class _MyPlatingUIState extends State<MyPlatingUI> {
   @override
   void initState() {
     super.initState();
-    _generateRandomItemsFromIngredients();
+    _generateAllItems();
   }
 
-  void _generateRandomItemsFromIngredients() {
+  void _generateAllItems() {
+
     final rand = Random();
-    items = controller.submittedCocList.map((coc) {
+    final submittedItems  = controller.submittedCocList.map((coc) { //* DISH
       double dx = rand.nextDouble() * 250;
       double dy = rand.nextDouble() * 350;
       return _DraggableItem(
@@ -40,10 +42,20 @@ class _MyPlatingUIState extends State<MyPlatingUI> {
         offset: Offset(dx, dy),
       );
     }).toList();
+
+    final extraItems = ingredientsCOC1.map((coc) { //* DECORATION
+      return _DraggableItem(
+        name: coc.name,
+        imageUrl: coc.path,
+        offset: Offset(rand.nextDouble() * 250, rand.nextDouble() * 350),
+      );
+    }).toList();
+
+    items = [...submittedItems, ...extraItems];
+
   }
 
-
-  Future<void> _capturePlatingImage() async {
+  Future<void> _capturePlatingImage() async { //* CAPTURE
     try {
       final boundary = _repaintKey.currentContext!.findRenderObject() as RenderRepaintBoundary;
       final image = await boundary.toImage(pixelRatio: 3.0);
@@ -67,9 +79,7 @@ class _MyPlatingUIState extends State<MyPlatingUI> {
     return PopScope(
       canPop: false,
       onPopInvokedWithResult: (didPop, _) {
-        if (!didPop) {
-          controller.exitDialog(context);
-        }
+        if (!didPop) controller.exitDialog(context);
       },
       child: Scaffold(
         resizeToAvoidBottomInset: false,
@@ -122,17 +132,44 @@ class _MyPlatingUIState extends State<MyPlatingUI> {
                     if (capturedImageBytes != null && context.mounted) {
                       showDialog(
                         context: context,
-                        builder: (_) => AlertDialog(
-                          title: Text("Preview"),
-                          content: Image.memory(capturedImageBytes!),
-                          actions: [
-                            TextButton(
-                              onPressed: () => Navigator.pop(context),
-                              child: Text("Close"),
-                            )
-                          ],
-                        ),
+                        barrierDismissible: false,
+                        builder: (_) => Center(child: CircularProgressIndicator()),
                       );
+
+                      final uploadedUrl = await controller.uploadImageToCloudinary(capturedImageBytes!);
+
+                      if(context.mounted) context.pop(); 
+
+                      if (uploadedUrl != null) {
+                        controller.platingImageUrl.value = uploadedUrl;
+
+                        if(context.mounted){
+                          showDialog(
+                            context: context,
+                            builder: (_) => AlertDialog(
+                              title: Text("Preview Uploaded Image"),
+                              content: Image.network(uploadedUrl),
+                              actions: [
+                                TextButton(
+                                  onPressed: () => context.pop(),
+                                  child: Text("Close"),
+                                )
+                              ],
+                            ),
+                          );
+                        }
+
+                        await controller.submitCoc();
+
+                      } else {
+                        debugPrint('Image upload failed');
+                        if(context.mounted){
+                          controller.showFloatingSnackbar(
+                            context: context,
+                            message: 'Failed to upload image',
+                          );
+                        }
+                      }
                     }
                   },
                 ),
@@ -176,7 +213,9 @@ class _MyPlatingUIState extends State<MyPlatingUI> {
           final localOffset = renderBox.globalToLocal(details.offset);
 
           setState(() {
-            items[index] = item.copyWith(offset: localOffset);
+            final draggedItem = items.removeAt(index);
+            final updatedItem = draggedItem.copyWith(offset: localOffset);
+            items.add(updatedItem);
           });
         },
         child: SizedBox(
