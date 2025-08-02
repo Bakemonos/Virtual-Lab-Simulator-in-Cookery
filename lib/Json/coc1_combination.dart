@@ -113,22 +113,30 @@ final List<Map<String, dynamic>> dishCombinations = [
     'image': 'https://res.cloudinary.com/dhceioavi/image/upload/v1753927779/sauce_n4syhg.png',
   },
 ];
-
 Map<String, dynamic>? getBestMatchedDish(List<IngredientsModel> selected, String type) {
-  final selectedNames = selected.map((i) => i.name.toLowerCase()).toSet();
+  final selectedNames = selected.map((i) => i.name.toLowerCase().trim()).toSet();
   int highestScore = 0;
   Map<String, dynamic>? bestMatch;
 
-  for (final dish in dishCombinations.where((d) => d['type'] == type)) {
-    final required = List<String>.from(dish['contains']);
-    int score = required.where((item) => selectedNames.contains(item)).length;
+  for (final dish in dishCombinations.where((d) => d['type'].toString().toLowerCase().trim() == type.toLowerCase().trim())) {
+    final required = List<String>.from((dish['contains'] as List).map((e) => e.toLowerCase().trim()));
+    final score = required.where((item) => selectedNames.contains(item)).length;
 
-    if (score > highestScore && score >= (required.length / 2)) {
+    if (score > highestScore) {
       highestScore = score;
       bestMatch = dish;
     }
   }
 
+  if (bestMatch == null || highestScore == 0) {
+    bestMatch = dishCombinations.firstWhere(
+      (d) => d['type'].toString().toLowerCase().trim() == type.toLowerCase().trim(),
+      orElse: () => {},
+    );
+  }
+
   return bestMatch;
 }
+
+
 

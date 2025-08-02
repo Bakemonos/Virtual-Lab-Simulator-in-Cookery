@@ -24,6 +24,9 @@ enum ActionType {
   steam,
   fry,
   whisk,
+  crack,
+  beat,
+  scramble, 
 }
 
 //? TOOLS

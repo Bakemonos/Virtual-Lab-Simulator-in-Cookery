@@ -45,5 +45,11 @@ List<ToolType> getToolsForAction(ActionType action) {
       return [ToolType.fryingPan, ToolType.deepFryer, ToolType.spatula];
     case ActionType.whisk:
       return [ToolType.whisk, ToolType.fork, ToolType.mixer];
+    case ActionType.crack:
+      return [ToolType.bowl, ToolType.hand];
+    case ActionType.beat:
+      return [ToolType.whisk, ToolType.fork, ToolType.spoon, ToolType.bowl];
+    case ActionType.scramble:
+      return [ToolType.pan, ToolType.spatula, ToolType.bowl];
   }
 }

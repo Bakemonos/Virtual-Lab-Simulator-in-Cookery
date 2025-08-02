@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
+import 'package:virtual_lab/components/custom_svg.dart';
 import 'package:virtual_lab/controllers/controller.dart';
 import 'package:virtual_lab/models/ingredients_model.dart';
 import 'package:virtual_lab/pages/play/inventory_ui.dart';
@@ -28,7 +29,6 @@ class _MyPlayUIPageState extends State<MyPlayUIPage> {
 
   @override
   Widget build(BuildContext context) {
-
     return PopScope(
       canPop: false,
       onPopInvokedWithResult: (didPop, _) {
@@ -45,32 +45,37 @@ class _MyPlayUIPageState extends State<MyPlayUIPage> {
                 padding: EdgeInsets.all(16.w),
                 child: Row(
                   spacing: 16.w,
-                  children: [
-                    const MyInventoryPage(),
-                    const MyProcedurePlatingPage(),
-                    const MyProcessPage(),
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: const [
+                    MyInventoryPage(),
+                    MyProcedurePlatingPage(),
+                    MyProcessPage(),
                   ],
                 ),
               ),
             ),
-            Align(
-              alignment: Alignment.topRight,
-              child: Container(
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: backgroundColor,
-                  border: Border.all(width: 8.w, color: backgroundColor)
-                ),
-                child: controller.floatingButton(
-                  context: context,
-                  icon: menu,
-                  onTap: () {
-                    context.go(Routes.menu);
-                  },
-                ),
+          ],
+        ),
+        floatingActionButtonLocation: FloatingActionButtonLocation.endTop,
+        floatingActionButton: Container(
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            color: backgroundColor,
+            border: Border.all(width: 8.w, color: backgroundColor),
+          ),
+          child: InkWell(
+            onTap: () {
+              controller.playClickSound();
+              context.go(Routes.menu);
+            },
+            child: SizedBox(
+              height: 48.h,
+              child: AspectRatio(
+                aspectRatio: 1,
+                child: MySvgPicture(path: menu),
               ),
             ),
-          ],
+          ),
         ),
       ),
     );

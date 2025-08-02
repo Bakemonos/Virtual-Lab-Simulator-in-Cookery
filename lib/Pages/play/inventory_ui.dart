@@ -78,7 +78,8 @@ class _MyInventoryPageState extends State<MyInventoryPage> {
               },
             ),
           )),
-          Expanded(
+          Flexible(
+            fit: FlexFit.loose,
             child: Container(
               width: double.infinity,
               decoration: controller.designUI(),
@@ -145,7 +146,8 @@ class _MyInventoryPageState extends State<MyInventoryPage> {
           ),
         ),
         SizedBox(height: 16.h),
-        Expanded(
+        Flexible(
+          fit: FlexFit.loose,
           child: Obx(() {
             final ingredients = controller.typeInventory.value.ingredients;
             return GridView.builder(
@@ -250,7 +252,8 @@ class _MyInventoryPageState extends State<MyInventoryPage> {
           ),
         ),
         SizedBox(height: 16.h),
-        Expanded(
+        Flexible(
+          fit: FlexFit.loose,
           child: Obx(() {
             final ingredients = controller.typeInventory.value.ingredients;
             return GridView.builder(

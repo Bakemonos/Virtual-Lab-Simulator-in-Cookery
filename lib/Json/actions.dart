@@ -1,7 +1,6 @@
 //? ACTIONS
 import 'package:virtual_lab/utils/enum.dart';
 
-//? ACTIONS
 List<ActionType> getActionsForIngredient(IngredientType type) {
   switch (type) {
     case IngredientType.vegetable:
@@ -44,9 +43,17 @@ List<ActionType> getActionsForIngredient(IngredientType type) {
         ActionType.pour,
         ActionType.grate,
         ActionType.melt,
+        ActionType.crack, 
+        ActionType.boil,   
+        ActionType.fry,  
+        ActionType.beat,     
+        ActionType.scramble, 
       ];
     case IngredientType.spice:
-      return [ActionType.grind, ActionType.sprinkle, ActionType.season];
+      return [
+        ActionType.grind,
+        ActionType.sprinkle,
+        ActionType.season,
+      ];
   }
 }
-

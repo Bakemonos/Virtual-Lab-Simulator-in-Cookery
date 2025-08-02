@@ -19,7 +19,8 @@ class MyProcessPage extends StatelessWidget {
     final controller = AppController.instance;
     final submitDishFormKey = GlobalKey<FormState>();
 
-    return Expanded(
+    return Flexible(
+      fit: FlexFit.loose,
       child: Container(
         decoration: controller.designUI(),
         child: Padding(
@@ -30,7 +31,7 @@ class MyProcessPage extends StatelessWidget {
                 onWillAcceptWithDetails: (details) => details.data.dragKey == 'submit' && details.data.actions.isEmpty,
                 onAcceptWithDetails: (details) {
                   controller.acceptIngredient(
-                    type: controller.typeSelected!.menu ?? '',
+                    type: controller.typeSelected!.menu ?? '', 
                     studentId: controller.userData.value.id!,
                     take: 'take_one',
                   );
@@ -254,7 +255,8 @@ class MyProcessPage extends StatelessWidget {
                   Obx(() {
                     final preparedData = controller.preparedData.value.ingredients;
 
-                    return Expanded(
+                    return Flexible(
+                      fit: FlexFit.loose,
                       child: SingleChildScrollView(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -413,20 +415,3 @@ class MyProcessPage extends StatelessWidget {
   }  
 
 }
-
-
-// const Spacer(),
-// Obx(
-//   () => controller.equipmentToggle.value ? preparedIngredients(controller)
-//   : SizedBox(
-//     width: double.infinity,
-//     child: Column(
-//       spacing: 12.h,
-//       crossAxisAlignment: CrossAxisAlignment.end,
-//       children: [
-//         equipToggler(controller: controller, iconPath: box, label: 'Inventory'),
-//         equipToggler(controller: controller, iconPath: basket, label: 'Basket'),
-//       ],
-//     ),
-//   ),
-// ),

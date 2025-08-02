@@ -54,10 +54,12 @@ class _MyProcedurePlatingPageState extends State<MyProcedurePlatingPage> with Ti
       width: 320.w,
       height: 1.sh, 
       child: Column(
+        spacing:  16.h,
         children: [
 
           //? DISPLAY DATA
-          Expanded(
+          Flexible(
+            fit: FlexFit.loose,
             child: Container(
               width: double.infinity,
               decoration: controller.designUI(),
@@ -70,17 +72,12 @@ class _MyProcedurePlatingPageState extends State<MyProcedurePlatingPage> with Ti
                     Align(
                       alignment: Alignment.topLeft,
                       child: Row(
+                        spacing: 8.w,
                         children: [
                           controller.actionButton(
                             text: 'View Instruction',
                             onPressed: () => controller.instruction(context, controller.typeSelected!),
                           ),
-                          SizedBox(width: 8.w),
-                          controller.actionButton(
-                            text: 'Get',
-                            onPressed: () => controller.getDish(context),
-                          ),
-                          SizedBox(width: 8.w),
                           Obx(() {
                             final requiredNames = controller.typeSelected!.instructions.map((req) => helper.toCamelCase(req.name)).toList();
                             final submittedCategories = controller.submittedCocList.map((dish) => dish.category).toList();
@@ -133,10 +130,9 @@ class _MyProcedurePlatingPageState extends State<MyProcedurePlatingPage> with Ti
             ),
           ),
 
-          SizedBox(height: 16.h),
           //? PROCEDURE AREA
-
-          Expanded(
+          Flexible(
+            fit: FlexFit.loose,
             child: DragTarget<IngredientsModel>(
               onWillAcceptWithDetails: (details) => details.data.dragKey == 'procedure',
               onAcceptWithDetails: (details) {
@@ -152,7 +148,7 @@ class _MyProcedurePlatingPageState extends State<MyProcedurePlatingPage> with Ti
 
                   return Container(
                     decoration: controller.designUI(
-                      backGround: candidateData.isEmpty ? acceptedColor : greenLighter.withOpacity(0.8),
+                      backGround: candidateData.isEmpty ? acceptedColor : greenLighter.withValues(alpha: 0.8),
                     ),
                     child: Padding(
                       padding: EdgeInsets.all(8.w),
@@ -275,6 +271,8 @@ class _MyProcedurePlatingPageState extends State<MyProcedurePlatingPage> with Ti
                               )
                             ],
                           ),
+                          
+                          SizedBox(width: 16.w),
 
                           //? TIMING BAR
                           if (controller.actionToggle.value)
@@ -296,7 +294,8 @@ class _MyProcedurePlatingPageState extends State<MyProcedurePlatingPage> with Ti
   }
 
   Widget toolListUI() {
-    return Expanded(
+    return Flexible(
+      fit: FlexFit.loose,
       child: Container(
         decoration: BoxDecoration(
           color: darkBrown,
@@ -328,7 +327,8 @@ class _MyProcedurePlatingPageState extends State<MyProcedurePlatingPage> with Ti
   }
 
   Widget actionListUI() {
-    return Expanded(
+    return Flexible(
+      fit: FlexFit.loose,
       child: Container(
         decoration: BoxDecoration(
           color: darkBrown,
@@ -336,23 +336,23 @@ class _MyProcedurePlatingPageState extends State<MyProcedurePlatingPage> with Ti
           borderRadius: BorderRadius.circular(4.r),
         ),
         child: Obx(() => ListView.builder(
-              itemCount: controller.currentActions.length,
-              itemBuilder: (context, index) {
-                final action = controller.currentActions[index];
-                return InkWell(
-                  onTap: () => onActionSelected(action),
-                  child: Padding(
-                    padding: EdgeInsets.all(4.w),
-                    child: MyText(
-                      text: action.name,
-                      textAlign: TextAlign.center,
-                      color: textLight,
-                      size: 14.sp,
-                    ),
-                  ),
-                );
-              },
-            )),
+          itemCount: controller.currentActions.length,
+          itemBuilder: (context, index) {
+            final action = controller.currentActions[index];
+            return InkWell(
+              onTap: () => onActionSelected(action),
+              child: Padding(
+                padding: EdgeInsets.all(4.w),
+                child: MyText(
+                  text: action.name,
+                  textAlign: TextAlign.center,
+                  color: textLight,
+                  size: 14.sp,
+                ),
+              ),
+            );
+          },
+        )),
       ),
     );
   }
@@ -387,7 +387,7 @@ class _MyProcedurePlatingPageState extends State<MyProcedurePlatingPage> with Ti
                           height: 32.h,
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(4.r),
-                            color: lightButtonBackground.withOpacity(0.3),
+                            color: lightButtonBackground.withValues(alpha: 0.3),
                           ),
                           child: Center(child: MySvgPicture(path: close, iconColor: darkBrown)),
                         ),
@@ -408,7 +408,8 @@ class _MyProcedurePlatingPageState extends State<MyProcedurePlatingPage> with Ti
                         ),
                       ),
                       SizedBox(width: 12.w),
-                      Expanded(
+                      Flexible(
+                        fit: FlexFit.loose,
                         child: MyText(
                           text: 'Name: ${ingredient.name}',
                           fontWeight: FontWeight.w500,

@@ -212,8 +212,6 @@ class AppController extends GetxController {
     debugPrint('\n✅ ACCEPTED INGREDIENT: ${currentIngredient.name} with ${currentIngredient.actions.length} actions');
     debugPrint('📦 Total accepted ingredients: ${preparedData.value.ingredients.length}\n');
 
-
-
     ingredientDragDropData.value = IngredientsModel.empty();
     ingredientActionData.value = IngredientsModel.empty();
     selectedActions.clear();
@@ -299,6 +297,9 @@ class AppController extends GetxController {
     gradeLevelErrorText.value = '';
     dishNameErrorText.value = '';
     typeErrorText.value = '';
+  }
+
+  void submitResetErrorHandler(){
     category.value = '';
     nameDishController.clear();
   }
@@ -891,11 +892,19 @@ class AppController extends GetxController {
 
       final coc = typeSelected!.menu;
       final studentId = userData.value.id;
+      final ingredients = preparedData.value.ingredients;
+
+      if (ingredients.any((i) => i.name.isEmpty)) {
+        debugPrint('Found ingredient with empty name!');
+        for (var i in ingredients) {
+          debugPrint('${i.name} | ${i.category} | ${i.path}');
+        }
+      }
 
       final matchedDish = getBestMatchedDish(
-        preparedData.value.ingredients,
-        helper.toCamelCase(category.value),
-      ); 
+        ingredients,
+        helper.toCamelCase(category.value), 
+      );
 
       final data = SubmitedCocModel(
         type: coc!, 
@@ -927,8 +936,16 @@ class AppController extends GetxController {
       final response = await db.post('coc/create', data.toJson());
 
       if(response.success! && context.mounted){
+        context.pop();
         debugPrint('SUCCESS : ${response.message}');
-        context.pop;
+        submitResetErrorHandler();
+        quickAlertDialog(
+          context: context,
+          type: QuickAlertType.success,
+          title: 'Submitted Successful!',
+          message: response.message.toString(),
+         
+        );
       }{
         debugPrint('FAILED : ${response.message}');
       }
@@ -938,6 +955,14 @@ class AppController extends GetxController {
       final errorMessage = helper.getErrorMessage(e);
       debugPrint('Error: $errorMessage');
       debugPrint('STACKTRACE: $t');
+      if (context.mounted) {
+        quickAlertDialog(
+          context: context,
+          type: QuickAlertType.error,
+          title: 'Submitted Failed!',
+          message: errorMessage,
+        );
+      }
     }
   }
 
