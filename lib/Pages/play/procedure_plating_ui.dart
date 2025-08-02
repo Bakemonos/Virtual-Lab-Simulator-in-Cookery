@@ -66,6 +66,7 @@ class _MyProcedurePlatingPageState extends State<MyProcedurePlatingPage> with Ti
               child: Padding(
                 padding: EdgeInsets.all(10.w),
                 child: Column(
+                  spacing: 10.h,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -78,15 +79,52 @@ class _MyProcedurePlatingPageState extends State<MyProcedurePlatingPage> with Ti
                             text: 'View Instruction',
                             onPressed: () => controller.instruction(context, controller.typeSelected!),
                           ),
-                          Obx(() {
-                            final requiredNames = controller.typeSelected!.instructions.map((req) => helper.toCamelCase(req.name)).toList();
-                            final submittedCategories = controller.submittedCocList.map((dish) => dish.category).toList();
-                            final requireDish = requiredNames.every((name) => submittedCategories.contains(name));
+                          
+                        ],
+                      ),
+                    ),
+                    Row(
+                      spacing: 16.w,
+                      children: [
+                        Obx(() => Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: controller.typeSelected!.instructions.asMap().entries.map((entry) {
+                            final index = entry.key + 1;
+                            final goal = entry.value;
+                            final goalCategory = goal.name;
 
-                            return controller.actionButton(
-                              text: 'Proceed',
-                              onPressed: () {
-                                if (requireDish) {
+                            final alreadySubmitted = controller.submittedCocList.any((item) {
+                              return item.category == helper.toCamelCase(goalCategory);
+                            });
+
+                            return Padding(
+                              padding: EdgeInsets.symmetric(vertical: 2.h),
+                              child: MyText(
+                                text: '$index. ${goal.name}',
+                                fontWeight: FontWeight.w500,
+                                color: textLight,
+                                size: 16.sp,
+                                decoration: alreadySubmitted ? TextDecoration.lineThrough : TextDecoration.none,
+                              ),
+                            );
+                          }).toList(),
+                        )),
+                        const Spacer(),
+                        repeatedIconButton(
+                          label: 'Equipment',
+                          icon: equipment, 
+                          onPressed: (){},
+                        ),
+                        Obx((){
+                          final requiredNames = controller.typeSelected!.instructions.map((req) => helper.toCamelCase(req.name)).toList();
+                          final submittedCategories = controller.submittedCocList.map((dish) => dish.category).toList();
+                          final requireDish = requiredNames.every((name) => submittedCategories.contains(name));
+
+                          return repeatedIconButton(
+                            label: 'Plating',
+                            icon: plating, 
+                            onPressed: (){
+                              if (requireDish) {
                                   context.push(Routes.plating);
                                 } else {
                                   controller.showFloatingSnackbar(
@@ -94,36 +132,11 @@ class _MyProcedurePlatingPageState extends State<MyProcedurePlatingPage> with Ti
                                     message: 'All dish must be prepared',
                                   );
                                 }
-                              },
-                            );
-                          }),
-                        ],
-                      ),
-                    ),
-                    SizedBox(height: 4.h),
-                    Obx(() => Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: controller.typeSelected!.instructions.asMap().entries.map((entry) {
-                        final index = entry.key + 1;
-                        final goal = entry.value;
-                        final goalCategory = goal.name;
-
-                        final alreadySubmitted = controller.submittedCocList.any((item) {
-                          return item.category == helper.toCamelCase(goalCategory);
-                        });
-
-                        return Padding(
-                          padding: EdgeInsets.symmetric(vertical: 2.h),
-                          child: MyText(
-                            text: '$index. ${goal.name}',
-                            fontWeight: FontWeight.w500,
-                            color: textLight,
-                            size: 16.sp,
-                            decoration: alreadySubmitted ? TextDecoration.lineThrough : TextDecoration.none,
-                          ),
-                        );
-                      }).toList(),
-                    )),
+                            },
+                          );
+                        })
+                      ],
+                    )
                   ],
                 ),
               ),
@@ -290,6 +303,40 @@ class _MyProcedurePlatingPageState extends State<MyProcedurePlatingPage> with Ti
           ),
         ],
       ),
+    );
+  }
+
+  Widget repeatedIconButton({required String label, required String icon, required Function() onPressed}) {
+    return Column(
+      children: [
+        SizedBox(
+          height: 60.h,
+          child: AspectRatio(
+            aspectRatio: 1,
+            child: IconButton(
+              style: ButtonStyle(
+                backgroundColor: WidgetStateProperty.resolveWith<Color?>((states) {
+                  if (states.contains(WidgetState.pressed)) {
+                    return Colors.brown.withValues(alpha: 0.2);
+                  }
+                  return backgroundColor.withValues(alpha: 0.8); 
+                }),
+                shape: WidgetStateProperty.all<RoundedRectangleBorder>(
+                  RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12.r),
+                    side: BorderSide(color: darkBrown, width: 2.w),
+                  ),
+                ),
+                padding: WidgetStateProperty.all(EdgeInsets.zero),
+                overlayColor: WidgetStateProperty.all(Colors.brown.withValues(alpha: 0.1)),
+              ),
+              icon: Padding(padding: EdgeInsets.all(8.w),child: MySvgPicture(path: icon)),
+              onPressed: onPressed,
+            ),
+          ),
+        ),
+        MyText(text: label, color: textLight, size: 14.sp )
+      ],
     );
   }
 

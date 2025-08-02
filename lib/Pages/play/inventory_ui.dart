@@ -31,7 +31,7 @@ class _MyInventoryPageState extends State<MyInventoryPage> {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      width: 145.w,
+      width: 130.w,
       child: Column(
         children: [
           Obx(() => AnimatedSwitcher(

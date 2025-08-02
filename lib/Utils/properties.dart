@@ -53,6 +53,8 @@ const String basket = "assets/icons/basket.svg";
 const String box = "assets/icons/box.svg";
 const String trashbag = "assets/icons/trashbag.svg";
 const String tap = "assets/icons/tap.svg";
+const String equipment = "assets/icons/equipment.svg";
+const String plating = "assets/icons/plating.svg";
 
 //? ON
 const String soundOn = "assets/icons/sound_on.svg";
