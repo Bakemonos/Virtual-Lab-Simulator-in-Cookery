@@ -73,15 +73,13 @@ class _MyLoginPageState extends State<MyLoginPage> {
                                   label: 'Email',
                                 ),
                                 controller.repeatedTextInput(
-                                  errorText: controller.passwordErrorText,
                                   obscureText: true,
+                                  errorText: controller.passwordErrorText,
                                   controller: controller.passwordController,
                                   label: 'Password',
                                 ),
                                 InkWell(
-                                  onTap:
-                                      () =>
-                                          context.push(Routes.forgotEnterEmail),
+                                  onTap: () => context.push(Routes.forgotEnterEmail),
                                   child: MyText(
                                     text: 'Forgot password',
                                     size: 14.sp,
@@ -98,10 +96,8 @@ class _MyLoginPageState extends State<MyLoginPage> {
                                           loading: controller.loader.value,
                                           text: 'LOGIN',
                                           onTap: () {
-                                            final form =
-                                                signInFormKey.currentState;
-                                            if (form != null &&
-                                                form.validate()) {
+                                            final form = signInFormKey.currentState;
+                                            if (form != null && form.validate()) {
                                               controller.errorHandlerSignin();
                                               controller.signin(context);
                                             }

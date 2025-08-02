@@ -153,7 +153,7 @@ class _MyInventoryPageState extends State<MyInventoryPage> {
               physics: AlwaysScrollableScrollPhysics(),
               gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 1,
-                childAspectRatio: 1,
+                childAspectRatio: 1, 
                 crossAxisSpacing: 8,
                 mainAxisSpacing: 8,
               ),

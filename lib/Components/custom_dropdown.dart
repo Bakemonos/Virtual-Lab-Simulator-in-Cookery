@@ -73,9 +73,7 @@ class MyDropDown extends StatelessWidget {
           focusedBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(12.r),
             borderSide: BorderSide(
-              color: hasError
-                  ? redLighter
-                  : (defaultBorderColor ?? darkBrown),
+              color: hasError ? redLighter : (defaultBorderColor ?? darkBrown),
               width: 1.5,
             ),
           ),
@@ -91,20 +89,16 @@ class MyDropDown extends StatelessWidget {
         iconEnabledColor: darkBrown,
         style: textStyle,
         validator: (value) => null,
-        items: items
-            .map(
-              (value) => DropdownMenuItem<String>(
-                value: value,
-                child: Center(
-                  child: Text(
-                    value,
-                    style: textStyle,
-                    textAlign: TextAlign.center,
-                  ),
-                ),
-              ),
-            )
-            .toList(),
+        items: items.map((value) => DropdownMenuItem<String>(
+          value: value,
+          child: Center(
+            child: Text(
+              value,
+              style: textStyle,
+              textAlign: TextAlign.center,
+            ),
+          ),
+        )).toList(),
         onChanged: onChanged,
       ),
     );

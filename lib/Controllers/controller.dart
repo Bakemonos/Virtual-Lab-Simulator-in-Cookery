@@ -5,6 +5,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:go_router/go_router.dart';
@@ -64,6 +65,10 @@ class AppController extends GetxController {
   final lastnameErrorText = ''.obs;
   final firstnameErrorText = ''.obs;
   final gradeLevelErrorText = ''.obs;
+
+  final typeErrorText = ''.obs;
+  final dishNameErrorText = ''.obs;
+
 
   final appName = ''.obs;
   final packageName = ''.obs;
@@ -292,6 +297,10 @@ class AppController extends GetxController {
     lastnameErrorText.value = '';
     firstnameErrorText.value = '';
     gradeLevelErrorText.value = '';
+    dishNameErrorText.value = '';
+    typeErrorText.value = '';
+    category.value = '';
+    nameDishController.clear();
   }
 
   void errorHandlerSignin() {
@@ -308,29 +317,28 @@ class AppController extends GetxController {
     }
   }
 
+  void errorHandlerSSubmitDish() {
+    if (category.value.isEmpty) {
+      typeErrorText.value = 'Type is required';
+    } else {
+      typeErrorText.value = '';
+    }
+
+    if (nameDishController.text.isEmpty) {
+      dishNameErrorText.value = 'Dish name is required';
+    } else {
+      dishNameErrorText.value = '';
+    }
+  }
+
   void errorHandlerSignup() {
-    emailErrorText.value =
-        emailController.text.isEmpty ? 'Email is required' : '';
-
-    passwordErrorText.value =
-        passwordController.text.isEmpty ? 'Password is required' : '';
-
-    changePasswordErrorText.value =
-        changePasswordController.text.isEmpty
-            ? 'Confirm Password is required'
-            : '';
-
+    emailErrorText.value = emailController.text.isEmpty ? 'Email is required' : '';
+    passwordErrorText.value = passwordController.text.isEmpty ? 'Password is required' : '';
+    changePasswordErrorText.value = changePasswordController.text.isEmpty ? 'Confirm Password is required' : '';
     lrnErrorText.value = lrnController.text.isEmpty ? 'LRN is required' : '';
-
-    firstnameErrorText.value =
-        firstnameController.text.isEmpty ? 'First Name is required' : '';
-
-    lastnameErrorText.value =
-        lastnameController.text.isEmpty ? 'Last Name is required' : '';
-
-    gradeLevelErrorText.value =
-        gradeLevel.value.isEmpty ? 'Grade Level is required' : '';
-
+    firstnameErrorText.value = firstnameController.text.isEmpty ? 'First Name is required' : '';
+    lastnameErrorText.value = lastnameController.text.isEmpty ? 'Last Name is required' : '';
+    gradeLevelErrorText.value = gradeLevel.value.isEmpty ? 'Grade Level is required' : '';
     genderErrorText.value = gender.value.isEmpty ? 'Gender is required' : '';
   }
 
@@ -529,7 +537,7 @@ class AppController extends GetxController {
     String? selectedValue,
     required void Function(String?) onChanged,
     bool hasError = false,
-    Color? defaultBorderColor, // <-- new
+    Color? defaultBorderColor,
   }) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -556,16 +564,16 @@ class AppController extends GetxController {
               Obx(() {
                 final isError = errorText.value.isNotEmpty;
                 return isError
-                    ? Padding(
-                        padding: EdgeInsets.only(top: 4.h, bottom: 4.h, left: 8.w),
-                        child: MyText(
-                          text: errorText.value,
-                          fontWeight: FontWeight.w400,
-                          color: redLighter,
-                          size: 14.sp,
-                        ),
-                      )
-                    : SizedBox.shrink();
+                  ? Padding(
+                      padding: EdgeInsets.only(top: 4.h, bottom: 4.h, left: 8.w),
+                      child: MyText(
+                        text: errorText.value,
+                        fontWeight: FontWeight.w400,
+                        color: redLighter,
+                        size: 14.sp,
+                      ),
+                    )
+                  : SizedBox.shrink();
               }),
           ],
         ),
@@ -576,7 +584,7 @@ class AppController extends GetxController {
           hintText: hint,
           value: selectedValue,
           onChanged: onChanged,
-          defaultBorderColor: defaultBorderColor, // <-- forward to dropdown
+          defaultBorderColor: defaultBorderColor,
         ),
       ],
     );
@@ -877,7 +885,7 @@ class AppController extends GetxController {
     }
   }
 
-  Future<void> createDish() async {
+  Future<void> createDish(BuildContext context) async {
     loader.value = true;
     try {
 
@@ -888,6 +896,7 @@ class AppController extends GetxController {
         preparedData.value.ingredients,
         helper.toCamelCase(category.value),
       ); 
+
       final data = SubmitedCocModel(
         type: coc!, 
         category: helper.toCamelCase(category.value), 
@@ -917,8 +926,9 @@ class AppController extends GetxController {
 
       final response = await db.post('coc/create', data.toJson());
 
-      if(response.success!){
+      if(response.success! && context.mounted){
         debugPrint('SUCCESS : ${response.message}');
+        context.pop;
       }{
         debugPrint('FAILED : ${response.message}');
       }
@@ -937,6 +947,8 @@ class AppController extends GetxController {
 
       final coc = typeSelected!.menu;
       final studentId = userData.value.id;
+    
+      debugPrint('PRESENT : ${platingImageUrl.value}');
 
       Map<String, dynamic> data = {
         'image': platingImageUrl.value,
@@ -959,7 +971,7 @@ class AppController extends GetxController {
       debugPrint('STACKTRACE: $t');
     }
   }
-
+ 
   Future<void> getInventory(BuildContext context) async {
     loader.value = true;
     
@@ -1042,8 +1054,10 @@ class AppController extends GetxController {
   }
 
   Future<String?> uploadImageToCloudinary(Uint8List imageBytes) async {
-    const String cloudName = 'dhceioavi';
-    const String uploadPreset = 'ml_default';
+    final String cloudName = dotenv.env['CLOUD_NAME']!;
+    const String uploadPreset = 'upload_plating';
+
+    debugPrint('\nCLOUDNAME : $cloudName\n');
 
     final uri = Uri.parse('https://api.cloudinary.com/v1_1/$cloudName/image/upload');
 

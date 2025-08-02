@@ -8,7 +8,7 @@ import 'package:virtual_lab/components/custom_svg.dart';
 import 'package:virtual_lab/controllers/controller.dart';
 import 'package:virtual_lab/json/tools.dart';
 import 'package:virtual_lab/models/ingredients_model.dart';
-import 'package:virtual_lab/pages/play/action_bar_ui.dart';
+import 'package:virtual_lab/components/custom_hit_bar.dart';
 import 'package:virtual_lab/components/custom_text.dart';
 import 'package:virtual_lab/components/shimmer.dart';
 import 'package:virtual_lab/utils/enum.dart';
@@ -55,6 +55,7 @@ class _MyProcedurePlatingPageState extends State<MyProcedurePlatingPage> with Ti
       height: 1.sh, 
       child: Column(
         children: [
+
           //? DISPLAY DATA
           Expanded(
             child: Container(
@@ -88,7 +89,7 @@ class _MyProcedurePlatingPageState extends State<MyProcedurePlatingPage> with Ti
                             return controller.actionButton(
                               text: 'Proceed',
                               onPressed: () {
-                                if (!requireDish) {
+                                if (requireDish) {
                                   context.push(Routes.plating);
                                 } else {
                                   controller.showFloatingSnackbar(
@@ -131,8 +132,10 @@ class _MyProcedurePlatingPageState extends State<MyProcedurePlatingPage> with Ti
               ),
             ),
           ),
+
           SizedBox(height: 16.h),
           //? PROCEDURE AREA
+
           Expanded(
             child: DragTarget<IngredientsModel>(
               onWillAcceptWithDetails: (details) => details.data.dragKey == 'procedure',
@@ -275,7 +278,7 @@ class _MyProcedurePlatingPageState extends State<MyProcedurePlatingPage> with Ti
 
                           //? TIMING BAR
                           if (controller.actionToggle.value)
-                          TimingHitBar(
+                          MyTimingHitBar(
                             animation: controller.animation,
                             controller: animationController,
                           ),

@@ -104,11 +104,7 @@ class MySignUpPage extends StatelessWidget {
                                               selectedValue: controller.gender.value,
                                               label: 'Gender',
                                               hint: 'Select Gender',
-                                              items: [
-                                                'Male',
-                                                'Female',
-                                                'Rather not say',
-                                              ],
+                                              items: ['Male','Female','Rather not say',],
                                               onChanged: (value) {
                                                 controller.gender.value = value!;
                                               },
@@ -116,34 +112,21 @@ class MySignUpPage extends StatelessWidget {
                                           ),
                                           Obx(
                                             () => controller.repeatedDropdown(
-                                              hasError:
-                                                  controller
-                                                      .gradeLevelErrorText
-                                                      .value
-                                                      .isNotEmpty,
-                                              errorText:
-                                                  controller
-                                                      .gradeLevelErrorText,
-                                              selectedValue:
-                                                  controller.gradeLevel.value,
+                                              hasError: controller.gradeLevelErrorText.value.isNotEmpty,
+                                              errorText: controller.gradeLevelErrorText,
+                                              selectedValue: controller.gradeLevel.value,
                                               label: 'Grade Level',
                                               hint: 'Select Grade Level',
-                                              items: [
-                                                'Junior High School',
-                                                'Senior High School',
-                                              ],
+                                              items: ['Junior High School','Senior High School'],
                                               onChanged: (value) {
-                                                controller.gradeLevel.value =
-                                                    value!;
+                                                controller.gradeLevel.value = value!;
                                               },
                                             ),
                                           ),
                                           controller.repeatedTextInput(
-                                            errorText:
-                                                controller.passwordErrorText,
+                                            errorText: controller.passwordErrorText,
                                             obscureText: true,
-                                            controller:
-                                                controller.passwordController,
+                                            controller: controller.passwordController,
                                             label: 'Password',
                                           ),
                                         ],

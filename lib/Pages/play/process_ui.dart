@@ -17,6 +17,7 @@ class MyProcessPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final controller = AppController.instance;
+    final submitDishFormKey = GlobalKey<FormState>();
 
     return Expanded(
       child: Container(
@@ -64,7 +65,10 @@ class MyProcessPage extends StatelessWidget {
                       spacing: 8.h,
                       children: [
                         controller.actionButton(text: 'Check', onPressed: ()=> checkStatus(context, controller)),
-                        controller.actionButton(text: 'Submit', onPressed: ()=> submitCreateDish(context, controller)),
+                        controller.actionButton(text: 'Submit', onPressed: (){
+                          controller.resetErrorHandler();
+                          submitCreateDish(context, controller, submitDishFormKey);
+                        }),
                       ],
                     ),
                   ),
@@ -297,7 +301,7 @@ class MyProcessPage extends StatelessWidget {
     );
   }
 
-  void submitCreateDish(BuildContext context, AppController controller) {
+  void submitCreateDish(BuildContext context, AppController controller, GlobalKey<FormState> key) {
     final borderColor = lightBrown.withValues(alpha: 0.3);
     showDialog(
       context: context,
@@ -351,31 +355,47 @@ class MyProcessPage extends StatelessWidget {
                                 ),
                               ],
                             ),
-                            controller.repeatedDropdown(
-                              label: 'Type',
-                              hint: 'Select Type', 
-                              items: ['Sauce', 'Main dish', 'Soup'],
-                              selectedValue: controller.category.value,
-                              defaultBorderColor: borderColor, 
-                              onChanged: (value) {
-                                controller.category.value = value!;
-                              },
-                            ),
-                            controller.repeatedTextInput(
-                              label: 'Dish name', 
-                              controller: controller.nameDishController,
-                              defaultBorderColor: borderColor,
+                            Form(
+                              key: key,
+                              child: Column(
+                                children: [
+                                  Obx(
+                                    () => controller.repeatedDropdown(
+                                      hasError: controller.typeErrorText.value.isNotEmpty,
+                                      errorText: controller.typeErrorText,
+                                      selectedValue: controller.category.value,
+                                      defaultBorderColor: borderColor, 
+                                      label: 'Type',
+                                      hint: 'Select Type', 
+                                      items: ['Sauce', 'Main dish', 'Soup'],
+                                      onChanged: (value) {
+                                        controller.category.value = value!;
+                                      },
+                                    ),
+                                  ),
+                                  SizedBox(height: 16.h),
+                                  controller.repeatedTextInput(
+                                    label: 'Dish name', 
+                                    errorText: controller.dishNameErrorText,
+                                    controller: controller.nameDishController,
+                                    defaultBorderColor: borderColor,
+                                  ),
+                                ],
+                              ),
                             ),
                             SizedBox(height: 16.h),
                             MyButton(
                               text: 'Submit', 
                               onTap: () async {
-                                if (controller.tap) return;
-                                controller.tap = true;
-                                await controller.createDish();
-                                if(context.mounted) await controller.getDish(context);
-                                if(context.mounted) context.pop();
-                                controller.tap = false; 
+                                final form = key.currentState;
+                                if (form != null && form.validate()) {
+                                  if (controller.tap) return;
+                                  controller.tap = true;
+                                  controller.errorHandlerSSubmitDish();
+                                  await controller.createDish(context);
+                                  if(context.mounted) await controller.getDish(context);
+                                  controller.tap = false; 
+                                }
                               },
                             )
                           ],
@@ -390,10 +410,7 @@ class MyProcessPage extends StatelessWidget {
         );
       },
     );
-  }
-
-  
-
+  }  
 
 }
 

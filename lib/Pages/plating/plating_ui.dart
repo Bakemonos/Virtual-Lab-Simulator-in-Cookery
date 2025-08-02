@@ -8,8 +8,10 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:virtual_lab/Components/shimmer.dart';
 import 'package:virtual_lab/Json/coc1.dart';
+import 'package:virtual_lab/components/custom_text.dart';
 import 'package:virtual_lab/controllers/controller.dart';
 import 'package:virtual_lab/utils/properties.dart';
+import 'package:virtual_lab/utils/routes.dart';
 
 class MyPlatingUI extends StatefulWidget {
   const MyPlatingUI({super.key});
@@ -133,13 +135,10 @@ class _MyPlatingUIState extends State<MyPlatingUI> {
                       showDialog(
                         context: context,
                         barrierDismissible: false,
-                        builder: (_) => Center(child: CircularProgressIndicator()),
+                        builder: (_) => Center(child: CircularProgressIndicator(color: textLight)),
                       );
-
                       final uploadedUrl = await controller.uploadImageToCloudinary(capturedImageBytes!);
-
                       if(context.mounted) context.pop(); 
-
                       if (uploadedUrl != null) {
                         controller.platingImageUrl.value = uploadedUrl;
 
@@ -147,19 +146,29 @@ class _MyPlatingUIState extends State<MyPlatingUI> {
                           showDialog(
                             context: context,
                             builder: (_) => AlertDialog(
-                              title: Text("Preview Uploaded Image"),
-                              content: Image.network(uploadedUrl),
+                              title: MyText(text: 'Preview Uploaded Image', fontWeight: FontWeight.w500,),
+                              content: CachedNetworkImage(
+                                imageUrl: uploadedUrl,
+                                placeholder: (context, url) => const ShimmerSkeletonLoader(),
+                                errorWidget: (context, url, error) => const Icon(Icons.error),
+                                fit: BoxFit.contain,
+                              ),
                               actions: [
                                 TextButton(
+                                  onPressed: () async {
+                                    context.go(Routes.playUI);
+                                    await controller.submitCoc();
+                                  },
+                                  child: MyText(text: 'Save', fontWeight: FontWeight.w400,),
+                                ),
+                                TextButton(
                                   onPressed: () => context.pop(),
-                                  child: Text("Close"),
-                                )
+                                  child: MyText(text: 'Close', fontWeight: FontWeight.w400,),
+                                ),
                               ],
                             ),
                           );
                         }
-
-                        await controller.submitCoc();
 
                       } else {
                         debugPrint('Image upload failed');

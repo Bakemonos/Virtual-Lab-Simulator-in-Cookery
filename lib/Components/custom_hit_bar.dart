@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:virtual_lab/utils/properties.dart';
 
-class TimingHitBar extends StatelessWidget {
+class MyTimingHitBar extends StatelessWidget {
   final Animation<double> animation;
   final AnimationController controller;
 
-  const TimingHitBar({
+  const MyTimingHitBar({
     super.key,
     required this.animation,
     required this.controller,
