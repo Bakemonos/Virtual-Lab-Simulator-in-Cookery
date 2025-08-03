@@ -99,11 +99,11 @@ class AppController extends GetxController {
   }
 
   //? TEXT CONTROLLER
-  final emailController = TextEditingController();
+  final emailController = TextEditingController(text: 'ricojay@gmail.com');
   final firstnameController = TextEditingController();
   final lastnameController = TextEditingController();
   final lrnController = TextEditingController();
-  final passwordController = TextEditingController();
+  final passwordController = TextEditingController(text: 'password');
   final changePasswordController = TextEditingController();
   final nameDishController = TextEditingController();
 
@@ -144,7 +144,9 @@ class AppController extends GetxController {
   //? HOLD ACTIONS / TOOLS
   final Rxn<ActionType> pendingAction = Rxn();  
   final Rxn<ToolType> pendingTool = Rxn();  
-
+  
+  //? EQUIPMENTS 
+  RxList<EquipmentsModel> equipmentData = <EquipmentsModel>[].obs;
   
   //! METHODS ---------------------------------------------------------------------------------------------------------------
 
@@ -913,6 +915,7 @@ class AppController extends GetxController {
         image: matchedDish?['image'] ?? '', 
         studentId: studentId!, 
         ingredients: preparedData.value.ingredients, 
+        // equipments: equipmentData,
         equipments: [
           EquipmentsModel(
             name: 'pot', 
@@ -973,8 +976,6 @@ class AppController extends GetxController {
       final coc = typeSelected!.menu;
       final studentId = userData.value.id;
     
-      debugPrint('PRESENT : ${platingImageUrl.value}');
-
       Map<String, dynamic> data = {
         'image': platingImageUrl.value,
         'studentId': studentId,
@@ -996,7 +997,7 @@ class AppController extends GetxController {
       debugPrint('STACKTRACE: $t');
     }
   }
- 
+  
   Future<void> getInventory(BuildContext context) async {
     loader.value = true;
     

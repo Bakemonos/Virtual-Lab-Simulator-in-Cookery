@@ -236,5 +236,12 @@ class EquipmentsModel {
       image: image ?? this.image,
     );
   }
+
+  factory EquipmentsModel.empty() {
+    return EquipmentsModel(
+      name: '',
+      image: '',
+    );
+  }
   
 }
