@@ -37,21 +37,40 @@ class MyProcessPage extends StatelessWidget {
                   );
                 },
                 builder: (context, candidateData, rejectedData){
-                  return Container(
-                    decoration: BoxDecoration(
-                      color: candidateData.isEmpty ? darkBrown.withValues(alpha: 0.6) : greenLighter.withValues(alpha: 0.8) ,
-                      borderRadius: BorderRadius.circular(8.r)
-                    ),
-                    width: 200.w, height: 200.h,
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: CachedNetworkImage(
-                        imageUrl: kaldero,
-                        placeholder: (context, url) => ShimmerSkeletonLoader(),
-                        errorWidget: (context, url, error) => Icon(Icons.error),
-                        fit: BoxFit.contain,
+                  return Column(
+                    children: [
+                      SizedBox(
+                        width: 200.w, height: 200.h,
+                        child: Stack(
+                          children: [
+                            Container(
+                              height: double.infinity,
+                              decoration: BoxDecoration(
+                                color: candidateData.isEmpty ? darkBrown.withValues(alpha: 0.6) : greenLighter.withValues(alpha: 0.8) ,
+                                borderRadius: BorderRadius.circular(8.r)
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: CachedNetworkImage(
+                                  imageUrl: kaldero,
+                                  placeholder: (context, url) => ShimmerSkeletonLoader(),
+                                  errorWidget: (context, url, error) => Icon(Icons.error),
+                                  fit: BoxFit.contain,
+                                ),
+                              ),
+                            ),
+                            Align(
+                              alignment: Alignment.bottomRight,
+                              child: IconButton(
+                                onPressed: (){}, 
+                                icon: Icon(Icons.repeat, color: textLight, size: 40.w),
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
-                    ),
+                      MyText(text: 'Kaldero', size: 16.sp, fontWeight: FontWeight.w500, color: textLight)
+                    ],
                   );
                 },
               ),

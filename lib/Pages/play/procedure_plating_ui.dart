@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:go_router/go_router.dart';
+import 'package:virtual_lab/Json/equipment.dart';
 import 'package:virtual_lab/Utils/routes.dart';
 import 'package:virtual_lab/components/custom_svg.dart';
 import 'package:virtual_lab/controllers/controller.dart';
@@ -65,80 +66,7 @@ class _MyProcedurePlatingPageState extends State<MyProcedurePlatingPage> with Ti
               decoration: controller.designUI(),
               child: Padding(
                 padding: EdgeInsets.all(10.w),
-                child: Column(
-                  spacing: 10.h,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Align(
-                      alignment: Alignment.topLeft,
-                      child: Row(
-                        spacing: 8.w,
-                        children: [
-                          controller.actionButton(
-                            text: 'View Instruction',
-                            onPressed: () => controller.instruction(context, controller.typeSelected!),
-                          ),
-                          
-                        ],
-                      ),
-                    ),
-                    Row(
-                      spacing: 16.w,
-                      children: [
-                        Obx(() => Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: controller.typeSelected!.instructions.asMap().entries.map((entry) {
-                            final index = entry.key + 1;
-                            final goal = entry.value;
-                            final goalCategory = goal.name;
-
-                            final alreadySubmitted = controller.submittedCocList.any((item) {
-                              return item.category == helper.toCamelCase(goalCategory);
-                            });
-
-                            return Padding(
-                              padding: EdgeInsets.symmetric(vertical: 2.h),
-                              child: MyText(
-                                text: '$index. ${goal.name}',
-                                fontWeight: FontWeight.w500,
-                                color: textLight,
-                                size: 16.sp,
-                                decoration: alreadySubmitted ? TextDecoration.lineThrough : TextDecoration.none,
-                              ),
-                            );
-                          }).toList(),
-                        )),
-                        const Spacer(),
-                        repeatedIconButton(
-                          label: 'Equipment',
-                          icon: equipment, 
-                          onPressed: (){},
-                        ),
-                        Obx((){
-                          final requiredNames = controller.typeSelected!.instructions.map((req) => helper.toCamelCase(req.name)).toList();
-                          final submittedCategories = controller.submittedCocList.map((dish) => dish.category).toList();
-                          final requireDish = requiredNames.every((name) => submittedCategories.contains(name));
-
-                          return repeatedIconButton(
-                            label: 'Plating',
-                            icon: plating, 
-                            onPressed: (){
-                              if (requireDish) {
-                                  context.push(Routes.plating);
-                                } else {
-                                  controller.showFloatingSnackbar(
-                                    context: context,
-                                    message: 'All dish must be prepared',
-                                  );
-                                }
-                            },
-                          );
-                        })
-                      ],
-                    )
-                  ],
-                ),
+                child: Obx(()=> controller.equipmentToggle.value ? equipmentUI() : detailsUI(context)),
               ),
             ),
           ),
@@ -303,6 +231,182 @@ class _MyProcedurePlatingPageState extends State<MyProcedurePlatingPage> with Ti
           ),
         ],
       ),
+    );
+  }
+
+  Widget equipmentUI() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        IconButton(
+          onPressed: controller.equipmentOntap,
+          icon: Container(
+            width: 80.w,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(4.r),
+              color: lightGridColor.withValues(alpha: 0.5),
+            ),
+            padding: EdgeInsets.all(8.w),
+            child: Center(
+              child: MySvgPicture(path: back, iconColor: textLight),
+            ),
+          ),
+        ),
+        Flexible(
+          fit: FlexFit.loose,
+          child: GridView.builder(
+            padding: EdgeInsets.zero,
+            scrollDirection: Axis.horizontal,
+            itemCount: personalEquipment.length,
+            physics: AlwaysScrollableScrollPhysics(),
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 1,
+              childAspectRatio: 1, 
+              mainAxisSpacing: 8,
+            ),
+            itemBuilder: (context, index) {
+              var data = personalEquipment[index];
+
+              return LongPressDraggable(
+                data: EquipmentsModel(
+                  name: data.name,
+                  image: data.image
+                ),
+                feedback: SizedBox(
+                  height: 80.h,
+                  child: Padding(
+                    padding: EdgeInsets.all(8.w),
+                    child: CachedNetworkImage(
+                      imageUrl: data.image,
+                      placeholder: (context, url) => ShimmerSkeletonLoader(),
+                      errorWidget: (context, url, error) => Icon(Icons.error),
+                      fit: BoxFit.contain,
+                    ),
+                  ),
+                ),
+                childWhenDragging: Container(
+                  decoration: BoxDecoration(
+                    color: lightGridColor,
+                    borderRadius: BorderRadius.circular(8.r),
+                  ),
+                  child: Center(child: MyText(text: data.name)),
+                ),
+                child: Stack(
+                  children: [
+                    AnimatedContainer(
+                      duration: Duration(milliseconds: 200),
+                      curve: Curves.easeInOut,
+                      alignment: Alignment.center,
+                      decoration: BoxDecoration(
+                        color: lightGridColor,
+                        borderRadius: BorderRadius.circular(8.r),
+                      ),
+                      child: Padding(
+                        padding: EdgeInsets.all(8.w),
+                        child: CachedNetworkImage(
+                          imageUrl: data.image,
+                          placeholder: (context, url) => ShimmerSkeletonLoader(),
+                          errorWidget: (context, url, error) =>
+                              Icon(Icons.error),
+                          fit: BoxFit.contain,
+                        ),
+                      ),
+                    ),
+                    Align(
+                      alignment: Alignment.bottomCenter,
+                      child: Container(
+                        width: double.infinity,
+                        decoration: BoxDecoration(
+                          color: lightBrown.withValues(alpha: 0.4),
+                          borderRadius: BorderRadius.only(bottomLeft: Radius.circular(8.r), bottomRight: Radius.circular(8.r))
+                        ),
+                        child: MyText(text: data.name, textAlign: TextAlign.center, color: textLight, size: 16.sp,),
+                      ),
+                    ),
+                  ],
+                ),
+              );
+            },
+          )
+        ),
+      ],
+    );
+  }
+
+  Widget detailsUI(BuildContext context) {
+    return Column(
+      spacing: 10.h,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Align(
+          alignment: Alignment.topLeft,
+          child: Row(
+            spacing: 8.w,
+            children: [
+              controller.actionButton(
+                text: 'View Instruction',
+                onPressed: () => controller.instruction(context, controller.typeSelected!),
+              ),
+              
+            ],
+          ),
+        ),
+        Row(
+          spacing: 16.w,
+          children: [
+            Obx(() => Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: controller.typeSelected!.instructions.asMap().entries.map((entry) {
+                final index = entry.key + 1;
+                final goal = entry.value;
+                final goalCategory = goal.name;
+        
+                final alreadySubmitted = controller.submittedCocList.any((item) {
+                  return item.category == helper.toCamelCase(goalCategory);
+                });
+        
+                return Padding(
+                  padding: EdgeInsets.symmetric(vertical: 2.h),
+                  child: MyText(
+                    text: '$index. ${goal.name}',
+                    fontWeight: FontWeight.w500,
+                    color: textLight,
+                    size: 16.sp,
+                    decoration: alreadySubmitted ? TextDecoration.lineThrough : TextDecoration.none,
+                  ),
+                );
+              }).toList(),
+            )),
+            const Spacer(),
+            repeatedIconButton(
+              label: 'Equipment',
+              icon: equipment, 
+              onPressed: controller.equipmentOntap,
+            ),
+            Obx((){
+              final requiredNames = controller.typeSelected!.instructions.map((req) => helper.toCamelCase(req.name)).toList();
+              final submittedCategories = controller.submittedCocList.map((dish) => dish.category).toList();
+              final requireDish = requiredNames.every((name) => submittedCategories.contains(name));
+        
+              return repeatedIconButton(
+                label: 'Plating',
+                icon: plating, 
+                onPressed: (){
+                  if (requireDish) {
+                      context.push(Routes.plating);
+                    } else {
+                      controller.showFloatingSnackbar(
+                        context: context,
+                        message: 'All dish must be prepared',
+                      );
+                    }
+                },
+              );
+            })
+          ],
+        ),
+      ],
     );
   }
 

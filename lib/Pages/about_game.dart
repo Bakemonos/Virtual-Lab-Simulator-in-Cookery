@@ -6,29 +6,13 @@ import 'package:virtual_lab/controllers/controller.dart';
 import 'package:virtual_lab/utils/properties.dart';
 import 'package:virtual_lab/components/custom_text.dart';
 
-class MyAboutGamePage extends StatefulWidget {
+class MyAboutGamePage extends StatelessWidget {
   const MyAboutGamePage({super.key});
 
   @override
-  State<MyAboutGamePage> createState() => _MyAboutGamePageState();
-}
-
-class _MyAboutGamePageState extends State<MyAboutGamePage> {
-  final controller = AppController.instance;
-
-  @override
-  void initState() {
-    // PackageInfo.fromPlatform().then((PackageInfo packageInfo) {
-    //   controller.appName.value = packageInfo.appName;
-    //   controller.packageName.value = packageInfo.packageName;
-    //   controller.version.value = packageInfo.version;
-    //   controller.buildNumber.value = packageInfo.buildNumber;
-    // });
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
+    final controller = AppController.instance;
+    
     return Scaffold(
       body: Stack(
         children: [

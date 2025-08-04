@@ -22,10 +22,10 @@ class MyFoodChoicesPage extends StatefulWidget {
 
 class _MyFoodChoicesPageState extends State<MyFoodChoicesPage> {
   final controller = AppController.instance;
+  final List<bool> unlocked = [true, false, false];
 
   @override
   Widget build(BuildContext context) {
-    final List<bool> unlocked = [true, false, false];
 
     return Scaffold(
       resizeToAvoidBottomInset: false,
