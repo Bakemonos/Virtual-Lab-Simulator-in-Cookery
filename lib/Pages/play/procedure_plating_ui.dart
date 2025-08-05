@@ -321,7 +321,7 @@ class _MyProcedurePlatingPageState extends State<MyProcedurePlatingPage> with Ti
             children: [
               controller.actionButton(
                 text: 'View Instruction',
-                onPressed: () => controller.instruction(context, controller.typeSelected!),
+                onPressed: () => controller.instruction(context, controller.typeSelected.value!),
               ),
               
             ],
@@ -332,15 +332,16 @@ class _MyProcedurePlatingPageState extends State<MyProcedurePlatingPage> with Ti
           children: [
             Obx(() => Column(
               crossAxisAlignment: CrossAxisAlignment.start,
-              children: controller.typeSelected!.instructions.asMap().entries.map((entry) {
+              children: controller.typeSelected.value?.instructions != null
+              ? controller.typeSelected.value!.instructions.asMap().entries.map((entry) {
                 final index = entry.key + 1;
                 final goal = entry.value;
                 final goalCategory = goal.name;
-        
+
                 final alreadySubmitted = controller.submittedCocList.any((item) {
                   return item.category == helper.toCamelCase(goalCategory);
                 });
-        
+
                 return Padding(
                   padding: EdgeInsets.symmetric(vertical: 2.h),
                   child: MyText(
@@ -351,23 +352,23 @@ class _MyProcedurePlatingPageState extends State<MyProcedurePlatingPage> with Ti
                     decoration: alreadySubmitted ? TextDecoration.lineThrough : TextDecoration.none,
                   ),
                 );
-              }).toList(),
+              }).toList() : [],
             )),
             const Spacer(),
             repeatedIconButton(
               label: 'Equipment',
-              icon: equipment, 
+              path: equipment, 
               onPressed: controller.equipmentOntap,
             ),
             Obx((){
-              final requiredNames = controller.typeSelected!.instructions.map((req) => helper.toCamelCase(req.name)).toList();
+              final requiredNames = controller.typeSelected.value!.instructions.map((req) => helper.toCamelCase(req.name)).toList();
               final submittedCategories = controller.submittedCocList.map((dish) => dish.category).toList();
               final requireDish = requiredNames.every((name) => submittedCategories.contains(name));
         
               return repeatedIconButton(
                 label: 'Plating',
-                icon: plating, 
-                onPressed: (){
+                path: plating, 
+                onPressed: () {
                   if (requireDish) {
                       context.push(Routes.plating);
                     } else {
@@ -385,7 +386,7 @@ class _MyProcedurePlatingPageState extends State<MyProcedurePlatingPage> with Ti
     );
   }
 
-  Widget repeatedIconButton({required String label, required String icon, required Function() onPressed}) {
+  Widget repeatedIconButton({required String label, required String path, required Function() onPressed}) {
     return Column(
       children: [
         SizedBox(
@@ -409,7 +410,15 @@ class _MyProcedurePlatingPageState extends State<MyProcedurePlatingPage> with Ti
                 padding: WidgetStateProperty.all(EdgeInsets.zero),
                 overlayColor: WidgetStateProperty.all(Colors.brown.withValues(alpha: 0.1)),
               ),
-              icon: Padding(padding: EdgeInsets.all(8.w),child: MySvgPicture(path: icon)),
+              icon: Padding(
+                padding: EdgeInsets.all(8.w),
+                child: CachedNetworkImage(
+                  imageUrl: path,
+                  placeholder: (context, url) => ShimmerSkeletonLoader(),
+                  errorWidget: (context, url, error) => Icon(Icons.error),
+                  fit: BoxFit.contain,
+                ),
+              ),
               onPressed: onPressed,
             ),
           ),
@@ -491,16 +500,19 @@ class _MyProcedurePlatingPageState extends State<MyProcedurePlatingPage> with Ti
           contentPadding: EdgeInsets.zero,
           content: Container(
             width: 360.w,
+            constraints: BoxConstraints(
+              maxHeight: 500.h, 
+            ),
             decoration: BoxDecoration(
               color: backgroundColor,
               borderRadius: BorderRadius.circular(16.r),
             ),
-            child: Padding(
-              padding: EdgeInsets.all(16.w),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Padding(
+                  padding: EdgeInsets.all(16.w),
+                  child: Row(
                     children: [
                       Image.asset(logo, width: 32.w),
                       SizedBox(width: 14.w),
@@ -513,68 +525,91 @@ class _MyProcedurePlatingPageState extends State<MyProcedurePlatingPage> with Ti
                           height: 32.h,
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(4.r),
-                            color: lightButtonBackground.withValues(alpha: 0.3),
+                            color: lightButtonBackground.withOpacity(0.3),
                           ),
-                          child: Center(child: MySvgPicture(path: close, iconColor: darkBrown)),
+                          child: Center(
+                            child: MySvgPicture(path: close, iconColor: darkBrown),
+                          ),
                         ),
                       ),
                     ],
                   ),
-                  SizedBox(height: 16.h),
-                  Row(
-                    children: [
-                      SizedBox(
-                        width: 100.w,
-                        height: 100.h,
-                        child: CachedNetworkImage(
-                          imageUrl: ingredient.path,
-                          placeholder: (context, url) => ShimmerSkeletonLoader(),
-                          errorWidget: (context, url, error) => Icon(Icons.error),
-                          fit: BoxFit.contain,
+                ),
+                Expanded(
+                  child: SingleChildScrollView(
+                    padding: EdgeInsets.all(16.w),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            SizedBox(
+                              width: 100.w,
+                              height: 100.h,
+                              child: CachedNetworkImage(
+                                imageUrl: ingredient.path,
+                                placeholder: (context, url) =>
+                                    ShimmerSkeletonLoader(),
+                                errorWidget: (context, url, error) =>
+                                    Icon(Icons.error),
+                                fit: BoxFit.contain,
+                              ),
+                            ),
+                            SizedBox(width: 12.w),
+                            Expanded(
+                              child: MyText(
+                                text: 'Name: ${ingredient.name}',
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          ],
                         ),
-                      ),
-                      SizedBox(width: 12.w),
-                      Flexible(
-                        fit: FlexFit.loose,
-                        child: MyText(
-                          text: 'Name: ${ingredient.name}',
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                    ],
+                        SizedBox(height: 16.h),
+                        MyText(text: 'Status', fontWeight: FontWeight.bold),
+                        ...ingredient.actions.asMap().entries.map((entry) {
+                          final index = entry.key + 1;
+                          final act = entry.value;
+                          final color = switch (act.status) {
+                            'perfect' => greenLighter,
+                            'good' => Colors.amber,
+                            _ => redLighter,
+                          };
+
+                          return Padding(
+                            padding: EdgeInsets.symmetric(vertical: 6.h),
+                            child: SizedBox(
+                              width: double.infinity,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Row(
+                                    children: [
+                                      MyText(
+                                        text: '$index. ${act.action} : ',
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                      MyText(
+                                        text: act.status,
+                                        fontWeight: FontWeight.w500,
+                                        color: color,
+                                      ),
+                                    ],
+                                  ),
+                                  MyText(
+                                    text: '   Tool : ${act.tool}',
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ],
+                              ),
+                            ),
+                          );
+                        }),
+                      ],
+                    ),
                   ),
-                  SizedBox(height: 16.h),
-                  MyText(text: 'Status'),
-                  ...ingredient.actions.asMap().entries.map((entry) {
-                    final index = entry.key + 1;
-                    final act = entry.value;
-                    final color = switch (act.status) {
-                      'perfect' => greenLighter,
-                      'good' => Colors.amber,
-                      _ => redLighter,
-                    };
-              
-                    return Padding(
-                      padding: EdgeInsets.symmetric(vertical: 6.h),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          MyText(
-                            text: '$index. ${act.action} : ',
-                            fontWeight: FontWeight.w500,
-                          ),
-                          MyText(
-                            text: act.status,
-                            fontWeight: FontWeight.w500,
-                            color: color,
-                          ),
-                          MyText(text: '   Tool : ${act.tool}', fontWeight: FontWeight.w500),
-                        ],
-                      ),
-                    );
-                  }),
-                ],
-              ),
+                ),
+              ],
             ),
           ),
         );

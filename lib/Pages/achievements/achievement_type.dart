@@ -49,6 +49,7 @@ class _MyAchievementTypePageState extends State<MyAchievementTypePage> {
                           mainAxisSize: MainAxisSize.min,
                           children: List.generate(3, (index) {
                             var data = foodMenu[index];
+
                             return Padding(
                               padding: EdgeInsets.only(
                                 right: index != 2 ? 24.w : 0,
@@ -56,7 +57,7 @@ class _MyAchievementTypePageState extends State<MyAchievementTypePage> {
                               child: foodChoices(
                                 onTap: () async {
                                   context.push(Routes.sliderOption);
-                                  await controller.getDish(context, type: 'coc1');
+                                  await controller.getDish(context, type: data.menu);
                                 },
                                 unlocked: unlocked[index],
                                 path: data.path,
@@ -130,10 +131,8 @@ class _MyAchievementTypePageState extends State<MyAchievementTypePage> {
                         child: Center(
                           child: CachedNetworkImage(
                             imageUrl: path,
-                            placeholder:
-                                (context, url) => ShimmerSkeletonLoader(),
-                            errorWidget:
-                                (context, url, error) => Icon(Icons.error),
+                            placeholder: (context, url) => ShimmerSkeletonLoader(),
+                            errorWidget: (context, url, error) => Icon(Icons.error),
                             fit: BoxFit.cover,
                           ),
                         ),

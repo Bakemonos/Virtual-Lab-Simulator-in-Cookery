@@ -53,8 +53,6 @@ const String basket = "assets/icons/basket.svg";
 const String box = "assets/icons/box.svg";
 const String trashbag = "assets/icons/trashbag.svg";
 const String tap = "assets/icons/tap.svg";
-const String equipment = "assets/icons/equipment.svg";
-const String plating = "assets/icons/plating.svg";
 
 //? ON
 const String soundOn = "assets/icons/sound_on.svg";
@@ -64,4 +62,7 @@ const String musicOn = "assets/icons/music_on.svg";
 const String soundOff = "assets/icons/sound_off.svg";
 const String musicOff = "assets/icons/music_off.svg";
 
+
+const String equipment = "https://res.cloudinary.com/dgvi2di6t/image/upload/v1754402329/equipment_ioey5d.png";
+const String plating = "https://res.cloudinary.com/dgvi2di6t/image/upload/v1754402328/plating_jcxuar.png";
 const String kaldero = 'https://res.cloudinary.com/dgvi2di6t/image/upload/v1753361570/pot_obti4v.png';

@@ -38,7 +38,7 @@ class _MyProcessPageState extends State<MyProcessPage> {
           ),
         ),
       ),
-    );
+    ); 
   }
 
   Widget kitchenEquipmentUI(){
@@ -120,15 +120,15 @@ class _MyProcessPageState extends State<MyProcessPage> {
   }
 
   Widget processUI() {
-    return InkWell(
-      onTap: controller.changeToolToggler,
-      child: Column(
-        children: [
-          DragTarget<IngredientsModel>(
+    return Column(
+      children: [
+        InkWell(
+          onTap: controller.changeToolToggler,
+          child: DragTarget<IngredientsModel>(
             onWillAcceptWithDetails: (details) => details.data.dragKey == 'submit' && details.data.actions.isEmpty,
             onAcceptWithDetails: (details) {
               controller.acceptIngredient(
-                type: controller.typeSelected!.menu ?? '', 
+                type: controller.typeSelected.value!.menu ?? '', 
                 studentId: controller.userData.value.id!,
                 take: 'take_one',
               );
@@ -172,29 +172,29 @@ class _MyProcessPageState extends State<MyProcessPage> {
               );
             },
           ),
-          const Spacer(),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Spacer(),
-              SizedBox(
-                width: 80.w,
-                child: Column(
-                  spacing: 8.h,
-                  children: [
-                    controller.actionButton(text: 'Check', onPressed: checkStatus),
-                    controller.actionButton(text: 'Submit', onPressed: (){
-                      controller.resetErrorHandler();
-                      submitCreateDish();
-                    }),
-                  ],
-                ),
+        ),
+        const Spacer(),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Spacer(),
+            SizedBox(
+              width: 80.w,
+              child: Column(
+                spacing: 8.h,
+                children: [
+                  controller.actionButton(text: 'Check', onPressed: checkStatus),
+                  controller.actionButton(text: 'Submit', onPressed: (){
+                    controller.resetErrorHandler();
+                    submitCreateDish();
+                  }),
+                ],
               ),
-            ],
-          ),
-        
-        ],
-      ),
+            ),
+          ],
+        ),
+      
+      ],
     );
   }
 
@@ -510,7 +510,7 @@ class _MyProcessPageState extends State<MyProcessPage> {
                                   controller.tap = true;
                                   controller.errorHandlerSSubmitDish();
                                   await controller.createDish(context);
-                                  if(context.mounted) await controller.getDish(context);
+                                  if (context.mounted) await controller.getDish(context); 
                                   controller.tap = false; 
                                 }
                               },
@@ -528,4 +528,5 @@ class _MyProcessPageState extends State<MyProcessPage> {
       },
     );
   }  
+
 }

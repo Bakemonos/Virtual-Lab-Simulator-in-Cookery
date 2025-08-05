@@ -66,7 +66,7 @@ class _MyFoodChoicesPageState extends State<MyFoodChoicesPage> {
 
                                   controller.tap = true;
                                   debugPrint('\n SELECTED : ${data.menu}\n');
-                                  controller.typeSelected = data;
+                                  controller.typeSelected.value = data;
  
                                   await controller.getDish(context, type: data.menu);
                                   if(context.mounted) await controller.getInventory(context);

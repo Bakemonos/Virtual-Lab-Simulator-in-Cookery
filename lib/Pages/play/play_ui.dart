@@ -23,6 +23,7 @@ class _MyPlayUIPageState extends State<MyPlayUIPage> {
   @override
   void dispose() {
     controller.discard(); 
+    controller.preparedIngredients.clear();
     controller.preparedData.value = InventoryModel.empty();
     super.dispose();
   }

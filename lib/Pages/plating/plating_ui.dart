@@ -26,40 +26,74 @@ class _MyPlatingUIState extends State<MyPlatingUI> {
   List<_DraggableItem> items = [];
   Uint8List? capturedImageBytes;
 
-  @override
-  void initState() {
-    super.initState();
-    _generateAllItems();
-  }
-
-  void _generateAllItems() {
-
+  void _generateAllItems({required double containerWidth, required double containerHeight}) {
     final rand = Random();
-    final submittedItems  = controller.submittedCocList.map((coc) { //* DISH
-      double dx = rand.nextDouble() * 250;
-      double dy = rand.nextDouble() * 350;
-      return _DraggableItem(
-        name: coc.name,
-        imageUrl: coc.image,
-        offset: Offset(dx, dy),
-      );
-    }).toList();
+    const double paddingX = 10;
+    const double paddingY = 10;
+    final double itemWidth = 80.w;
+    final double itemHeight = 80.h;
 
-    final extraItems = ingredientsCOC1.map((coc) { //* DECORATION
-      return _DraggableItem(
-        name: coc.name,
-        imageUrl: coc.path,
-        offset: Offset(rand.nextDouble() * 250, rand.nextDouble() * 350),
-      );
-    }).toList();
+    final double leftBaseX = paddingX;
+    final double rightBaseX = containerWidth - itemWidth - paddingX;
 
-    items = [...submittedItems, ...extraItems];
+    final List<_DraggableItem> newItems = [];
 
+    int totalItems = max(ingredientsCOC1.length, controller.submittedCocList.length);
+    double currentY = paddingY;
+
+    for (int i = 0; i < totalItems; i++) {
+      if (i < ingredientsCOC1.length) {
+        final leftItem = ingredientsCOC1[i];
+        newItems.add(
+          _DraggableItem(
+            name: leftItem.name,
+            imageUrl: leftItem.path,
+            offset: Offset(
+              leftBaseX + rand.nextDouble() * 5, // jitter
+              currentY + rand.nextDouble() * 5,
+            ),
+            side: 'left',
+          ),
+        );
+      }
+
+      if (i < controller.submittedCocList.length) {
+        final rightItem = controller.submittedCocList[i];
+        newItems.add(
+          _DraggableItem(
+            name: rightItem.name,
+            imageUrl: rightItem.image,
+            offset: Offset(
+              rightBaseX + rand.nextDouble() * 5,
+              currentY + rand.nextDouble() * 5,
+            ),
+            side: 'right',
+          ),
+        );
+      }
+
+      currentY += itemHeight + paddingY;
+
+      // Clamp to container height
+      if (currentY + itemHeight > containerHeight) {
+        currentY = paddingY + rand.nextDouble() * 10; // wrap and offset
+      }
+    }
+
+    setState(() {
+      items = newItems;
+    });
   }
 
-  Future<void> _capturePlatingImage() async { //* CAPTURE
+
+  Future<void> _capturePlatingImage() async {
     try {
-      final boundary = _repaintKey.currentContext!.findRenderObject() as RenderRepaintBoundary;
+      final boundaryContext = _repaintKey.currentContext;
+      if (boundaryContext == null) return;
+
+      final boundary = boundaryContext.findRenderObject();
+      if (boundary == null || boundary is! RenderRepaintBoundary) return;
+
       final image = await boundary.toImage(pixelRatio: 3.0);
       final byteData = await image.toByteData(format: ui.ImageByteFormat.png);
       final pngBytes = byteData?.buffer.asUint8List();
@@ -67,7 +101,6 @@ class _MyPlatingUIState extends State<MyPlatingUI> {
       if (pngBytes != null) {
         setState(() {
           capturedImageBytes = pngBytes;
-          debugPrint('\nPICTURE : $pngBytes\n');
         });
         debugPrint("Screenshot captured in memory.");
       }
@@ -92,13 +125,34 @@ class _MyPlatingUIState extends State<MyPlatingUI> {
                 padding: EdgeInsets.all(16.w),
                 child: RepaintBoundary(
                   key: _repaintKey,
-                  child: Container(
-                    width: double.infinity,
-                    height: 500.h,
-                    decoration: controller.designUI(),
-                    child: Stack(
-                      children: items.asMap().entries.map((entry) => _buildDraggable(entry.key)).toList(),
-                    ),
+                  child: LayoutBuilder(
+                    builder: (context, constraints) {
+                      final containerWidth = constraints.maxWidth;
+                      final containerHeight = constraints.maxHeight;
+                      if (items.isEmpty) {
+                        WidgetsBinding.instance.addPostFrameCallback((_) {
+                          if (items.isEmpty) {
+                          Future.microtask(() {
+                            if (mounted) {
+                              _generateAllItems(
+                                containerWidth: containerWidth,
+                                containerHeight: containerHeight,
+                              );
+                            }
+                          });
+                        }
+
+                        });
+                      }
+                      return Container(
+                        width: double.infinity,
+                        height: 500.h,
+                        decoration: controller.designUI(),
+                        child: Stack(
+                          children: items.asMap().entries.map((entry) => _buildDraggable(entry.key)).toList(),
+                        ),
+                      );
+                    },
                   ),
                 ),
               ),
@@ -138,15 +192,15 @@ class _MyPlatingUIState extends State<MyPlatingUI> {
                         builder: (_) => Center(child: CircularProgressIndicator(color: textLight)),
                       );
                       final uploadedUrl = await controller.uploadImageToCloudinary(capturedImageBytes!);
-                      if(context.mounted) context.pop(); 
+                      if (context.mounted) context.pop();
                       if (uploadedUrl != null) {
                         controller.platingImageUrl.value = uploadedUrl;
 
-                        if(context.mounted){
+                        if (context.mounted) {
                           showDialog(
                             context: context,
                             builder: (_) => AlertDialog(
-                              title: MyText(text: 'Preview Uploaded Image', fontWeight: FontWeight.w500,),
+                              title: MyText(text: 'Preview Uploaded Image', fontWeight: FontWeight.w500),
                               content: CachedNetworkImage(
                                 imageUrl: uploadedUrl,
                                 placeholder: (context, url) => const ShimmerSkeletonLoader(),
@@ -159,20 +213,19 @@ class _MyPlatingUIState extends State<MyPlatingUI> {
                                     context.go(Routes.playUI);
                                     await controller.submitCoc();
                                   },
-                                  child: MyText(text: 'Save', fontWeight: FontWeight.w400,),
+                                  child: MyText(text: 'Save', fontWeight: FontWeight.w400),
                                 ),
                                 TextButton(
                                   onPressed: () => context.pop(),
-                                  child: MyText(text: 'Close', fontWeight: FontWeight.w400,),
+                                  child: MyText(text: 'Close', fontWeight: FontWeight.w400),
                                 ),
                               ],
                             ),
                           );
                         }
-
                       } else {
                         debugPrint('Image upload failed');
-                        if(context.mounted){
+                        if (context.mounted) {
                           controller.showFloatingSnackbar(
                             context: context,
                             message: 'Failed to upload image',
@@ -189,72 +242,75 @@ class _MyPlatingUIState extends State<MyPlatingUI> {
       ),
     );
   }
- 
+
   Widget _buildDraggable(int index) {
     final item = items[index];
     return Positioned(
       left: item.offset.dx,
       top: item.offset.dy,
       child: Draggable(
-        feedback: SizedBox(
-          width: 80.w, height: 80.h,
-          child: CachedNetworkImage(
-            imageUrl: item.imageUrl,
-            placeholder: (context, url) => const ShimmerLightLoader(),
-            errorWidget: (context, url, error) => const Icon(Icons.error),
-            fit: BoxFit.contain,
-          ),
-        ),
-        childWhenDragging: Opacity(
-          opacity: 0.4,
-          child: SizedBox(
-          width: 80.w, height: 80.h,
-            child: CachedNetworkImage(
-              imageUrl: item.imageUrl,
-              placeholder: (context, url) => const ShimmerLightLoader(),
-              errorWidget: (context, url, error) => const Icon(Icons.error),
-              fit: BoxFit.contain,
-            ),
-          ),
-        ),
+        feedback: _buildImage(item),
+        childWhenDragging: Opacity(opacity: 0.4, child: _buildImage(item)),
         onDragEnd: (details) {
-          final renderBox = _repaintKey.currentContext!.findRenderObject() as RenderBox;
-          final localOffset = renderBox.globalToLocal(details.offset);
+          final context = _repaintKey.currentContext;
+          if (context == null) return;
+
+          final renderObject = context.findRenderObject();
+          if (renderObject == null || renderObject is! RenderBox) return;
+
+          final localOffset = renderObject.globalToLocal(details.offset);
+
+          final containerSize = renderObject.size;
+          final itemWidth = 80.w;
+          final itemHeight = 80.h;
+
+          final clampedX = localOffset.dx.clamp(0.0, containerSize.width - itemWidth);
+          final clampedY = localOffset.dy.clamp(0.0, containerSize.height - itemHeight);
 
           setState(() {
             final draggedItem = items.removeAt(index);
-            final updatedItem = draggedItem.copyWith(offset: localOffset);
+            final updatedItem = draggedItem.copyWith(offset: Offset(clampedX, clampedY));
             items.add(updatedItem);
           });
         },
-        child: SizedBox(
-          width: 80.w, height: 80.h,
-          child: CachedNetworkImage(
-            imageUrl: item.imageUrl,
-            placeholder: (context, url) => const ShimmerLightLoader(),
-            errorWidget: (context, url, error) => const Icon(Icons.error),
-            fit: BoxFit.contain,
-          ),
-        ),
+        child: _buildImage(item),
       ),
     );
   }
 
+  Widget _buildImage(_DraggableItem item) {
+    return SizedBox(
+      width: 80.w,
+      height: 80.h,
+      child: CachedNetworkImage(
+        imageUrl: item.imageUrl,
+        placeholder: (context, url) => const ShimmerLightLoader(),
+        errorWidget: (context, url, error) => const Icon(Icons.error),
+        fit: BoxFit.contain,
+      ),
+    );
+  }
 }
 
 class _DraggableItem {
   final String name;
   final String imageUrl;
   Offset offset;
+  final String side;
 
-  _DraggableItem({required this.name, required this.imageUrl, required this.offset});
+  _DraggableItem({
+    required this.name,
+    required this.imageUrl,
+    required this.offset,
+    required this.side,
+  });
 
   _DraggableItem copyWith({Offset? offset}) {
     return _DraggableItem(
       name: name,
       imageUrl: imageUrl,
       offset: offset ?? this.offset,
+      side: side,
     );
   }
 }
-

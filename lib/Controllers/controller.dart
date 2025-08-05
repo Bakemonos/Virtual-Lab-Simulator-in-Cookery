@@ -131,7 +131,9 @@ class AppController extends GetxController {
   final ingredientsData = <IngredientsModel>[].obs;
 
   //? TYPE
-  FoodMenuModel? typeSelected;
+  // FoodMenuModel? typeSelected;
+  final typeSelected = Rxn<FoodMenuModel>(); 
+
 
   //? HOLD INGREDIENTS INFORMATION 
   Rx<IngredientsModel> ingredientActionData = IngredientsModel.empty().obs;
@@ -213,9 +215,9 @@ class AppController extends GetxController {
 
     preparedData.value = newData;
 
-    debugPrint('\n✅ ACCEPTED INGREDIENT: ${currentIngredient.name} with ${currentIngredient.actions.length} actions');
-    debugPrint('📦 Total accepted ingredients: ${preparedData.value.ingredients.length}\n');
-
+    debugPrint('\nACCEPTED INGREDIENT: ${currentIngredient.name} with ${currentIngredient.actions.length} actions');
+    debugPrint('Total accepted ingredients: ${preparedData.value.ingredients.length}\n');
+    
     ingredientDragDropData.value = IngredientsModel.empty();
     ingredientActionData.value = IngredientsModel.empty();
     selectedActions.clear();
@@ -855,7 +857,7 @@ class AppController extends GetxController {
       ingredientsData.refresh();
 
       final data = InventoryModel(
-        type: typeSelected!.menu ?? '',
+        type: typeSelected.value!.menu ?? '',
         studentId: user.id ?? '',
         take: 'take_one',
         ingredients: ingredientsData,
@@ -900,7 +902,13 @@ class AppController extends GetxController {
     loader.value = true;
     try {
 
-      final coc = typeSelected!.menu;
+      final coc = typeSelected.value?.menu;
+      if (coc == null) {
+        debugPrint('typeSelected or its menu is null');
+        loader.value = false;
+        return;
+      }
+
       final studentId = userData.value.id;
       final ingredients = preparedData.value.ingredients;
 
@@ -947,19 +955,22 @@ class AppController extends GetxController {
       final response = await db.post('coc/create', data.toJson());
 
       if(response.success! && context.mounted){
-        preparedData.value = InventoryModel.empty();
-        context.pop();
         debugPrint('SUCCESS : ${response.message}');
+        context.pop();
         submitResetErrorHandler();
-        quickAlertDialog(
-          context: context,
-          type: QuickAlertType.success,
-          title: 'Submitted Successful!',
-          message: response.message.toString(),
-         
-        );
+        preparedIngredients.clear();
+        // preparedData.value = InventoryModel.empty();
+        if(context.mounted){
+          quickAlertDialog(
+            context: context,
+            type: QuickAlertType.success,
+            title: 'Submitted Successful!',
+            message: response.message.toString(),
+          );
+        }
       }{
         debugPrint('FAILED : ${response.message}');
+        preparedIngredients.clear();
       }
 
     } catch (e, t) {
@@ -982,7 +993,7 @@ class AppController extends GetxController {
     loader.value = true;
     try {
 
-      final coc = typeSelected!.menu;
+      final coc = typeSelected.value!.menu;
       final studentId = userData.value.id;
     
       Map<String, dynamic> data = {
@@ -1012,7 +1023,7 @@ class AppController extends GetxController {
     
     try {
       final studentId = userData.value.id;
-      final coc = typeSelected!.menu;
+      final coc = typeSelected.value!.menu;
       final type = 'take_one';
 
       final response = await db.get('inventory/read/$studentId/?type=$coc&take=$type');
