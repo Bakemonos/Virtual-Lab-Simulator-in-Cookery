@@ -925,7 +925,7 @@ class AppController extends GetxController {
       );
 
       final data = SubmitedCocModel(
-        type: coc!, 
+        type: coc, 
         category: helper.toCamelCase(category.value), 
         name: nameDishController.text, 
         image: matchedDish?['image'] ?? '', 

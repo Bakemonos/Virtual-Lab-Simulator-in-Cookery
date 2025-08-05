@@ -8,6 +8,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:virtual_lab/Components/shimmer.dart';
 import 'package:virtual_lab/Json/coc1.dart';
+import 'package:virtual_lab/components/custom_svg.dart';
 import 'package:virtual_lab/components/custom_text.dart';
 import 'package:virtual_lab/controllers/controller.dart';
 import 'package:virtual_lab/utils/properties.dart';
@@ -25,6 +26,22 @@ class _MyPlatingUIState extends State<MyPlatingUI> {
   final GlobalKey _repaintKey = GlobalKey();
   List<_DraggableItem> items = [];
   Uint8List? capturedImageBytes;
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final renderBox = _repaintKey.currentContext?.findRenderObject() as RenderBox?;
+      if (renderBox != null && mounted) {
+        final size = renderBox.size;
+        _generateAllItems(
+          containerWidth: size.width,
+          containerHeight: size.height,
+        );
+      }
+    });
+  }
+
 
   void _generateAllItems({required double containerWidth, required double containerHeight}) {
     final rand = Random();
@@ -127,23 +144,6 @@ class _MyPlatingUIState extends State<MyPlatingUI> {
                   key: _repaintKey,
                   child: LayoutBuilder(
                     builder: (context, constraints) {
-                      final containerWidth = constraints.maxWidth;
-                      final containerHeight = constraints.maxHeight;
-                      if (items.isEmpty) {
-                        WidgetsBinding.instance.addPostFrameCallback((_) {
-                          if (items.isEmpty) {
-                          Future.microtask(() {
-                            if (mounted) {
-                              _generateAllItems(
-                                containerWidth: containerWidth,
-                                containerHeight: containerHeight,
-                              );
-                            }
-                          });
-                        }
-
-                        });
-                      }
                       return Container(
                         width: double.infinity,
                         height: 500.h,
@@ -153,29 +153,11 @@ class _MyPlatingUIState extends State<MyPlatingUI> {
                         ),
                       );
                     },
+
                   ),
                 ),
               ),
             ),
-
-            Align(
-              alignment: Alignment.topRight,
-              child: Container(
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: backgroundColor,
-                  border: Border.all(width: 8.w, color: backgroundColor),
-                ),
-                child: controller.floatingButton(
-                  context: context,
-                  icon: menu,
-                  onTap: () {
-                    context.pop();
-                  },
-                ),
-              ),
-            ),
-
             Align(
               alignment: Alignment.bottomCenter,
               child: Padding(
@@ -238,6 +220,27 @@ class _MyPlatingUIState extends State<MyPlatingUI> {
               ),
             ),
           ],
+        ),
+        floatingActionButtonLocation: FloatingActionButtonLocation.endTop,
+        floatingActionButton: Container(
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            color: backgroundColor,
+            border: Border.all(width: 8.w, color: backgroundColor),
+          ),
+          child: InkWell(
+            onTap: () {
+              controller.playClickSound();
+              context.pop();
+            },
+            child: SizedBox(
+              height: 48.h,
+              child: AspectRatio(
+                aspectRatio: 1,
+                child: MySvgPicture(path: menu),
+              ),
+            ),
+          ),
         ),
       ),
     );
