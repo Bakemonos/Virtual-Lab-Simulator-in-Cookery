@@ -3,6 +3,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:go_router/go_router.dart';
+import 'package:virtual_lab/Json/equipment.dart';
 import 'package:virtual_lab/components/custom_button.dart';
 import 'package:virtual_lab/components/custom_svg_picture.dart';
 import 'package:virtual_lab/components/custom_text.dart';
@@ -11,13 +12,19 @@ import 'package:virtual_lab/controllers/controller.dart';
 import 'package:virtual_lab/models/ingredients_model.dart';
 import 'package:virtual_lab/utils/properties.dart';
 
-class MyProcessPage extends StatelessWidget {
+class MyProcessPage extends StatefulWidget {
   const MyProcessPage({super.key});
 
   @override
+  State<MyProcessPage> createState() => _MyProcessPageState();
+}
+
+class _MyProcessPageState extends State<MyProcessPage> {
+  final submitDishFormKey = GlobalKey<FormState>();
+  final controller = AppController.instance;
+  
+  @override
   Widget build(BuildContext context) {
-    final controller = AppController.instance;
-    final submitDishFormKey = GlobalKey<FormState>();
 
     return Flexible(
       fit: FlexFit.loose,
@@ -25,83 +32,173 @@ class MyProcessPage extends StatelessWidget {
         decoration: controller.designUI(),
         child: Padding(
           padding: EdgeInsets.all(10.w),
-          child: Column(
-            children: [
-              DragTarget<IngredientsModel>(
-                onWillAcceptWithDetails: (details) => details.data.dragKey == 'submit' && details.data.actions.isEmpty,
-                onAcceptWithDetails: (details) {
-                  controller.acceptIngredient(
-                    type: controller.typeSelected!.menu ?? '', 
-                    studentId: controller.userData.value.id!,
-                    take: 'take_one',
-                  );
-                },
-                builder: (context, candidateData, rejectedData){
-                  return Column(
-                    children: [
-                      SizedBox(
-                        width: 200.w, height: 200.h,
-                        child: Stack(
-                          children: [
-                            Container(
-                              height: double.infinity,
-                              decoration: BoxDecoration(
-                                color: candidateData.isEmpty ? darkBrown.withValues(alpha: 0.6) : greenLighter.withValues(alpha: 0.8) ,
-                                borderRadius: BorderRadius.circular(8.r)
-                              ),
-                              child: Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: CachedNetworkImage(
-                                  imageUrl: kaldero,
-                                  placeholder: (context, url) => ShimmerSkeletonLoader(),
-                                  errorWidget: (context, url, error) => Icon(Icons.error),
-                                  fit: BoxFit.contain,
-                                ),
-                              ),
-                            ),
-                            Align(
-                              alignment: Alignment.bottomRight,
-                              child: IconButton(
-                                onPressed: (){}, 
-                                icon: Icon(Icons.repeat, color: textLight, size: 40.w),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      MyText(text: 'Kaldero', size: 16.sp, fontWeight: FontWeight.w500, color: textLight)
-                    ],
-                  );
-                },
-              ),
-              const Spacer(),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Spacer(),
-                  SizedBox(
-                    width: 80.w,
-                    child: Column(
-                      spacing: 8.h,
-                      children: [
-                        controller.actionButton(text: 'Check', onPressed: ()=> checkStatus(context, controller)),
-                        controller.actionButton(text: 'Submit', onPressed: (){
-                          controller.resetErrorHandler();
-                          submitCreateDish(context, controller, submitDishFormKey);
-                        }),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            ],
+          child: SizedBox(
+            width: double.infinity,
+            child: Obx(()=> controller.changeToolToggle.value ? kitchenEquipmentUI() : processUI()),
           ),
         ),
       ),
     );
   }
 
-  Widget preparedIngredients(AppController controller) {
+  Widget kitchenEquipmentUI(){
+    return Column(
+      children: [
+        IconButton(
+          onPressed: controller.changeToolToggler,
+          icon: Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(4.r),
+              color: lightGridColor.withValues(alpha: 0.5),
+            ),
+            padding: EdgeInsets.all(8.w),
+            child: Center(
+              child: MySvgPicture(path: back, iconColor: textLight),
+            ),
+          ),
+        ),
+        Flexible(
+          fit: FlexFit.loose,
+          child: GridView.builder(
+            padding: EdgeInsets.zero,
+            itemCount: cookingEquipment.length,
+            physics: AlwaysScrollableScrollPhysics(),
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 2,
+              childAspectRatio: 1,
+              crossAxisSpacing: 8, 
+              mainAxisSpacing: 8,
+            ),
+            itemBuilder: (context, index) {
+              var data = cookingEquipment[index];
+        
+              return InkWell(
+                onTap: (){
+                  controller.changeToolToggler();
+                  controller.cookingToolData.value = data;
+                },
+                child: Stack(
+                  children: [
+                    AnimatedContainer(
+                      
+                      duration: Duration(milliseconds: 200),
+                      curve: Curves.easeInOut,
+                      alignment: Alignment.center,
+                      decoration: BoxDecoration(
+                        color: controller.cookingToolData.value == data ? lightGridColor : lightGridColor.withValues(alpha: 0.5),
+                        borderRadius: BorderRadius.circular(8.r),
+                      ),
+                      child: Padding(
+                        padding: EdgeInsets.all(8.w),
+                        child: CachedNetworkImage(
+                          imageUrl: data.image,
+                          placeholder: (context, url) => ShimmerSkeletonLoader(),
+                          errorWidget: (context, url, error) => Icon(Icons.error),
+                          fit: BoxFit.contain,
+                        ),
+                      ),
+                    ),
+                    Align(
+                      alignment: Alignment.bottomCenter,
+                      child: Container(
+                        width: double.infinity,
+                        decoration: BoxDecoration(
+                          color: lightBrown.withValues(alpha: 0.4),
+                          borderRadius: BorderRadius.only(bottomLeft: Radius.circular(8.r), bottomRight: Radius.circular(8.r))
+                        ),
+                        child: MyText(text: data.name, textAlign: TextAlign.center, color: textLight, size: 16.sp,),
+                      ),
+                    ),
+                  ],
+                ),
+              );
+            },
+          )
+        ),
+      ],
+    );
+  }
+
+  Widget processUI() {
+    return InkWell(
+      onTap: controller.changeToolToggler,
+      child: Column(
+        children: [
+          DragTarget<IngredientsModel>(
+            onWillAcceptWithDetails: (details) => details.data.dragKey == 'submit' && details.data.actions.isEmpty,
+            onAcceptWithDetails: (details) {
+              controller.acceptIngredient(
+                type: controller.typeSelected!.menu ?? '', 
+                studentId: controller.userData.value.id!,
+                take: 'take_one',
+              );
+            },
+            builder: (context, candidateData, rejectedData){
+              return Column(
+                children: [
+                  SizedBox(
+                    width: 200.w, height: 200.h,
+                    child: Stack(
+                      children: [
+                        Container(
+                          height: double.infinity,
+                          width: double.infinity,
+                          decoration: BoxDecoration(
+                            color: candidateData.isEmpty ? darkBrown.withValues(alpha: 0.6) : greenLighter.withValues(alpha: 0.8) ,
+                            borderRadius: BorderRadius.circular(8.r)
+                          ),
+                          child: Padding(
+                            padding: EdgeInsets.all(24.w),
+                            child: CachedNetworkImage(
+                              imageUrl: controller.cookingToolData.value.image,
+                              placeholder: (context, url) => ShimmerSkeletonLoader(),
+                              errorWidget: (context, url, error) => Icon(Icons.error),
+                              fit: BoxFit.contain,
+                            ),
+                          ),
+                        ),
+                        Align(
+                          alignment: Alignment.bottomRight,
+                          child: IconButton(
+                            onPressed: controller.changeToolToggler, 
+                            icon: Icon(Icons.repeat, color: textLight, size: 40.w),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  MyText(text: controller.cookingToolData.value.name, size: 16.sp, fontWeight: FontWeight.w500, color: textLight)
+                ],
+              );
+            },
+          ),
+          const Spacer(),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Spacer(),
+              SizedBox(
+                width: 80.w,
+                child: Column(
+                  spacing: 8.h,
+                  children: [
+                    controller.actionButton(text: 'Check', onPressed: checkStatus),
+                    controller.actionButton(text: 'Submit', onPressed: (){
+                      controller.resetErrorHandler();
+                      submitCreateDish();
+                    }),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        
+        ],
+      ),
+    );
+  }
+
+  Widget preparedIngredients() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -195,7 +292,6 @@ class MyProcessPage extends StatelessWidget {
   }
 
   Widget equipToggler({
-    required AppController controller,
     required String label,
     required iconPath,
   }) {
@@ -211,7 +307,7 @@ class MyProcessPage extends StatelessWidget {
     );
   }
 
-  void checkStatus(BuildContext context, AppController controller) {
+  void checkStatus() {
     Row repeatedUI(String label, String value) {
       return Row(
         children: [
@@ -322,7 +418,7 @@ class MyProcessPage extends StatelessWidget {
     );
   }
 
-  void submitCreateDish(BuildContext context, AppController controller, GlobalKey<FormState> key) {
+  void submitCreateDish() {
     final borderColor = lightBrown.withValues(alpha: 0.3);
     showDialog(
       context: context,
@@ -377,7 +473,7 @@ class MyProcessPage extends StatelessWidget {
                               ],
                             ),
                             Form(
-                              key: key,
+                              key: submitDishFormKey,
                               child: Column(
                                 children: [
                                   Obx(
@@ -408,7 +504,7 @@ class MyProcessPage extends StatelessWidget {
                             MyButton(
                               text: 'Submit', 
                               onTap: () async {
-                                final form = key.currentState;
+                                final form = submitDishFormKey.currentState;
                                 if (form != null && form.validate()) {
                                   if (controller.tap) return;
                                   controller.tap = true;
@@ -432,5 +528,4 @@ class MyProcessPage extends StatelessWidget {
       },
     );
   }  
-
 }

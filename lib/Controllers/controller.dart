@@ -87,6 +87,7 @@ class AppController extends GetxController {
   final actionListToggle = false.obs;
   final actionToggle = false.obs;
   final toolListToggle = false.obs;
+  final changeToolToggle = false.obs;
   bool tap = false;
 
   
@@ -147,6 +148,7 @@ class AppController extends GetxController {
   
   //? EQUIPMENTS 
   RxList<EquipmentsModel> equipmentData = <EquipmentsModel>[].obs;
+  Rx<EquipmentsModel> cookingToolData = EquipmentsModel(image: kaldero, name: 'Default').obs;
   
   //! METHODS ---------------------------------------------------------------------------------------------------------------
 
@@ -395,6 +397,12 @@ class AppController extends GetxController {
 
   void initializeSelection(int itemCount) {
     isSelectedList.value = List.generate(itemCount, (_) => false.obs);
+  }
+
+
+
+  void changeToolToggler() {
+    changeToolToggle.value = !changeToolToggle.value;
   }
 
   void toggleSelection(int index) {
@@ -939,6 +947,7 @@ class AppController extends GetxController {
       final response = await db.post('coc/create', data.toJson());
 
       if(response.success! && context.mounted){
+        preparedData.value = InventoryModel.empty();
         context.pop();
         debugPrint('SUCCESS : ${response.message}');
         submitResetErrorHandler();
