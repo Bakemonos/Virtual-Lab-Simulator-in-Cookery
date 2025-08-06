@@ -3,11 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:go_router/go_router.dart';
+import 'package:virtual_lab/Json/actions.dart';
 import 'package:virtual_lab/Json/equipment.dart';
 import 'package:virtual_lab/Utils/routes.dart';
 import 'package:virtual_lab/components/custom_svg.dart';
 import 'package:virtual_lab/controllers/controller.dart';
-import 'package:virtual_lab/json/tools.dart';
 import 'package:virtual_lab/models/ingredients_model.dart';
 import 'package:virtual_lab/components/custom_hit_bar.dart';
 import 'package:virtual_lab/components/custom_text.dart';
@@ -132,7 +132,7 @@ class _MyProcedurePlatingPageState extends State<MyProcedurePlatingPage> with Ti
                                           ),
                                           childWhenDragging: Center(child: MyText(text: ingredient.name)),
                                           child: InkWell(
-                                            onTap: () => controller.actionOnTap(ingredient),
+                                            onTap: controller.actionToggle.value? (){} : () => controller.actionOnTap(ingredient),
                                             child: SizedBox(
                                               height: 80.h,
                                               width: 80.w,

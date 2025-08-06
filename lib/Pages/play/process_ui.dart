@@ -323,7 +323,7 @@ class _MyProcessPageState extends State<MyProcessPage> {
         return AlertDialog(
           contentPadding: EdgeInsets.zero,
           content: Container(
-            width: 360.w,
+            width: 460.w,
             decoration: BoxDecoration(
               color: backgroundColor,
               borderRadius: BorderRadius.circular(16.r),
@@ -390,13 +390,28 @@ class _MyProcessPageState extends State<MyProcessPage> {
                                     ...actions.asMap().entries.map((entry){
                                       final index = entry.key + 1; 
                                       final a = entry.value;
+                                      final color = switch (a.status) {
+                                        'perfect' => greenLighter,
+                                        'good' => Colors.amber,
+                                        _ => redLighter,
+                                      };
 
                                       return Container(
                                         margin: EdgeInsetsGeometry.only(left: 16.w),
-                                        child: MyText(
-                                            text: '$index Action: ${a.action}, Tool: ${a.tool}, Status: ${a.status}',
-                                            fontWeight: FontWeight.w500,
-                                            size: 16.sp,
+                                        child: Row(
+                                          children: [
+                                            MyText(
+                                              text: '$index Action: ${a.action}, Tool: ${a.tool}, Status:',
+                                              fontWeight: FontWeight.w500,
+                                              size: 16.sp,
+                                            ),
+                                            MyText(
+                                              text: ' ${a.status}',
+                                              fontWeight: FontWeight.w500,
+                                              size: 16.sp,
+                                              color: color,
+                                            ),
+                                          ],
                                         ),
                                       );
                                     }),
