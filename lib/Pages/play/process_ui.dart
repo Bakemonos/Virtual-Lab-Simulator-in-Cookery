@@ -80,7 +80,6 @@ class _MyProcessPageState extends State<MyProcessPage> {
                 child: Stack(
                   children: [
                     AnimatedContainer(
-                      
                       duration: Duration(milliseconds: 200),
                       curve: Curves.easeInOut,
                       alignment: Alignment.center,
@@ -132,6 +131,7 @@ class _MyProcessPageState extends State<MyProcessPage> {
                 studentId: controller.userData.value.id!,
                 take: 'take_one',
               );
+              controller.equipmentData.add(controller.cookingToolData.value); //TODO ADD EQUIPMENT
             },
             builder: (context, candidateData, rejectedData){
               return Column(

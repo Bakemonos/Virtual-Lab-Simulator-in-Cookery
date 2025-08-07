@@ -197,8 +197,9 @@ class AppController extends GetxController {
     required String studentId,
     required String take,
   }) {
-    final currentIngredient = ingredientActionData.value;
 
+    final currentIngredient = ingredientActionData.value.copyWith(used: cookingToolData.value); //TODO TRY DATA
+    
     if (currentIngredient.name.isEmpty) return;
 
     preparedIngredients.removeWhere((i) =>
@@ -951,6 +952,8 @@ class AppController extends GetxController {
           ),
         ],
       );
+
+      debugPrint('\nDATA : ${data.toJson()}\n');
 
       final response = await db.post('coc/create', data.toJson());
 

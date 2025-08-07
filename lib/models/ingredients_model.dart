@@ -105,6 +105,7 @@ class IngredientsModel {
   final String path;
   final String category;
   final List<ActionsModel> actions;
+  final EquipmentsModel? used;
 
   IngredientsModel({
     this.dragKey,
@@ -112,6 +113,7 @@ class IngredientsModel {
     required this.path,
     required this.category,
     this.actions = const [],
+    this.used,
   });
 
   factory IngredientsModel.fromJson(Map<String, dynamic> map) {
@@ -125,6 +127,9 @@ class IngredientsModel {
               .toList()
           : [],
       dragKey: map['dragKey'],
+      used: map['used'] != null
+          ? EquipmentsModel.fromJson(map['used'])
+          : null,
     );
   }
 
@@ -135,6 +140,7 @@ class IngredientsModel {
       'category': category,
       'actions': actions.map((item) => item.toJson()).toList(),
       'dragKey': dragKey,
+      'used': used?.toJson(),
     };
   }
 
@@ -145,6 +151,7 @@ class IngredientsModel {
       path: '',
       category: '',
       actions: [],
+      used: null,
     );
   }
 
@@ -154,6 +161,7 @@ class IngredientsModel {
     String? path,
     String? category,
     List<ActionsModel>? actions,
+    EquipmentsModel? used,
   }) {
     return IngredientsModel(
       dragKey: dragKey ?? this.dragKey,
@@ -163,9 +171,11 @@ class IngredientsModel {
       actions: actions != null
           ? actions.map((a) => a.copyWith()).toList()
           : this.actions.map((a) => a.copyWith()).toList(),
+      used: used ?? this.used,
     );
   }
 }
+
 
 class ActionsModel {
   final String action;
