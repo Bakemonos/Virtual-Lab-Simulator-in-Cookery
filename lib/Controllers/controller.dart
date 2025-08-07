@@ -1092,7 +1092,34 @@ class AppController extends GetxController {
         }
       } else {
         submittedCocList.clear();
-        debugPrint('Inventory fetch failed: ${response.message}');
+        debugPrint('Dish fetch failed: ${response.message}');
+      }
+    } catch (e, t) {
+      loader.value = false;
+      final errorMessage = helper.getErrorMessage(e);
+      debugPrint('Error: $errorMessage');
+      debugPrint('STACKTRACE: $t');
+    }
+  }
+
+  Future<void> getScore(BuildContext context, String type) async {
+    loader.value = true;
+    try { 
+      final studentId = userData.value.id;
+      final response = await db.get('performance/read/$studentId/?type=$type');
+      loader.value = false;
+
+      if (!context.mounted) return;
+
+      if (response.success == true && response.data != null) {
+        try {
+          debugPrint('DATA: ${response.data}');
+
+        } catch (e) {
+          debugPrint('PARSING ERROR: $e');
+        }
+      } else {
+        debugPrint('Score fetch failed: ${response.message}');
       }
     } catch (e, t) {
       loader.value = false;

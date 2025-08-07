@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:go_router/go_router.dart';
@@ -17,14 +18,18 @@ class MySliderOptionPage extends StatefulWidget {
 }
 
 class _MySliderOptionPageState extends State<MySliderOptionPage> {
-  final PageController _pageController = PageController(viewportFraction: 0.3);
+  final PageController _pageController = PageController(
+    initialPage: 1,
+    viewportFraction: 0.3,
+  );
   final controller = AppController.instance;
   double _currentPage = 0;
   String? selectedClass;
 
-  @override
+ @override
   void initState() {
     super.initState();
+    _currentPage = _pageController.initialPage.toDouble();
     _pageController.addListener(() {
       setState(() {
         _currentPage = _pageController.page ?? 0;
@@ -34,6 +39,7 @@ class _MySliderOptionPageState extends State<MySliderOptionPage> {
 
   @override
   void dispose() {
+    controller.submittedCocList.clear();
     _pageController.dispose();
     super.dispose();
   }
@@ -52,6 +58,10 @@ class _MySliderOptionPageState extends State<MySliderOptionPage> {
                 height: 250.h,
                 child: Obx((){
                   var submitted = controller.submittedCocList;
+
+                  if(controller.loader.value) {
+                    return loader();
+                  }
 
                   return PageView.builder(
                     controller: _pageController,
@@ -148,6 +158,43 @@ class _MySliderOptionPageState extends State<MySliderOptionPage> {
               context.go(Routes.achievementOption);
             },
           ),
+        ],
+      ),
+    );
+  }
+
+  Widget loader(){
+    Widget shimmer(){
+      return Container(
+        height: 170.h,
+        width: 170.w,
+        decoration: BoxDecoration(
+          color: darkBrown.withValues(alpha: 0.5),
+          borderRadius: BorderRadius.circular(12.r)
+        ),
+      ).animate(
+        delay: Duration(milliseconds: 300),
+        onPlay: (controller) => controller.repeat(),
+      ).shimmer(duration: Duration(seconds: 1), color: backgroundColor);
+    }
+    return Center(
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        spacing: 24.w,
+        children: [
+          shimmer(),
+          Container(
+            height: 220.h,
+            width: 250.w,
+            decoration: BoxDecoration(
+              color: darkBrown.withValues(alpha: 0.7),
+              borderRadius: BorderRadius.circular(12.r)
+            ),
+          ).animate(
+            delay: Duration(milliseconds: 300),
+            onPlay: (controller) => controller.repeat(),
+          ).shimmer(duration: Duration(seconds: 1), color: backgroundColor),
+          shimmer(),
         ],
       ),
     );

@@ -23,7 +23,6 @@ class _MyAchievementTypePageState extends State<MyAchievementTypePage> {
 
   @override
   Widget build(BuildContext context) {
-    final List<bool> unlocked = [true, false, false];
 
     return Scaffold(
       resizeToAvoidBottomInset: false,
@@ -57,9 +56,9 @@ class _MyAchievementTypePageState extends State<MyAchievementTypePage> {
                               child: foodChoices(
                                 onTap: () async {
                                   context.push(Routes.sliderOption);
-                                  await controller.getDish(context, type: data.menu);
+                                  await controller.getScore(context, data.menu!);
+                                  if(context.mounted) await controller.getDish(context, type: data.menu);
                                 },
-                                unlocked: unlocked[index],
                                 path: data.path,
                                 label: data.label,
                               ),
@@ -101,7 +100,6 @@ class _MyAchievementTypePageState extends State<MyAchievementTypePage> {
   Widget foodChoices({
     required String path,
     required String label,
-    required bool unlocked,
     required Function() onTap,
   }) {
     return SizedBox(
@@ -157,7 +155,7 @@ class _MyAchievementTypePageState extends State<MyAchievementTypePage> {
               padding: EdgeInsets.symmetric(horizontal: 12.w),
               child: SizedBox(
                 height: 48.h,
-                child: MyButton(text: 'View', onTap: unlocked ? onTap : () {}),
+                child: MyButton(text: 'View', onTap: onTap),
               ),
             ),
           ),
