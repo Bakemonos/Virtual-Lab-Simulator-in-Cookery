@@ -18,15 +18,12 @@ class MySliderOptionPage extends StatefulWidget {
 }
 
 class _MySliderOptionPageState extends State<MySliderOptionPage> {
-  final PageController _pageController = PageController(
-    initialPage: 1,
-    viewportFraction: 0.3,
-  );
+  final PageController _pageController = PageController(initialPage: 1, viewportFraction: 0.3);
   final controller = AppController.instance;
   double _currentPage = 0;
   String? selectedClass;
 
- @override
+  @override
   void initState() {
     super.initState();
     _currentPage = _pageController.initialPage.toDouble();
@@ -58,7 +55,6 @@ class _MySliderOptionPageState extends State<MySliderOptionPage> {
                 height: 250.h,
                 child: Obx((){
                   var submitted = controller.submittedCocList;
-
                   if(controller.loader.value) {
                     return loader();
                   }

@@ -1133,8 +1133,6 @@ class AppController extends GetxController {
     final String cloudName = dotenv.env['CLOUD_NAME']!;
     const String uploadPreset = 'upload_plating';
 
-    debugPrint('\nCLOUDNAME : $cloudName\n');
-
     final uri = Uri.parse('https://api.cloudinary.com/v1_1/$cloudName/image/upload');
 
     final request = http.MultipartRequest('POST', uri)
@@ -1150,7 +1148,6 @@ class AppController extends GetxController {
 
     final response = await request.send();
     final responseData = await response.stream.bytesToString();
-    print('Cloudinary response: $responseData');
 
     if (response.statusCode == 200) {
       final data = json.decode(responseData);

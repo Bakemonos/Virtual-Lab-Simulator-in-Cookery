@@ -229,19 +229,19 @@ class _MyProcedurePlatingPageState extends State<MyProcedurePlatingPage> with Ti
               },
             ),
           ),
+        
         ],
       ),
     );
   }
 
   Widget equipmentUI() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+    return Row(
       children: [
         IconButton(
           onPressed: controller.equipmentOntap,
           icon: Container(
-            width: 80.w,
+            width: 48.w,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(4.r),
               color: lightGridColor.withValues(alpha: 0.5),
