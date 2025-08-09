@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:virtual_lab/components/custom_button.dart';
 import 'package:virtual_lab/components/custom_header.dart';
 import 'package:virtual_lab/controllers/controller.dart';
+import 'package:virtual_lab/services/services.dart';
 import 'package:virtual_lab/utils/properties.dart';
 
 class MySignUpPage extends StatelessWidget {
@@ -13,6 +14,8 @@ class MySignUpPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final controller = AppController.instance;
+    final db = ApiServices.instance;
+    
     return Scaffold(
       resizeToAvoidBottomInset: false,
       body: Center(
@@ -154,7 +157,7 @@ class MySignUpPage extends StatelessWidget {
                                     text: 'SIGN UP',
                                     onTap: () {
                                       controller.errorHandlerSignup();
-                                      controller.signup(context);
+                                      db.signup(context);
                                     },
                                   ),
                                 ),

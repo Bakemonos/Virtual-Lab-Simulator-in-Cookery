@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:virtual_lab/components/custom_button.dart';
 import 'package:virtual_lab/components/custom_header.dart';
 import 'package:virtual_lab/controllers/controller.dart';
+import 'package:virtual_lab/services/services.dart';
 import 'package:virtual_lab/utils/properties.dart';
 import 'package:virtual_lab/components/custom_text.dart';
 import 'package:virtual_lab/utils/routes.dart';
@@ -20,6 +21,7 @@ class _MyLoginPageState extends State<MyLoginPage> {
   @override
   Widget build(BuildContext context) {
     final controller = AppController.instance;
+    final db = ApiServices.instance;
     final signInFormKey = GlobalKey<FormState>();
 
     return PopScope(
@@ -99,7 +101,7 @@ class _MyLoginPageState extends State<MyLoginPage> {
                                             final form = signInFormKey.currentState;
                                             if (form != null && form.validate()) {
                                               controller.errorHandlerSignin();
-                                              controller.signin(context);
+                                              db.signin(context);
                                             }
                                           },
                                         ),

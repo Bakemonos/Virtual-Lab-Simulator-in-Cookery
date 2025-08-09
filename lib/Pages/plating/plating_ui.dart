@@ -11,6 +11,7 @@ import 'package:virtual_lab/Json/coc1.dart';
 import 'package:virtual_lab/components/custom_svg.dart';
 import 'package:virtual_lab/components/custom_text.dart';
 import 'package:virtual_lab/controllers/controller.dart';
+import 'package:virtual_lab/services/services.dart';
 import 'package:virtual_lab/utils/properties.dart';
 import 'package:virtual_lab/utils/routes.dart';
 
@@ -23,6 +24,7 @@ class MyPlatingUI extends StatefulWidget {
 
 class _MyPlatingUIState extends State<MyPlatingUI> {
   final controller = AppController.instance;
+  final db = ApiServices.instance;
   final GlobalKey _repaintKey = GlobalKey();
   List<_DraggableItem> items = [];
   Uint8List? capturedImageBytes;
@@ -173,7 +175,7 @@ class _MyPlatingUIState extends State<MyPlatingUI> {
                         barrierDismissible: false,
                         builder: (_) => Center(child: CircularProgressIndicator(color: textLight)),
                       );
-                      final uploadedUrl = await controller.uploadImageToCloudinary(capturedImageBytes!);
+                      final uploadedUrl = await db.uploadImageToCloudinary(capturedImageBytes!);
                       if (context.mounted) context.pop();
                       if (uploadedUrl != null) {
                         controller.platingImageUrl.value = uploadedUrl;
@@ -193,7 +195,7 @@ class _MyPlatingUIState extends State<MyPlatingUI> {
                                 TextButton(
                                   onPressed: () async {
                                     context.go(Routes.playUI);
-                                    await controller.submitCoc();
+                                    await db.submitCoc();
                                   },
                                   child: MyText(text: 'Save', fontWeight: FontWeight.w400),
                                 ),

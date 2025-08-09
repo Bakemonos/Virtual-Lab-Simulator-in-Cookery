@@ -7,6 +7,7 @@ import 'package:virtual_lab/components/custom_text.dart';
 import 'package:virtual_lab/components/shimmer.dart';
 import 'package:virtual_lab/controllers/controller.dart';
 import 'package:virtual_lab/models/ingredients_model.dart';
+import 'package:virtual_lab/services/services.dart';
 import 'package:virtual_lab/utils/properties.dart';
 
 class MyInventoryPage extends StatefulWidget {
@@ -18,12 +19,13 @@ class MyInventoryPage extends StatefulWidget {
 
 class _MyInventoryPageState extends State<MyInventoryPage> {
   final controller = AppController.instance;
+  final db = ApiServices.instance;
   Color acceptedColor = lightBrown;
 
   @override
   void initState() {
      WidgetsBinding.instance.addPostFrameCallback((_) {
-      controller.getInventory(context);
+      db.getInventory(context);
     });
     super.initState();
   }

@@ -9,6 +9,7 @@ import 'package:virtual_lab/components/shimmer.dart';
 import 'package:virtual_lab/controllers/controller.dart';
 import 'package:virtual_lab/json/coc1.dart';
 import 'package:virtual_lab/components/custom_text.dart';
+import 'package:virtual_lab/services/services.dart';
 import 'package:virtual_lab/utils/helper.dart';
 import 'package:virtual_lab/utils/properties.dart';
 import 'package:virtual_lab/utils/routes.dart';
@@ -22,6 +23,7 @@ class MyIngredientsSelectionPage extends StatefulWidget {
 
 class _MyIngredientsSelectionPageState extends State<MyIngredientsSelectionPage> {
   final controller = AppController.instance;
+  final db = ApiServices.instance;
   final helper = Helper.instance;
 
   @override
@@ -145,7 +147,7 @@ class _MyIngredientsSelectionPageState extends State<MyIngredientsSelectionPage>
                                   child: MyButton(
                                     text: controller.seconds.value == 0 ? 'CONFIRM' : helper.formatSecondsToMMSS(controller.seconds.value),
                                     onTap: () async {
-                                      if(controller.seconds.value == 0) await controller.ingredientsCreate(context);
+                                      if(controller.seconds.value == 0) await db.ingredientsCreate(context);
                                     },
                                   ),
                                 ),

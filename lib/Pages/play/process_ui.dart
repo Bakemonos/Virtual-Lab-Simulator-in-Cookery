@@ -10,6 +10,7 @@ import 'package:virtual_lab/components/custom_text.dart';
 import 'package:virtual_lab/components/shimmer.dart';
 import 'package:virtual_lab/controllers/controller.dart';
 import 'package:virtual_lab/models/ingredients_model.dart';
+import 'package:virtual_lab/services/services.dart';
 import 'package:virtual_lab/utils/properties.dart';
 
 class MyProcessPage extends StatefulWidget {
@@ -22,6 +23,7 @@ class MyProcessPage extends StatefulWidget {
 class _MyProcessPageState extends State<MyProcessPage> {
   final submitDishFormKey = GlobalKey<FormState>();
   final controller = AppController.instance;
+  final db = ApiServices.instance;
   
   @override
   Widget build(BuildContext context) {
@@ -530,8 +532,8 @@ class _MyProcessPageState extends State<MyProcessPage> {
                                   if (controller.tap) return;
                                   controller.tap = true;
                                   controller.errorHandlerSSubmitDish();
-                                  await controller.createDish(context);
-                                  if (context.mounted) await controller.getDish(context); 
+                                  await db.createDish(context);
+                                  if (context.mounted) await db.getDish(context); 
                                   controller.tap = false; 
                                 }
                               },

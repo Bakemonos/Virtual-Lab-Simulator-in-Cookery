@@ -8,6 +8,7 @@ import 'package:virtual_lab/components/custom_text.dart';
 import 'package:virtual_lab/components/shimmer.dart';
 import 'package:virtual_lab/controllers/controller.dart';
 import 'package:virtual_lab/json/food_menu.dart';
+import 'package:virtual_lab/services/services.dart';
 import 'package:virtual_lab/utils/properties.dart';
 import 'package:virtual_lab/utils/routes.dart';
 
@@ -20,6 +21,8 @@ class MyAchievementTypePage extends StatefulWidget {
 
 class _MyAchievementTypePageState extends State<MyAchievementTypePage> {
   final controller = AppController.instance;
+  final db = ApiServices.instance;
+  
 
   @override
   Widget build(BuildContext context) {
@@ -56,8 +59,8 @@ class _MyAchievementTypePageState extends State<MyAchievementTypePage> {
                               child: foodChoices(
                                 onTap: () async {
                                   context.push(Routes.sliderOption);
-                                  await controller.getScore(context, data.menu!);
-                                  if(context.mounted) await controller.getDish(context, type: data.menu);
+                                  await db.getScore(context, data.menu!);
+                                  if(context.mounted) await db.getDish(context, type: data.menu);
                                 },
                                 path: data.path,
                                 label: data.label,

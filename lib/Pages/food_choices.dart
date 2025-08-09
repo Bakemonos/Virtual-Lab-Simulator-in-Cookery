@@ -10,6 +10,7 @@ import 'package:virtual_lab/components/custom_text.dart';
 import 'package:virtual_lab/components/shimmer.dart';
 import 'package:virtual_lab/controllers/controller.dart';
 import 'package:virtual_lab/json/food_menu.dart';
+import 'package:virtual_lab/services/services.dart';
 import 'package:virtual_lab/utils/properties.dart';
 import 'package:virtual_lab/utils/routes.dart';
 
@@ -22,6 +23,7 @@ class MyFoodChoicesPage extends StatefulWidget {
 
 class _MyFoodChoicesPageState extends State<MyFoodChoicesPage> {
   final controller = AppController.instance;
+  final db = ApiServices.instance;
   final List<bool> unlocked = [true, false, false];
 
   @override
@@ -68,8 +70,8 @@ class _MyFoodChoicesPageState extends State<MyFoodChoicesPage> {
                                   debugPrint('\n SELECTED : ${data.menu}\n');
                                   controller.typeSelected.value = data;
  
-                                  await controller.getDish(context, type: data.menu);
-                                  if(context.mounted) await controller.getInventory(context);
+                                  await db.getDish(context, type: data.menu);
+                                  if(context.mounted) await db.getInventory(context);
 
                                   controller.tap = false;
                                   controller.foodLoading[index] = false;
