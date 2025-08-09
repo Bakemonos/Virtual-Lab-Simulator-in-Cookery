@@ -34,8 +34,7 @@ class _MyProcedurePlatingPageState extends State<MyProcedurePlatingPage> with Ti
   void initState() {
     super.initState();
     animationController = AnimationController(
-      vsync: this,
-      duration: const Duration(seconds: 2),
+      vsync: this, duration: const Duration(seconds: 2),
     )..repeat(reverse: true);
 
     controller.animation = Tween<double>(begin: 0, end: 1).animate(
@@ -236,12 +235,13 @@ class _MyProcedurePlatingPageState extends State<MyProcedurePlatingPage> with Ti
   }
 
   Widget equipmentUI() {
-    return Row(
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         IconButton(
           onPressed: controller.equipmentOntap,
           icon: Container(
-            width: 48.w,
+            width: 80.w,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(4.r),
               color: lightGridColor.withValues(alpha: 0.5),
@@ -258,52 +258,95 @@ class _MyProcedurePlatingPageState extends State<MyProcedurePlatingPage> with Ti
             padding: EdgeInsets.zero,
             scrollDirection: Axis.horizontal,
             itemCount: personalEquipment.length,
-            physics: AlwaysScrollableScrollPhysics(),
+            physics: const AlwaysScrollableScrollPhysics(),
             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 1,
-              childAspectRatio: 1, 
+              childAspectRatio: 1,
               mainAxisSpacing: 8,
             ),
             itemBuilder: (context, index) {
               var data = personalEquipment[index];
 
-              return Stack(
-                children: [
-                  AnimatedContainer(
-                    duration: Duration(milliseconds: 200),
-                    curve: Curves.easeInOut,
-                    alignment: Alignment.center,
-                    decoration: BoxDecoration(
-                      color: lightGridColor,
-                      borderRadius: BorderRadius.circular(8.r),
-                    ),
-                    child: Padding(
-                      padding: EdgeInsets.all(8.w),
-                      child: CachedNetworkImage(
-                        imageUrl: data.image,
-                        placeholder: (context, url) => ShimmerSkeletonLoader(),
-                        errorWidget: (context, url, error) =>
-                            Icon(Icons.error),
-                        fit: BoxFit.contain,
+              return Material(
+                color: Colors.transparent,
+                child: InkWell(
+                  onTapDown: (details) async {
+                    final selected = await showMenu(
+                      context: context,
+                      position: RelativeRect.fromLTRB(
+                        details.globalPosition.dx,
+                        details.globalPosition.dy,
+                        details.globalPosition.dx,
+                        details.globalPosition.dy,
                       ),
-                    ),
-                  ),
-                  Align(
-                    alignment: Alignment.bottomCenter,
-                    child: Container(
-                      width: double.infinity,
-                      decoration: BoxDecoration(
-                        color: lightBrown.withValues(alpha: 0.4),
-                        borderRadius: BorderRadius.only(bottomLeft: Radius.circular(8.r), bottomRight: Radius.circular(8.r))
+                      items: [
+                        if(!controller.equipmentData.contains(data)) PopupMenuItem(
+                          value: 'equip',
+                          child: MyText(text: 'Equip', size: 14.sp),
+                        ),
+                        if(controller.equipmentData.contains(data)) PopupMenuItem(
+                          value: 'unequip',
+                          child: MyText(text: 'Unequip', size: 14.sp),
+                        ),
+                      ],
+                    );
+                    if (selected == 'equip') {
+                      if (!controller.equipmentData.contains(data)) {
+                        controller.equipmentData.add(data);
+                        // debugPrint('\nEQUIPMENT : ${controller.equipmentData.map((e)=> e.name).toList()}\n');
+                      }
+                    }
+                    if (selected == 'unequip') {
+                      controller.equipmentData.remove(data);
+                    }
+                  },
+                  child: Stack(
+                    children: [
+                      Obx(()=> AnimatedContainer(
+                        duration: const Duration(milliseconds: 200),
+                        curve: Curves.easeInOut,
+                        alignment: Alignment.center,
+                        decoration: BoxDecoration(
+                          color: controller.equipmentData.contains(data) ? lightGridColor : lightGridColor.withValues(alpha: 0.5),
+                          borderRadius: BorderRadius.circular(8.r),
+                        ),
+                        child: Padding(
+                          padding: EdgeInsets.all(8.w),
+                          child: CachedNetworkImage(
+                            imageUrl: data.image,
+                            placeholder: (context, url) => ShimmerSkeletonLoader(),
+                            errorWidget: (context, url, error) => const Icon(Icons.error),
+                            fit: BoxFit.contain,
+                          ),
+                        ),
+                      )),
+                      Align(
+                        alignment: Alignment.bottomCenter,
+                        child: Container(
+                          width: double.infinity,
+                          decoration: BoxDecoration(
+                            color: lightBrown.withValues(alpha: 0.4),
+                            borderRadius: BorderRadius.only(
+                              bottomLeft: Radius.circular(8.r),
+                              bottomRight: Radius.circular(8.r),
+                            ),
+                          ),
+                          child: MyText(
+                            text: data.name,
+                            textAlign: TextAlign.center,
+                            color: textLight,
+                            size: 16.sp,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
                       ),
-                      child: MyText(text: data.name, textAlign: TextAlign.center, color: textLight, size: 16.sp,),
-                    ),
+                    ],
                   ),
-                ],
+                ),
               );
             },
-          )
-        ),
+          ),
+        )
       ],
     );
   }

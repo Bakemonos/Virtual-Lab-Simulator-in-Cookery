@@ -134,7 +134,6 @@ class AppController extends GetxController {
   // FoodMenuModel? typeSelected;
   final typeSelected = Rxn<FoodMenuModel>(); 
 
-
   //? HOLD INGREDIENTS INFORMATION 
   Rx<IngredientsModel> ingredientActionData = IngredientsModel.empty().obs;
   RxList<ActionsModel> actionHistory = <ActionsModel>[].obs;
@@ -247,8 +246,12 @@ class AppController extends GetxController {
     actionToggle.value  = false; //? HIDE ACTION
     actionListToggle.value = false; //? HIDE ACTION LIST
     toolListToggle.value = false; //? HIDE TOOL LIST
-    
-    currentActions.clear(); //?
+
+    //? EQUIPMENT
+    equipmentData.clear();
+    equipmentToggle.value = false; 
+
+    currentActions.clear();
     ingredientActionData.value = IngredientsModel.empty();
     ingredientDragDropData.value = IngredientsModel.empty();
   }

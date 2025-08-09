@@ -36,7 +36,6 @@ class _MySliderOptionPageState extends State<MySliderOptionPage> {
 
   @override
   void dispose() {
-    controller.submittedCocList.clear();
     _pageController.dispose();
     super.dispose();
   }
@@ -46,111 +45,146 @@ class _MySliderOptionPageState extends State<MySliderOptionPage> {
     return Scaffold(
       body: Stack(
         children: [
-          Column(
-            children: [
-              SizedBox(height: 24.h),
-              MyText(text: 'Achievements', size: 32.sp),
-              SizedBox(height: 16.h),
-              SizedBox(
-                height: 250.h,
-                child: Obx((){
-                  var submitted = controller.submittedCocList;
-                  if(controller.loader.value) {
-                    return loader();
-                  }
-
-                  return PageView.builder(
-                    controller: _pageController,
-                    itemCount: submitted.length,
-                    itemBuilder: (context, index) {
-                      final item = submitted[index];
-                      
-                      double difference = (_currentPage - index).abs();
-                      double scale = 1 - (difference * 0.3).clamp(0.0, 0.3);
-                      bool isSelected = selectedClass == item.id;
-
-                      return Transform.scale(
-                        scale: scale,
-                        child: GestureDetector(
-                          onTap: () {
-                            setState(() {
-                              controller.selectedDish.value = item;
-                              context.go(Routes.viewAchievement);
-                              selectedClass = item.id;
-                            });
-                          },
-                          child: Container(
-                            width: 250.w,
-                            margin: EdgeInsets.only(bottom: 24.h),
-                            decoration: BoxDecoration(
-                              color: isSelected ? lightBrown : darkBrown,
-                              borderRadius: BorderRadius.circular(12.r),
-                              boxShadow: [
-                                if (isSelected) BoxShadow(
-                                  color: lightBrown.withValues(alpha: 0.5),
-                                  blurRadius: 15,
-                                  spreadRadius: 1,
-                                ),
-                              ],
+          SizedBox(
+            width: double.infinity,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Obx(()=> controller.submittedCocList.isEmpty ? SizedBox.shrink() : Column(
+                  children: [
+                    SizedBox(height: 24.h),
+                    MyText(text: 'Achievements', size: 32.sp),
+                    SizedBox(height: 16.h),
+                  ],
+                )),
+                SizedBox(
+                  height: 250.h,
+                  child: Obx((){
+                    var submitted = controller.submittedCocList;
+                    if(controller.loader.value) {
+                      return loader();
+                    }
+            
+                    if(submitted.isEmpty){
+                      return Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          SizedBox(
+                            height: 220.h,
+                            width: 220.w,
+                            child: CachedNetworkImage(
+                              imageUrl: noData,
+                              placeholder: (context, url) => ShimmerSkeletonLoader(),
+                              errorWidget: (context, url, error) => Icon(Icons.error),
+                              fit: BoxFit.contain,
                             ),
-                            child: Padding(
-                              padding: EdgeInsets.only(right: 16.w,left: 16.w,top: 16.h,bottom: 4.h),
-                              child: Column(
-                                children: [
-                                  Expanded(
-                                    child: Container(
-                                      width: double.infinity,
-                                      decoration: BoxDecoration(
-                                        color: backgroundColor,
-                                        borderRadius: BorderRadius.circular(8.r),
-                                      ),
-                                      child: Padding(
-                                        padding: EdgeInsets.all(4.w),
-                                        child: Column(
-                                          spacing: 8.h,
-                                          mainAxisAlignment: MainAxisAlignment.center,
-                                          children: [
-                                            SizedBox(
-                                              height: 90.h,
-                                              width: 90.w,
-                                              child: CachedNetworkImage(
-                                                imageUrl: item.image,
-                                                placeholder: (context, url) => ShimmerSkeletonLoader(),
-                                                errorWidget: (context, url, error) => Icon(Icons.error),
-                                                fit: BoxFit.contain,
+                          ),
+                          SizedBox(
+                            width: 300.w,
+                            child: MyText(
+                              text: 'Looks empty here... time to whip up your first dish!',
+                              fontWeight: FontWeight.w400,
+                              size: 24.sp,
+                            ),
+                          )
+                        ],
+                      );
+                    }
+            
+                    return PageView.builder(
+                      controller: _pageController,
+                      itemCount: submitted.length,
+                      itemBuilder: (context, index) {
+                        final item = submitted[index];
+                        
+                        double difference = (_currentPage - index).abs();
+                        double scale = 1 - (difference * 0.3).clamp(0.0, 0.3);
+                        bool isSelected = selectedClass == item.id;
+            
+                        return Transform.scale(
+                          scale: scale,
+                          child: GestureDetector(
+                            onTap: () {
+                              setState(() {
+                                controller.selectedDish.value = item;
+                                context.go(Routes.viewAchievement);
+                                selectedClass = item.id;
+                              });
+                            },
+                            child: Container(
+                              width: 250.w,
+                              margin: EdgeInsets.only(bottom: 24.h),
+                              decoration: BoxDecoration(
+                                color: isSelected ? lightBrown : darkBrown,
+                                borderRadius: BorderRadius.circular(12.r),
+                                boxShadow: [
+                                  if (isSelected) BoxShadow(
+                                    color: lightBrown.withValues(alpha: 0.5),
+                                    blurRadius: 15,
+                                    spreadRadius: 1,
+                                  ),
+                                ],
+                              ),
+                              child: Padding(
+                                padding: EdgeInsets.only(right: 16.w,left: 16.w,top: 16.h,bottom: 4.h),
+                                child: Column(
+                                  children: [
+                                    Expanded(
+                                      child: Container(
+                                        width: double.infinity,
+                                        decoration: BoxDecoration(
+                                          color: backgroundColor,
+                                          borderRadius: BorderRadius.circular(8.r),
+                                        ),
+                                        child: Padding(
+                                          padding: EdgeInsets.all(4.w),
+                                          child: Column(
+                                            spacing: 8.h,
+                                            mainAxisAlignment: MainAxisAlignment.center,
+                                            children: [
+                                              SizedBox(
+                                                height: 90.h,
+                                                width: 90.w,
+                                                child: CachedNetworkImage(
+                                                  imageUrl: item.image,
+                                                  placeholder: (context, url) => ShimmerSkeletonLoader(),
+                                                  errorWidget: (context, url, error) => Icon(Icons.error),
+                                                  fit: BoxFit.contain,
+                                                ),
                                               ),
-                                            ),
-                                            Row(
-                                              mainAxisAlignment: MainAxisAlignment.center,
-                                              crossAxisAlignment: CrossAxisAlignment.end,
-                                              children: [ 
-                                                Icon(Icons.star,color: darkBrown,size: 28.w),
-                                                Icon(Icons.star,color: darkBrown,size: 36.w),
-                                                Icon(Icons.star,color: darkBrown,size: 28.w),
-                                              ],
-                                            ),
-                                            MyText(text: item.name, size: 20.sp,color: darkBrown),
-                                          ],
+                                              Row(
+                                                mainAxisAlignment: MainAxisAlignment.center,
+                                                crossAxisAlignment: CrossAxisAlignment.end,
+                                                children: [ 
+                                                  Icon(Icons.star,color: darkBrown,size: 28.w),
+                                                  Icon(Icons.star,color: darkBrown,size: 36.w),
+                                                  Icon(Icons.star,color: darkBrown,size: 28.w),
+                                                ],
+                                              ),
+                                              MyText(text: item.name, size: 20.sp,color: darkBrown),
+                                            ],
+                                          ),
                                         ),
                                       ),
                                     ),
-                                  ),
-                                  MyText(text: 'View',size: 18.sp,color: textLight),
-                                ],
+                                    MyText(text: 'View',size: 18.sp,color: textLight),
+                                  ],
+                                ),
                               ),
                             ),
                           ),
-                        ),
-                      );
-                    },
-                  );
-                })
-              ),
-            ],
+                        );
+                      },
+                    );
+                  })
+                ),
+              ],
+            ),
           ),
           controller.floatingButton(
             context: context,
             onTap: () {
+              controller.submittedCocList.clear();
               context.go(Routes.achievementOption);
             },
           ),

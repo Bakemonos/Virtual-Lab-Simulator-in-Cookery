@@ -72,43 +72,46 @@ class _MyProcessPageState extends State<MyProcessPage> {
             itemBuilder: (context, index) {
               var data = cookingEquipment[index];
         
-              return InkWell(
-                onTap: (){
-                  controller.changeToolToggler();
-                  controller.cookingToolData.value = data;
-                },
-                child: Stack(
-                  children: [
-                    AnimatedContainer(
-                      duration: Duration(milliseconds: 200),
-                      curve: Curves.easeInOut,
-                      alignment: Alignment.center,
-                      decoration: BoxDecoration(
-                        color: controller.cookingToolData.value == data ? lightGridColor : lightGridColor.withValues(alpha: 0.5),
-                        borderRadius: BorderRadius.circular(8.r),
-                      ),
-                      child: Padding(
-                        padding: EdgeInsets.all(8.w),
-                        child: CachedNetworkImage(
-                          imageUrl: data.image,
-                          placeholder: (context, url) => ShimmerSkeletonLoader(),
-                          errorWidget: (context, url, error) => Icon(Icons.error),
-                          fit: BoxFit.contain,
-                        ),
-                      ),
-                    ),
-                    Align(
-                      alignment: Alignment.bottomCenter,
-                      child: Container(
-                        width: double.infinity,
+              return Material(
+                color: Colors.transparent,
+                child: InkWell(
+                  onTap: (){
+                    controller.changeToolToggler();
+                    controller.cookingToolData.value = data;
+                  },
+                  child: Stack(
+                    children: [
+                      AnimatedContainer(
+                        duration: Duration(milliseconds: 200),
+                        curve: Curves.easeInOut,
+                        alignment: Alignment.center,
                         decoration: BoxDecoration(
-                          color: lightBrown.withValues(alpha: 0.4),
-                          borderRadius: BorderRadius.only(bottomLeft: Radius.circular(8.r), bottomRight: Radius.circular(8.r))
+                          color: controller.cookingToolData.value == data ? lightGridColor : lightGridColor.withValues(alpha: 0.5),
+                          borderRadius: BorderRadius.circular(8.r),
                         ),
-                        child: MyText(text: data.name, textAlign: TextAlign.center, color: textLight, size: 16.sp,),
+                        child: Padding(
+                          padding: EdgeInsets.all(8.w),
+                          child: CachedNetworkImage(
+                            imageUrl: data.image,
+                            placeholder: (context, url) => ShimmerSkeletonLoader(),
+                            errorWidget: (context, url, error) => Icon(Icons.error),
+                            fit: BoxFit.contain,
+                          ),
+                        ),
                       ),
-                    ),
-                  ],
+                      Align(
+                        alignment: Alignment.bottomCenter,
+                        child: Container(
+                          width: double.infinity,
+                          decoration: BoxDecoration(
+                            color: lightBrown.withValues(alpha: 0.4),
+                            borderRadius: BorderRadius.only(bottomLeft: Radius.circular(8.r), bottomRight: Radius.circular(8.r))
+                          ),
+                          child: MyText(text: data.name, textAlign: TextAlign.center, color: textLight, size: 16.sp,),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               );
             },
@@ -121,57 +124,60 @@ class _MyProcessPageState extends State<MyProcessPage> {
   Widget processUI() {
     return Column(
       children: [
-        InkWell(
-          onTap: controller.changeToolToggler,
-          child: DragTarget<IngredientsModel>(
-            onWillAcceptWithDetails: (details) => details.data.dragKey == 'submit' && details.data.actions.isEmpty,
-            onAcceptWithDetails: (details) {
-              controller.acceptIngredient(
-                type: controller.typeSelected.value!.menu ?? '', 
-                studentId: controller.userData.value.id!,
-                take: 'take_one',
-              );
-              controller.equipmentData.add(controller.cookingToolData.value); //TODO ADD EQUIPMENT
-            },
-            builder: (context, candidateData, rejectedData){
-              return Column(
-                children: [
-                  SizedBox(
-                    width: 200.w, height: 200.h,
-                    child: Stack(
-                      children: [
-                        Container(
-                          height: double.infinity,
-                          width: double.infinity,
-                          decoration: BoxDecoration(
-                            color: candidateData.isEmpty ? darkBrown.withValues(alpha: 0.6) : greenLighter.withValues(alpha: 0.8) ,
-                            borderRadius: BorderRadius.circular(8.r)
-                          ),
-                          child: Padding(
-                            padding: EdgeInsets.all(24.w),
-                            child: CachedNetworkImage(
-                              imageUrl: controller.cookingToolData.value.image,
-                              placeholder: (context, url) => ShimmerSkeletonLoader(),
-                              errorWidget: (context, url, error) => Icon(Icons.error),
-                              fit: BoxFit.contain,
+        DragTarget<IngredientsModel>(
+          onWillAcceptWithDetails: (details) => details.data.dragKey == 'submit' && details.data.actions.isEmpty,
+          onAcceptWithDetails: (details) {
+            controller.acceptIngredient(
+              type: controller.typeSelected.value!.menu ?? '', 
+              studentId: controller.userData.value.id!,
+              take: 'take_one',
+            );
+            controller.equipmentData.add(controller.cookingToolData.value); //TODO ADD EQUIPMENT
+          },
+          builder: (context, candidateData, rejectedData){
+            return Column(
+              children: [
+                Material(
+                  color: Colors.transparent,
+                  child: InkWell(
+                    onTap: controller.changeToolToggler,
+                    child: SizedBox(
+                      width: 200.w, height: 200.h,
+                      child: Stack(
+                        children: [
+                          Container(
+                            height: double.infinity,
+                            width: double.infinity,
+                            decoration: BoxDecoration(
+                              color: candidateData.isEmpty ? darkBrown.withValues(alpha: 0.6) : greenLighter.withValues(alpha: 0.8) ,
+                              borderRadius: BorderRadius.circular(8.r)
+                            ),
+                            child: Padding(
+                              padding: EdgeInsets.all(24.w),
+                              child: CachedNetworkImage(
+                                imageUrl: controller.cookingToolData.value.image,
+                                placeholder: (context, url) => ShimmerSkeletonLoader(),
+                                errorWidget: (context, url, error) => Icon(Icons.error),
+                                fit: BoxFit.contain,
+                              ),
                             ),
                           ),
-                        ),
-                        Align(
-                          alignment: Alignment.bottomRight,
-                          child: IconButton(
-                            onPressed: controller.changeToolToggler, 
-                            icon: Icon(Icons.repeat, color: textLight, size: 40.w),
+                          Align(
+                            alignment: Alignment.bottomRight,
+                            child: IconButton(
+                              onPressed: controller.changeToolToggler, 
+                              icon: Icon(Icons.repeat, color: textLight, size: 40.w),
+                            ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   ),
-                  MyText(text: controller.cookingToolData.value.name, size: 16.sp, fontWeight: FontWeight.w500, color: textLight)
-                ],
-              );
-            },
-          ),
+                ),
+                MyText(text: controller.cookingToolData.value.name, size: 16.sp, fontWeight: FontWeight.w500, color: textLight)
+              ],
+            );
+          },
         ),
         const Spacer(),
         Row(
