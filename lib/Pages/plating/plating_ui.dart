@@ -1,4 +1,3 @@
-import 'dart:math';
 import 'dart:typed_data';
 import 'dart:ui' as ui;
 import 'package:cached_network_image/cached_network_image.dart';
@@ -12,6 +11,7 @@ import 'package:virtual_lab/Json/coc1.dart';
 import 'package:virtual_lab/components/custom_svg.dart';
 import 'package:virtual_lab/components/custom_text.dart';
 import 'package:virtual_lab/controllers/controller.dart';
+import 'package:virtual_lab/json/equipments.dart';
 import 'package:virtual_lab/services/services.dart';
 import 'package:virtual_lab/utils/properties.dart';
 import 'package:virtual_lab/utils/routes.dart';
@@ -31,83 +31,9 @@ class _MyPlatingUIState extends State<MyPlatingUI> {
   Uint8List? capturedImageBytes;
 
   @override
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      final renderBox = _repaintKey.currentContext?.findRenderObject() as RenderBox?;
-      if (renderBox != null && mounted) {
-        final size = renderBox.size;
-        _generateAllItems(
-          containerWidth: size.width,
-          containerHeight: size.height,
-        );
-      }
-    });
-  }
-
-  @override
   void dispose() {
     controller.platingOptionToggle.value = false;
     super.dispose();
-  }
-
-  void _generateAllItems({required double containerWidth, required double containerHeight}) {
-    final rand = Random();
-    const double paddingX = 10;
-    const double paddingY = 10;
-    final double itemWidth = 80.w;
-    final double itemHeight = 80.h;
-
-    final double leftBaseX = paddingX;
-    final double rightBaseX = containerWidth - itemWidth - paddingX;
-
-    final List<_DraggableItem> newItems = [];
-
-    int totalItems = max(ingredientsCOC1.length, controller.submittedCocList.length);
-    double currentY = paddingY;
-
-    for (int i = 0; i < totalItems; i++) {
-      if (i < ingredientsCOC1.length) {
-        final leftItem = ingredientsCOC1[i];
-        newItems.add(
-          _DraggableItem(
-            name: leftItem.name,
-            imageUrl: leftItem.path,
-            offset: Offset(
-              leftBaseX + rand.nextDouble() * 5, 
-              currentY + rand.nextDouble() * 5,
-            ),
-            side: 'left',
-          ),
-        );
-      }
-
-      if (i < controller.submittedCocList.length) {
-        final rightItem = controller.submittedCocList[i];
-        newItems.add(
-          _DraggableItem(
-            name: rightItem.name,
-            imageUrl: rightItem.image,
-            offset: Offset(
-              rightBaseX + rand.nextDouble() * 5,
-              currentY + rand.nextDouble() * 5,
-            ),
-            side: 'right',
-          ),
-        );
-      }
-
-      currentY += itemHeight + paddingY;
-
-      // Clamp to container height
-      if (currentY + itemHeight > containerHeight) {
-        currentY = paddingY + rand.nextDouble() * 10; // wrap and offset
-      }
-    }
-
-    setState(() {
-      items = newItems;
-    });
   }
 
   Future<void> _capturePlatingImage() async {
@@ -156,12 +82,26 @@ class _MyPlatingUIState extends State<MyPlatingUI> {
                         width: double.infinity,
                         height: 500.h,
                         decoration: controller.designUI(),
-                        child: Stack(
-                          children: items.asMap().entries.map((entry) => _buildDraggable(entry.key)).toList(),
+                        child: DragTarget<_DraggableItem>(
+                          onAcceptWithDetails: (details) {
+                            final renderObject = _repaintKey.currentContext?.findRenderObject() as RenderBox?;
+                            if (renderObject != null) {
+                              final localPos = renderObject.globalToLocal(details.offset);
+                              setState(() {
+                                items.add(
+                                  details.data.copyWith(offset: localPos),
+                                );
+                              });
+                            }
+                          },
+                          builder: (context, candidateData, rejectedData) {
+                            return Stack(
+                              children: items.asMap().entries.map((entry) => _buildDraggable(entry.key)).toList(),
+                            );
+                          },
                         ),
                       );
                     },
-
                   ),
                 ),
               ),
@@ -170,7 +110,7 @@ class _MyPlatingUIState extends State<MyPlatingUI> {
               alignment: Alignment.bottomCenter,
               child: Padding(
                 padding: EdgeInsets.all(24.w),
-                child: Obx(()=> controller.platingOptionToggle.value ? platingOption(context) : platingMenu(context))
+                child: Obx(() => controller.platingOptionToggle.value ? platingOption(context) : platingMenu(context)),
               ),
             ),
           ],
@@ -209,21 +149,34 @@ class _MyPlatingUIState extends State<MyPlatingUI> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             controller.repeatedIconButton(
-              label: 'Plates',
-              path: equipment, 
-              onPressed: controller.platingOptionToggler,
-            ),
-            controller.repeatedIconButton(
-              label: 'Submit',
-              path: plating, 
-              onPressed: () async => await submitPlating(context),
+              label: 'Garnish',
+              path: garnish,
+              onPressed: () {
+                controller.selectedOption.value = 'garnish';
+                controller.platingOptionToggler();
+              },
             ),
             controller.repeatedIconButton(
               label: 'Dish',
-              path: equipment, 
-              onPressed: controller.platingOptionToggler,
+              path: dish,
+              onPressed: (){
+                controller.selectedOption.value = 'dish';
+                controller.platingOptionToggler();
+              },
             ),
-            
+            controller.repeatedIconButton(
+              label: 'Utilities',
+              path: dish,
+              onPressed: (){
+                controller.selectedOption.value = 'utilities';
+                controller.platingOptionToggler();
+              },
+            ),
+            controller.repeatedIconButton(
+              label: 'Submit',
+              path: plating,
+              onPressed: () async => await submitPlating(context),
+            ),
           ],
         ),
       ],
@@ -231,6 +184,20 @@ class _MyPlatingUIState extends State<MyPlatingUI> {
   }
 
   Widget platingOption(BuildContext context) {
+    final List<dynamic> sourceList;
+    
+    switch(controller.selectedOption.value){
+      case 'garnish': 
+        sourceList = ingredientsCOC1;
+        break;
+      case 'utilities': 
+        sourceList = utilities;
+        break;
+      default: 
+        sourceList = controller.submittedCocList;
+        break;
+    }
+
     return SizedBox(
       height: 80.h,
       child: Row(
@@ -246,7 +213,7 @@ class _MyPlatingUIState extends State<MyPlatingUI> {
                     if (states.contains(WidgetState.pressed)) {
                       return Colors.brown.withValues(alpha: 0.2);
                     }
-                    return backgroundColor.withValues(alpha: 0.8); 
+                    return backgroundColor.withValues(alpha: 0.8);
                   }),
                   shape: WidgetStateProperty.all<RoundedRectangleBorder>(
                     RoundedRectangleBorder(
@@ -266,7 +233,7 @@ class _MyPlatingUIState extends State<MyPlatingUI> {
                     fit: BoxFit.contain,
                   ),
                 ),
-                onPressed: controller.platingOptionToggler
+                onPressed: controller.platingOptionToggler,
               ),
             ),
           ),
@@ -274,7 +241,7 @@ class _MyPlatingUIState extends State<MyPlatingUI> {
             child: GridView.builder(
               padding: EdgeInsets.zero,
               scrollDirection: Axis.horizontal,
-              itemCount: ingredientsCOC1.length,
+              itemCount: sourceList.length,
               physics: const AlwaysScrollableScrollPhysics(),
               gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 1,
@@ -282,47 +249,63 @@ class _MyPlatingUIState extends State<MyPlatingUI> {
                 mainAxisSpacing: 8,
               ),
               itemBuilder: (context, index) {
-                var data = ingredientsCOC1[index];
-          
-                return Stack(
-                  children: [
-                    Container(
-                      alignment: Alignment.center,
-                      decoration: BoxDecoration(
-                        color: lightGridColor,
-                        borderRadius: BorderRadius.circular(8.r),
-                      ),
-                      child: Padding(
-                        padding: EdgeInsets.all(8.w),
-                        child: CachedNetworkImage(
-                          imageUrl: data.path,
-                          placeholder: (context, url) => ShimmerSkeletonLoader(),
-                          errorWidget: (context, url, error) => const Icon(Icons.error),
-                          fit: BoxFit.contain,
-                        ),
-                      ),
+                var data = sourceList[index];
+
+                return LongPressDraggable<_DraggableItem>(
+                  data: _DraggableItem(
+                    name: data.name,
+                    imageUrl: data.image,
+                    offset: Offset.zero,
+                    side: controller.selectedOption.value,
+                  ),
+                  feedback: SizedBox(
+                    width: 80.w,
+                    height: 80.h,
+                    child: CachedNetworkImage(
+                      imageUrl: data.image,
+                      placeholder: (context, url) => ShimmerSkeletonLoader(),
+                      fit: BoxFit.contain,
                     ),
-                    Align(
-                      alignment: Alignment.bottomCenter,
-                      child: Container(
-                        width: double.infinity,
+                  ),
+                  child: Stack(
+                    children: [
+                      Container(
+                        alignment: Alignment.center,
                         decoration: BoxDecoration(
-                          color: lightBrown.withValues(alpha: 0.4),
-                          borderRadius: BorderRadius.only(
-                            bottomLeft: Radius.circular(8.r),
-                            bottomRight: Radius.circular(8.r),
+                          color: lightGridColor,
+                          borderRadius: BorderRadius.circular(8.r),
+                        ),
+                        child: Padding(
+                          padding: EdgeInsets.all(8.w),
+                          child: CachedNetworkImage(
+                            imageUrl: data.image,
+                            placeholder: (context, url) => ShimmerSkeletonLoader(),
+                            fit: BoxFit.contain,
                           ),
                         ),
-                        child: MyText(
-                          text: data.name,
-                          textAlign: TextAlign.center,
-                          color: textLight,
-                          size: 16.sp,
-                          overflow: TextOverflow.ellipsis,
+                      ),
+                      Align(
+                        alignment: Alignment.bottomCenter,
+                        child: Container(
+                          width: double.infinity,
+                          decoration: BoxDecoration(
+                            color: lightBrown.withValues(alpha: 0.4),
+                            borderRadius: BorderRadius.only(
+                              bottomLeft: Radius.circular(8.r),
+                              bottomRight: Radius.circular(8.r),
+                            ),
+                          ),
+                          child: MyText(
+                            text: data.name,
+                            textAlign: TextAlign.center,
+                            color: textLight,
+                            size: 16.sp,
+                            overflow: TextOverflow.ellipsis,
+                          ),
                         ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 );
               },
             ),
@@ -368,18 +351,51 @@ class _MyPlatingUIState extends State<MyPlatingUI> {
   }
 
   Widget _buildImage(_DraggableItem item) {
-    return SizedBox(
-      width: 80.w,
-      height: 80.h,
-      child: CachedNetworkImage(
-        imageUrl: item.imageUrl,
-        placeholder: (context, url) => const ShimmerLightLoader(),
-        errorWidget: (context, url, error) => const Icon(Icons.error),
-        fit: BoxFit.contain,
+    return InkWell(
+      onTapDown: (details) async {
+        final menuItems = <PopupMenuEntry<String>>[];
+
+        if (items.contains(item)) {
+          menuItems.add(
+            PopupMenuItem(
+              value: 'remove',
+              child: MyText(text: 'Remove', size: 14.sp),
+            ),
+          );
+        }
+
+        if (menuItems.isEmpty) return; 
+
+        final selected = await showMenu(
+          context: context,
+          position: RelativeRect.fromLTRB(
+            details.globalPosition.dx,
+            details.globalPosition.dy,
+            details.globalPosition.dx,
+            details.globalPosition.dy,
+          ),
+          items: menuItems,
+        );
+
+        if (selected == 'remove') {
+          setState(() {
+            items.remove(item);
+          });
+        }
+      },
+      child: SizedBox(
+        width: 80.w,
+        height: 80.h,
+        child: CachedNetworkImage(
+          imageUrl: item.imageUrl,
+          placeholder: (context, url) => const ShimmerLightLoader(),
+          errorWidget: (context, url, error) => const Icon(Icons.error),
+          fit: BoxFit.contain,
+        ),
       ),
     );
   }
-  
+
   Future<void> submitPlating(BuildContext context) async {
     await _capturePlatingImage();
     if (capturedImageBytes != null && context.mounted) {
@@ -392,7 +408,7 @@ class _MyPlatingUIState extends State<MyPlatingUI> {
       if (context.mounted) context.pop();
       if (uploadedUrl != null) {
         controller.platingImageUrl.value = uploadedUrl;
-                        
+
         if (context.mounted) {
           showDialog(
             context: context,
@@ -437,8 +453,8 @@ class _MyPlatingUIState extends State<MyPlatingUI> {
 class _DraggableItem {
   final String name;
   final String imageUrl;
-  Offset offset;
   final String side;
+  final Offset offset;
 
   _DraggableItem({
     required this.name,

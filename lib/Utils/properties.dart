@@ -66,3 +66,5 @@ const String musicOff = "assets/icons/music_off.svg";
 const String equipment = "https://res.cloudinary.com/dgvi2di6t/image/upload/v1754402329/equipment_ioey5d.png";
 const String plating = "https://res.cloudinary.com/dgvi2di6t/image/upload/v1754402328/plating_jcxuar.png";
 const String noData = 'https://res.cloudinary.com/dgvi2di6t/image/upload/v1754735616/no_data_orpctv.png';
+const String garnish = 'https://res.cloudinary.com/dgvi2di6t/image/upload/v1754746207/garnish_qnujlk.png';
+const String dish = 'https://res.cloudinary.com/dgvi2di6t/image/upload/v1754746357/dish_vnnf54.png';

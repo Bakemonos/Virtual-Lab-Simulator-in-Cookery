@@ -137,6 +137,9 @@ class AppController extends GetxController {
   //? EQUIPMENTS 
   RxList<EquipmentsModel> equipmentData = <EquipmentsModel>[].obs;
   Rx<EquipmentsModel> cookingToolData = cookingEquipment[0].obs;
+
+  var selectedOption = 'plates'.obs;
+
   
   //! METHODS ---------------------------------------------------------------------------------------------------------------
 
@@ -164,7 +167,7 @@ class AppController extends GetxController {
 
     final updatedIngredient = IngredientsModel(
       name: ingredient.name,
-      path: ingredient.path,
+      image: ingredient.image,
       category: ingredient.category,
       actions: selectedActions.toList(),
     );
@@ -189,7 +192,7 @@ class AppController extends GetxController {
     if (currentIngredient.name.isEmpty) return;
 
     preparedIngredients.removeWhere((i) =>
-      i.name == currentIngredient.name && i.path == currentIngredient.path);
+      i.name == currentIngredient.name && i.image == currentIngredient.image);
 
     preparedIngredients.add(currentIngredient.copyWith());
 

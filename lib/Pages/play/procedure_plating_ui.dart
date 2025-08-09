@@ -84,7 +84,7 @@ class _MyProcedurePlatingPageState extends State<MyProcedurePlatingPage> with Ti
               builder: (context, candidateData, rejectedData) {
                 return Obx(() {
                   final ingredient = controller.ingredientDragDropData.value;
-                  final hasIngredient = ingredient.path.isNotEmpty;
+                  final hasIngredient = ingredient.image.isNotEmpty;
 
                   return Container(
                     decoration: controller.designUI(
@@ -108,7 +108,7 @@ class _MyProcedurePlatingPageState extends State<MyProcedurePlatingPage> with Ti
                                         Draggable<IngredientsModel>(
                                           data: IngredientsModel(
                                             name: ingredient.name,
-                                            path: ingredient.path,
+                                            image: ingredient.image,
                                             category: ingredient.category,
                                             actions: ingredient.actions,
                                             dragKey: 'submit',
@@ -122,7 +122,7 @@ class _MyProcedurePlatingPageState extends State<MyProcedurePlatingPage> with Ti
                                             child: Padding(
                                               padding: EdgeInsets.all(8.w),
                                               child: CachedNetworkImage(
-                                                imageUrl: ingredient.path,
+                                                imageUrl: ingredient.image,
                                                 placeholder: (context, url) => const ShimmerSkeletonLoader(),
                                                 errorWidget: (context, url, error) => const Icon(Icons.error),
                                                 fit: BoxFit.contain,
@@ -136,7 +136,7 @@ class _MyProcedurePlatingPageState extends State<MyProcedurePlatingPage> with Ti
                                               height: 80.h,
                                               width: 80.w,
                                               child: CachedNetworkImage(
-                                                imageUrl: ingredient.path,
+                                                imageUrl: ingredient.image,
                                                 placeholder: (context, url) => const ShimmerSkeletonLoader(),
                                                 errorWidget: (context, url, error) => const Icon(Icons.error),
                                                 fit: BoxFit.contain,
@@ -182,7 +182,7 @@ class _MyProcedurePlatingPageState extends State<MyProcedurePlatingPage> with Ti
 
                           //? TOOL OR ACTION LIST
                           Obx(() {
-                            final hasIngredient = controller.ingredientDragDropData.value.path.isNotEmpty;
+                            final hasIngredient = controller.ingredientDragDropData.value.image.isNotEmpty;
                             if (!hasIngredient) return const SizedBox();
                             if (controller.toolListToggle.value) return toolListUI();
                             if (controller.actionListToggle.value) return actionListUI();
@@ -293,7 +293,6 @@ class _MyProcedurePlatingPageState extends State<MyProcedurePlatingPage> with Ti
                     if (selected == 'equip') {
                       if (!controller.equipmentData.contains(data)) {
                         controller.equipmentData.add(data);
-                        // debugPrint('\nEQUIPMENT : ${controller.equipmentData.map((e)=> e.name).toList()}\n');
                       }
                     }
                     if (selected == 'unequip') {
@@ -410,8 +409,7 @@ class _MyProcedurePlatingPageState extends State<MyProcedurePlatingPage> with Ti
                 label: 'Plating',
                 path: plating, 
                 onPressed: () {
-                  //TODO HERE
-                  if (!requireDish) {
+                  if (requireDish) {
                       context.push(Routes.plating);
                     } else {
                       controller.showFloatingSnackbar(
@@ -548,11 +546,9 @@ class _MyProcedurePlatingPageState extends State<MyProcedurePlatingPage> with Ti
                               width: 100.w,
                               height: 100.h,
                               child: CachedNetworkImage(
-                                imageUrl: ingredient.path,
-                                placeholder: (context, url) =>
-                                    ShimmerSkeletonLoader(),
-                                errorWidget: (context, url, error) =>
-                                    Icon(Icons.error),
+                                imageUrl: ingredient.image,
+                                placeholder: (context, url) => ShimmerSkeletonLoader(),
+                                errorWidget: (context, url, error) => Icon(Icons.error),
                                 fit: BoxFit.contain,
                               ),
                             ),

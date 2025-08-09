@@ -257,7 +257,7 @@ class _MyProcessPageState extends State<MyProcessPage> {
                     child: Padding(
                       padding: EdgeInsets.all(8.w),
                       child: CachedNetworkImage(
-                        imageUrl: data.path,
+                        imageUrl: data.image,
                         placeholder: (context, url) => ShimmerSkeletonLoader(),
                         errorWidget: (context, url, error) => Icon(Icons.error),
                         fit: BoxFit.contain,
@@ -282,7 +282,7 @@ class _MyProcessPageState extends State<MyProcessPage> {
                       child: Padding(
                         padding: EdgeInsets.all(8.w),
                         child: CachedNetworkImage(
-                          imageUrl: data.path,
+                          imageUrl: data.image,
                           placeholder: (context, url) => ShimmerSkeletonLoader(),
                           errorWidget: (context, url, error) => Icon(Icons.error),
                           fit: BoxFit.contain,

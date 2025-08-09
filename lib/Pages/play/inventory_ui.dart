@@ -167,7 +167,7 @@ class _MyInventoryPageState extends State<MyInventoryPage> {
                 return LongPressDraggable(
                   data: IngredientsModel(
                     name: data.name,
-                    path: data.path,
+                    image: data.image,
                     category: data.category,
                     actions: data.actions,
                     dragKey: 'procedure', 
@@ -177,7 +177,7 @@ class _MyInventoryPageState extends State<MyInventoryPage> {
                     child: Padding(
                       padding: EdgeInsets.all(8.w),
                       child: CachedNetworkImage(
-                        imageUrl: data.path,
+                        imageUrl: data.image,
                         placeholder: (context, url) => ShimmerSkeletonLoader(),
                         errorWidget: (context, url, error) =>
                             Icon(Icons.error),
@@ -205,7 +205,7 @@ class _MyInventoryPageState extends State<MyInventoryPage> {
                         child: Padding(
                           padding: EdgeInsets.all(8.w),
                           child: CachedNetworkImage(
-                            imageUrl: data.path,
+                            imageUrl: data.image,
                             placeholder: (context, url) => ShimmerSkeletonLoader(),
                             errorWidget: (context, url, error) =>
                                 Icon(Icons.error),
@@ -283,7 +283,7 @@ class _MyInventoryPageState extends State<MyInventoryPage> {
                       child: Padding(
                         padding: EdgeInsets.all(8.w),
                         child: CachedNetworkImage(
-                          imageUrl: data.path,
+                          imageUrl: data.image,
                           placeholder: (context, url) => ShimmerSkeletonLoader(),
                           errorWidget: (context, url, error) =>
                               Icon(Icons.error),

@@ -112,8 +112,8 @@ class _MyIngredientsSelectionPageState extends State<MyIngredientsSelectionPage>
                                           ),
                                           child: Padding(
                                             padding: EdgeInsets.all(8.w),
-                                            child: data.path == ''? SizedBox() : CachedNetworkImage(
-                                              imageUrl: data.path,
+                                            child: data.image == ''? SizedBox() : CachedNetworkImage(
+                                              imageUrl: data.image,
                                               placeholder: (context, url) => ShimmerSkeletonLoader(),
                                               errorWidget: (context, url, error) => Icon(Icons.error),
                                               fit: BoxFit.contain,

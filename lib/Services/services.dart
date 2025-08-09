@@ -216,7 +216,7 @@ class ApiServices extends GetxController {
           controller.ingredientsData.add(
             IngredientsModel(
               name: ingredientsCOC1[i].name,
-              path: ingredientsCOC1[i].path,
+              image: ingredientsCOC1[i].image,
               category: ingredientsCOC1[i].category,
             ),
           );
@@ -284,7 +284,7 @@ class ApiServices extends GetxController {
       if (ingredients.any((i) => i.name.isEmpty)) {
         debugPrint('Found ingredient with empty name!');
         for (var i in ingredients) {
-          debugPrint('${i.name} | ${i.category} | ${i.path}');
+          debugPrint('${i.name} | ${i.category} | ${i.image}');
         }
       }
 
@@ -305,29 +305,29 @@ class ApiServices extends GetxController {
 
       debugPrint('\nDATA : ${data.toJson()}\n');
 
-      // final response = await post('coc/create', data.toJson());
+      final response = await post('coc/create', data.toJson());
 
-      // if(response.success! && context.mounted){
-      //   debugPrint('SUCCESS : ${response.message}');
-      //   controller.submitResetErrorHandler();
-      //   controller.preparedIngredients.clear();
-      //   // preparedData.value = InventoryModel.empty();
-      //   if(context.mounted){
-      //     quickAlertDialog(
-      //       context: context,
-      //       type: QuickAlertType.success,
-      //       title: 'Submitted Successful!',
-      //       message: response.message.toString(),
-      //       onConfirmBtnTap: (){
-      //         context.pop();
-      //         context.pop();
-      //       }
-      //     );
-      //   }
-      // }{
-      //   debugPrint('FAILED : ${response.message}');
-      //   controller.preparedIngredients.clear();
-      // }
+      if(response.success! && context.mounted){
+        debugPrint('SUCCESS : ${response.message}');
+        controller.submitResetErrorHandler();
+        controller.preparedIngredients.clear();
+        // preparedData.value = InventoryModel.empty();
+        if(context.mounted){
+          quickAlertDialog(
+            context: context,
+            type: QuickAlertType.success,
+            title: 'Submitted Successful!',
+            message: response.message.toString(),
+            onConfirmBtnTap: (){
+              context.pop();
+              context.pop();
+            }
+          );
+        }
+      }{
+        debugPrint('FAILED : ${response.message}');
+        controller.preparedIngredients.clear();
+      }
 
     } catch (e, t) {
       controller.loader.value = false;

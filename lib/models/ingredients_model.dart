@@ -102,7 +102,7 @@ class InventoryModel {
 class IngredientsModel {
   final String? dragKey;
   final String name;
-  final String path;
+  final String image;
   final String category;
   final List<ActionsModel> actions;
   final EquipmentsModel? used;
@@ -110,7 +110,7 @@ class IngredientsModel {
   IngredientsModel({
     this.dragKey,
     required this.name,
-    required this.path,
+    required this.image,
     required this.category,
     this.actions = const [],
     this.used,
@@ -119,7 +119,7 @@ class IngredientsModel {
   factory IngredientsModel.fromJson(Map<String, dynamic> map) {
     return IngredientsModel(
       name: map['name'] ?? '',
-      path: map['path'] ?? '',
+      image: map['path'] ?? '',
       category: map['category'] ?? '',
       actions: map['actions'] != null ? (map['actions'] as List).map((item) => ActionsModel.fromJson(item)).toList() : [],
       dragKey: map['dragKey'],
@@ -130,7 +130,7 @@ class IngredientsModel {
   Map<String, dynamic> toJson() {
     return {
       'name': name,
-      'path': path,
+      'path': image,
       'category': category,
       'actions': actions.map((item) => item.toJson()).toList(),
       'used': used?.toJson(),
@@ -141,7 +141,7 @@ class IngredientsModel {
     return IngredientsModel(
       dragKey: '',
       name: '',
-      path: '',
+      image: '',
       category: '',
       actions: [],
       used: null,
@@ -151,7 +151,7 @@ class IngredientsModel {
   IngredientsModel copyWith({
     String? dragKey,
     String? name,
-    String? path,
+    String? image,
     String? category,
     List<ActionsModel>? actions,
     EquipmentsModel? used,
@@ -159,7 +159,7 @@ class IngredientsModel {
     return IngredientsModel(
       dragKey: dragKey ?? this.dragKey,
       name: name ?? this.name,
-      path: path ?? this.path,
+      image: image ?? this.image,
       category: category ?? this.category,
       actions: actions != null
           ? actions.map((a) => a.copyWith()).toList()
