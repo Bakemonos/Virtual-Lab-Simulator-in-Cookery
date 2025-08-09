@@ -26,7 +26,9 @@ class ApiServices extends GetxController {
 
   final String apiKey = dotenv.env['API_URL']!;
 
-  //? GET
+
+  //* API HERE ---------------------------------------------------------------------------------------------------------------------
+
   Future<ApiResponse> get(String endpoint) async {
     print('\nENDPOINT : $apiKey/$endpoint\n');
 
@@ -52,7 +54,6 @@ class ApiServices extends GetxController {
     }
   }
 
-  //? POST
   Future<ApiResponse> post(String endpoint, Map<String, dynamic> data) async {
     print('\nENDPOINT : $apiKey/$endpoint\n');
 
@@ -68,6 +69,43 @@ class ApiServices extends GetxController {
       throw Exception('POST failed: ${response.body}');
     }
   }
+
+
+
+  //* CLOUDINARY ---------------------------------------------------------------------------------------------------------------------
+
+  Future<String?> uploadImageToCloudinary(Uint8List imageBytes) async {
+    final String cloudName = dotenv.env['CLOUD_NAME']!;
+    const String uploadPreset = 'upload_plating';
+
+    final uri = Uri.parse('https://api.cloudinary.com/v1_1/$cloudName/image/upload');
+
+    final request = http.MultipartRequest('POST', uri)
+      ..fields['upload_preset'] = uploadPreset
+      ..files.add(
+        http.MultipartFile.fromBytes(
+          'file',
+          imageBytes,
+          filename: 'screenshot.png',
+          contentType: MediaType('image', 'png'),
+        ),
+      );
+
+    final response = await request.send();
+    final responseData = await response.stream.bytesToString();
+
+    if (response.statusCode == 200) {
+      final data = json.decode(responseData);
+      return data['secure_url'];
+    } else {
+      debugPrint('Cloudinary upload failed: ${response.statusCode}');
+      return null;
+    }
+  }
+
+
+
+  //* SERVICES ---------------------------------------------------------------------------------------------------------------------
 
   Future<void> signup(BuildContext context) async {
     controller.loader.value = true;
@@ -262,49 +300,34 @@ class ApiServices extends GetxController {
         image: matchedDish?['image'] ?? '', 
         studentId: studentId!, 
         ingredients: controller.preparedData.value.ingredients, 
-        // equipments: equipmentData,
-        equipments: [
-          EquipmentsModel(
-            name: 'pot', 
-            image: 'pot.url',
-          ),
-          EquipmentsModel(
-            name: 'hair net', 
-            image: 'hair.url',
-          ),
-          EquipmentsModel(
-            name: 'gloves', 
-            image: 'gloves.url',
-          ),
-          EquipmentsModel(
-            name: 'apron', 
-            image: 'apron.url',
-          ),
-        ],
+        equipments: controller.equipmentData,
       );
 
       debugPrint('\nDATA : ${data.toJson()}\n');
 
-      final response = await post('coc/create', data.toJson());
+      // final response = await post('coc/create', data.toJson());
 
-      if(response.success! && context.mounted){
-        debugPrint('SUCCESS : ${response.message}');
-        context.pop();
-        controller.submitResetErrorHandler();
-        controller.preparedIngredients.clear();
-        // preparedData.value = InventoryModel.empty();
-        if(context.mounted){
-          quickAlertDialog(
-            context: context,
-            type: QuickAlertType.success,
-            title: 'Submitted Successful!',
-            message: response.message.toString(),
-          );
-        }
-      }{
-        debugPrint('FAILED : ${response.message}');
-        controller.preparedIngredients.clear();
-      }
+      // if(response.success! && context.mounted){
+      //   debugPrint('SUCCESS : ${response.message}');
+      //   controller.submitResetErrorHandler();
+      //   controller.preparedIngredients.clear();
+      //   // preparedData.value = InventoryModel.empty();
+      //   if(context.mounted){
+      //     quickAlertDialog(
+      //       context: context,
+      //       type: QuickAlertType.success,
+      //       title: 'Submitted Successful!',
+      //       message: response.message.toString(),
+      //       onConfirmBtnTap: (){
+      //         context.pop();
+      //         context.pop();
+      //       }
+      //     );
+      //   }
+      // }{
+      //   debugPrint('FAILED : ${response.message}');
+      //   controller.preparedIngredients.clear();
+      // }
 
     } catch (e, t) {
       controller.loader.value = false;
@@ -459,33 +482,6 @@ class ApiServices extends GetxController {
     }
   }
 
-  Future<String?> uploadImageToCloudinary(Uint8List imageBytes) async {
-    final String cloudName = dotenv.env['CLOUD_NAME']!;
-    const String uploadPreset = 'upload_plating';
-
-    final uri = Uri.parse('https://api.cloudinary.com/v1_1/$cloudName/image/upload');
-
-    final request = http.MultipartRequest('POST', uri)
-      ..fields['upload_preset'] = uploadPreset
-      ..files.add(
-        http.MultipartFile.fromBytes(
-          'file',
-          imageBytes,
-          filename: 'screenshot.png',
-          contentType: MediaType('image', 'png'),
-        ),
-      );
-
-    final response = await request.send();
-    final responseData = await response.stream.bytesToString();
-
-    if (response.statusCode == 200) {
-      final data = json.decode(responseData);
-      return data['secure_url'];
-    } else {
-      debugPrint('Cloudinary upload failed: ${response.statusCode}');
-      return null;
-    }
-  }
+  
 
 }

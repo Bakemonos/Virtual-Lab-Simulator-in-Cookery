@@ -13,7 +13,7 @@ List<ToolType> getToolsForAction(ActionType action) {
     case ActionType.marinate:
       return [ToolType.bowl, ToolType.container, ToolType.ziplocBag]; 
     case ActionType.slice:
-      return [ToolType.knife, ToolType.mandolineSlicer]; 
+      return [ToolType.knife, ToolType.mandolineSlicer, ToolType.breadSlicer]; 
     case ActionType.blend:
       return [ToolType.blender, ToolType.foodProcessor];
     case ActionType.grind:

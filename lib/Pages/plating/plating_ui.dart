@@ -5,6 +5,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/state_manager.dart';
 import 'package:go_router/go_router.dart';
 import 'package:virtual_lab/Components/shimmer.dart';
 import 'package:virtual_lab/Json/coc1.dart';
@@ -44,6 +45,11 @@ class _MyPlatingUIState extends State<MyPlatingUI> {
     });
   }
 
+  @override
+  void dispose() {
+    controller.platingOptionToggle.value = false;
+    super.dispose();
+  }
 
   void _generateAllItems({required double containerWidth, required double containerHeight}) {
     final rand = Random();
@@ -68,7 +74,7 @@ class _MyPlatingUIState extends State<MyPlatingUI> {
             name: leftItem.name,
             imageUrl: leftItem.path,
             offset: Offset(
-              leftBaseX + rand.nextDouble() * 5, // jitter
+              leftBaseX + rand.nextDouble() * 5, 
               currentY + rand.nextDouble() * 5,
             ),
             side: 'left',
@@ -104,7 +110,6 @@ class _MyPlatingUIState extends State<MyPlatingUI> {
     });
   }
 
-
   Future<void> _capturePlatingImage() async {
     try {
       final boundaryContext = _repaintKey.currentContext;
@@ -138,6 +143,7 @@ class _MyPlatingUIState extends State<MyPlatingUI> {
       child: Scaffold(
         resizeToAvoidBottomInset: false,
         body: Stack(
+          alignment: Alignment.bottomCenter,
           children: [
             Center(
               child: Padding(
@@ -163,62 +169,8 @@ class _MyPlatingUIState extends State<MyPlatingUI> {
             Align(
               alignment: Alignment.bottomCenter,
               child: Padding(
-                padding: EdgeInsets.only(bottom: 32.h),
-                child: controller.actionButton(
-                  text: 'Submit',
-                  onPressed: () async {
-                    await _capturePlatingImage();
-
-                    if (capturedImageBytes != null && context.mounted) {
-                      showDialog(
-                        context: context,
-                        barrierDismissible: false,
-                        builder: (_) => Center(child: CircularProgressIndicator(color: textLight)),
-                      );
-                      final uploadedUrl = await db.uploadImageToCloudinary(capturedImageBytes!);
-                      if (context.mounted) context.pop();
-                      if (uploadedUrl != null) {
-                        controller.platingImageUrl.value = uploadedUrl;
-
-                        if (context.mounted) {
-                          showDialog(
-                            context: context,
-                            builder: (_) => AlertDialog(
-                              title: MyText(text: 'Preview Uploaded Image', fontWeight: FontWeight.w500),
-                              content: CachedNetworkImage(
-                                imageUrl: uploadedUrl,
-                                placeholder: (context, url) => const ShimmerSkeletonLoader(),
-                                errorWidget: (context, url, error) => const Icon(Icons.error),
-                                fit: BoxFit.contain,
-                              ),
-                              actions: [
-                                TextButton(
-                                  onPressed: () async {
-                                    context.go(Routes.playUI);
-                                    await db.submitCoc();
-                                  },
-                                  child: MyText(text: 'Save', fontWeight: FontWeight.w400),
-                                ),
-                                TextButton(
-                                  onPressed: () => context.pop(),
-                                  child: MyText(text: 'Close', fontWeight: FontWeight.w400),
-                                ),
-                              ],
-                            ),
-                          );
-                        }
-                      } else {
-                        debugPrint('Image upload failed');
-                        if (context.mounted) {
-                          controller.showFloatingSnackbar(
-                            context: context,
-                            message: 'Failed to upload image',
-                          );
-                        }
-                      }
-                    }
-                  },
-                ),
+                padding: EdgeInsets.all(24.w),
+                child: Obx(()=> controller.platingOptionToggle.value ? platingOption(context) : platingMenu(context))
               ),
             ),
           ],
@@ -244,6 +196,138 @@ class _MyPlatingUIState extends State<MyPlatingUI> {
             ),
           ),
         ),
+      ),
+    );
+  }
+
+  Widget platingMenu(BuildContext context) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Row(
+          spacing: 24.w,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            controller.repeatedIconButton(
+              label: 'Plates',
+              path: equipment, 
+              onPressed: controller.platingOptionToggler,
+            ),
+            controller.repeatedIconButton(
+              label: 'Submit',
+              path: plating, 
+              onPressed: () async => await submitPlating(context),
+            ),
+            controller.repeatedIconButton(
+              label: 'Dish',
+              path: equipment, 
+              onPressed: controller.platingOptionToggler,
+            ),
+            
+          ],
+        ),
+      ],
+    );
+  }
+
+  Widget platingOption(BuildContext context) {
+    return SizedBox(
+      height: 80.h,
+      child: Row(
+        spacing: 8.w,
+        children: [
+          SizedBox(
+            height: 80.h,
+            child: AspectRatio(
+              aspectRatio: 1,
+              child: IconButton(
+                style: ButtonStyle(
+                  backgroundColor: WidgetStateProperty.resolveWith<Color?>((states) {
+                    if (states.contains(WidgetState.pressed)) {
+                      return Colors.brown.withValues(alpha: 0.2);
+                    }
+                    return backgroundColor.withValues(alpha: 0.8); 
+                  }),
+                  shape: WidgetStateProperty.all<RoundedRectangleBorder>(
+                    RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8.r),
+                      side: BorderSide(color: darkBrown, width: 2.w),
+                    ),
+                  ),
+                  padding: WidgetStateProperty.all(EdgeInsets.zero),
+                  overlayColor: WidgetStateProperty.all(Colors.brown.withValues(alpha: 0.1)),
+                ),
+                icon: Padding(
+                  padding: EdgeInsets.all(8.w),
+                  child: CachedNetworkImage(
+                    imageUrl: plating,
+                    placeholder: (context, url) => ShimmerSkeletonLoader(),
+                    errorWidget: (context, url, error) => Icon(Icons.error),
+                    fit: BoxFit.contain,
+                  ),
+                ),
+                onPressed: controller.platingOptionToggler
+              ),
+            ),
+          ),
+          Expanded(
+            child: GridView.builder(
+              padding: EdgeInsets.zero,
+              scrollDirection: Axis.horizontal,
+              itemCount: ingredientsCOC1.length,
+              physics: const AlwaysScrollableScrollPhysics(),
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 1,
+                childAspectRatio: 1,
+                mainAxisSpacing: 8,
+              ),
+              itemBuilder: (context, index) {
+                var data = ingredientsCOC1[index];
+          
+                return Stack(
+                  children: [
+                    Container(
+                      alignment: Alignment.center,
+                      decoration: BoxDecoration(
+                        color: lightGridColor,
+                        borderRadius: BorderRadius.circular(8.r),
+                      ),
+                      child: Padding(
+                        padding: EdgeInsets.all(8.w),
+                        child: CachedNetworkImage(
+                          imageUrl: data.path,
+                          placeholder: (context, url) => ShimmerSkeletonLoader(),
+                          errorWidget: (context, url, error) => const Icon(Icons.error),
+                          fit: BoxFit.contain,
+                        ),
+                      ),
+                    ),
+                    Align(
+                      alignment: Alignment.bottomCenter,
+                      child: Container(
+                        width: double.infinity,
+                        decoration: BoxDecoration(
+                          color: lightBrown.withValues(alpha: 0.4),
+                          borderRadius: BorderRadius.only(
+                            bottomLeft: Radius.circular(8.r),
+                            bottomRight: Radius.circular(8.r),
+                          ),
+                        ),
+                        child: MyText(
+                          text: data.name,
+                          textAlign: TextAlign.center,
+                          color: textLight,
+                          size: 16.sp,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                    ),
+                  ],
+                );
+              },
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -295,6 +379,59 @@ class _MyPlatingUIState extends State<MyPlatingUI> {
       ),
     );
   }
+  
+  Future<void> submitPlating(BuildContext context) async {
+    await _capturePlatingImage();
+    if (capturedImageBytes != null && context.mounted) {
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (_) => Center(child: CircularProgressIndicator(color: textLight)),
+      );
+      final uploadedUrl = await db.uploadImageToCloudinary(capturedImageBytes!);
+      if (context.mounted) context.pop();
+      if (uploadedUrl != null) {
+        controller.platingImageUrl.value = uploadedUrl;
+                        
+        if (context.mounted) {
+          showDialog(
+            context: context,
+            builder: (_) => AlertDialog(
+              title: MyText(text: 'Preview Uploaded Image', fontWeight: FontWeight.w500),
+              content: CachedNetworkImage(
+                imageUrl: uploadedUrl,
+                placeholder: (context, url) => const ShimmerSkeletonLoader(),
+                errorWidget: (context, url, error) => const Icon(Icons.error),
+                fit: BoxFit.contain,
+              ),
+              actions: [
+                TextButton(
+                  onPressed: () async {
+                    context.go(Routes.playUI);
+                    await db.submitCoc();
+                  },
+                  child: MyText(text: 'Confirm', fontWeight: FontWeight.w400),
+                ),
+                TextButton(
+                  onPressed: () => context.pop(),
+                  child: MyText(text: 'Close', fontWeight: FontWeight.w400),
+                ),
+              ],
+            ),
+          );
+        }
+      } else {
+        debugPrint('Image upload failed');
+        if (context.mounted) {
+          controller.showFloatingSnackbar(
+            context: context,
+            message: 'Failed to upload image',
+          );
+        }
+      }
+    }
+  }
+
 }
 
 class _DraggableItem {

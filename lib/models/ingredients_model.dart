@@ -121,17 +121,11 @@ class IngredientsModel {
       name: map['name'] ?? '',
       path: map['path'] ?? '',
       category: map['category'] ?? '',
-      actions: map['actions'] != null
-          ? (map['actions'] as List)
-              .map((item) => ActionsModel.fromJson(item))
-              .toList()
-          : [],
+      actions: map['actions'] != null ? (map['actions'] as List).map((item) => ActionsModel.fromJson(item)).toList() : [],
       dragKey: map['dragKey'],
-      used: map['used'] != null
-          ? EquipmentsModel.fromJson(map['used'])
-          : null,
+      used: map['used'] != null ? EquipmentsModel.fromJson(map['used']) : null,
     );
-  }
+  } 
 
   Map<String, dynamic> toJson() {
     return {
@@ -139,7 +133,6 @@ class IngredientsModel {
       'path': path,
       'category': category,
       'actions': actions.map((item) => item.toJson()).toList(),
-      'dragKey': dragKey,
       'used': used?.toJson(),
     };
   }

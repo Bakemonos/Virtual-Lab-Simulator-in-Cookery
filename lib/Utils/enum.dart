@@ -58,4 +58,5 @@ enum ToolType {
   cup,  
   bowl,
   zester,
+  breadSlicer
 }

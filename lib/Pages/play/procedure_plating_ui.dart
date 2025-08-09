@@ -4,7 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:go_router/go_router.dart';
 import 'package:virtual_lab/Json/actions.dart';
-import 'package:virtual_lab/Json/equipment.dart';
+import 'package:virtual_lab/Json/equipments.dart';
 import 'package:virtual_lab/Utils/routes.dart';
 import 'package:virtual_lab/components/custom_svg.dart';
 import 'package:virtual_lab/controllers/controller.dart';
@@ -302,9 +302,7 @@ class _MyProcedurePlatingPageState extends State<MyProcedurePlatingPage> with Ti
                   },
                   child: Stack(
                     children: [
-                      Obx(()=> AnimatedContainer(
-                        duration: const Duration(milliseconds: 200),
-                        curve: Curves.easeInOut,
+                      Obx(()=> Container(
                         alignment: Alignment.center,
                         decoration: BoxDecoration(
                           color: controller.equipmentData.contains(data) ? lightGridColor : lightGridColor.withValues(alpha: 0.5),
@@ -398,7 +396,7 @@ class _MyProcedurePlatingPageState extends State<MyProcedurePlatingPage> with Ti
               }).toList() : [],
             )),
             const Spacer(),
-            repeatedIconButton(
+            controller.repeatedIconButton(
               label: 'Equipment',
               path: equipment, 
               onPressed: controller.equipmentOntap,
@@ -408,11 +406,12 @@ class _MyProcedurePlatingPageState extends State<MyProcedurePlatingPage> with Ti
               final submittedCategories = controller.submittedCocList.map((dish) => dish.category).toList();
               final requireDish = requiredNames.every((name) => submittedCategories.contains(name));
         
-              return repeatedIconButton(
+              return controller.repeatedIconButton(
                 label: 'Plating',
                 path: plating, 
                 onPressed: () {
-                  if (requireDish) {
+                  //TODO HERE
+                  if (!requireDish) {
                       context.push(Routes.plating);
                     } else {
                       controller.showFloatingSnackbar(
@@ -425,48 +424,6 @@ class _MyProcedurePlatingPageState extends State<MyProcedurePlatingPage> with Ti
             })
           ],
         ),
-      ],
-    );
-  }
-
-  Widget repeatedIconButton({required String label, required String path, required Function() onPressed}) {
-    return Column(
-      children: [
-        SizedBox(
-          height: 60.h,
-          child: AspectRatio(
-            aspectRatio: 1,
-            child: IconButton(
-              style: ButtonStyle(
-                backgroundColor: WidgetStateProperty.resolveWith<Color?>((states) {
-                  if (states.contains(WidgetState.pressed)) {
-                    return Colors.brown.withValues(alpha: 0.2);
-                  }
-                  return backgroundColor.withValues(alpha: 0.8); 
-                }),
-                shape: WidgetStateProperty.all<RoundedRectangleBorder>(
-                  RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12.r),
-                    side: BorderSide(color: darkBrown, width: 2.w),
-                  ),
-                ),
-                padding: WidgetStateProperty.all(EdgeInsets.zero),
-                overlayColor: WidgetStateProperty.all(Colors.brown.withValues(alpha: 0.1)),
-              ),
-              icon: Padding(
-                padding: EdgeInsets.all(8.w),
-                child: CachedNetworkImage(
-                  imageUrl: path,
-                  placeholder: (context, url) => ShimmerSkeletonLoader(),
-                  errorWidget: (context, url, error) => Icon(Icons.error),
-                  fit: BoxFit.contain,
-                ),
-              ),
-              onPressed: onPressed,
-            ),
-          ),
-        ),
-        MyText(text: label, color: textLight, size: 14.sp )
       ],
     );
   }

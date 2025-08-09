@@ -1,16 +1,11 @@
 import 'dart:async';
-import 'dart:convert';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:go_router/go_router.dart';
-import 'package:http/http.dart' as http;
-import 'package:http_parser/http_parser.dart';
 import 'package:quickalert/models/quickalert_type.dart';
 import 'package:virtual_lab/Json/tools.dart';
 import 'package:virtual_lab/components/custom_dropdown.dart';
@@ -19,8 +14,7 @@ import 'package:virtual_lab/components/custom_text.dart';
 import 'package:virtual_lab/components/custom_textfield.dart';
 import 'package:virtual_lab/components/custom_dalog.dart';
 import 'package:virtual_lab/components/shimmer.dart';
-import 'package:virtual_lab/json/coc1.dart';
-import 'package:virtual_lab/json/coc1_combination.dart';
+import 'package:virtual_lab/json/equipments.dart';
 import 'package:virtual_lab/json/food_menu.dart';
 import 'package:virtual_lab/models/food_menu_model.dart';
 import 'package:virtual_lab/models/ingredients_model.dart';
@@ -69,7 +63,6 @@ class AppController extends GetxController {
   final typeErrorText = ''.obs;
   final dishNameErrorText = ''.obs;
 
-
   final appName = ''.obs;
   final packageName = ''.obs;
   final version = ''.obs;
@@ -88,16 +81,10 @@ class AppController extends GetxController {
   final actionToggle = false.obs;
   final toolListToggle = false.obs;
   final changeToolToggle = false.obs;
+  final platingOptionToggle = false.obs;
   bool tap = false;
-
   
   RxList<bool> foodLoading = List.generate(foodMenu.length, (_) => false).obs;
-
-  void resetLoading() {
-    for (int i = 0; i < foodLoading.length; i++) {
-      foodLoading[i] = false;
-    }
-  }
 
   //? TEXT CONTROLLER
   final emailController = TextEditingController(text: 'ricojay@gmail.com');
@@ -149,7 +136,7 @@ class AppController extends GetxController {
   
   //? EQUIPMENTS 
   RxList<EquipmentsModel> equipmentData = <EquipmentsModel>[].obs;
-  Rx<EquipmentsModel> cookingToolData = EquipmentsModel(image: kaldero, name: 'Default').obs;
+  Rx<EquipmentsModel> cookingToolData = cookingEquipment[0].obs;
   
   //! METHODS ---------------------------------------------------------------------------------------------------------------
 
@@ -239,6 +226,12 @@ class AppController extends GetxController {
       return ActionStatus.good;
     } else {
       return ActionStatus.bad;
+    }
+  }
+  
+  void resetLoading() {
+    for (int i = 0; i < foodLoading.length; i++) {
+      foodLoading[i] = false;
     }
   }
 
@@ -408,10 +401,12 @@ class AppController extends GetxController {
     isSelectedList.value = List.generate(itemCount, (_) => false.obs);
   }
 
-
-
   void changeToolToggler() {
     changeToolToggle.value = !changeToolToggle.value;
+  }
+
+  void platingOptionToggler() {
+    platingOptionToggle.value = !platingOptionToggle.value;
   }
 
   void toggleSelection(int index) {
@@ -743,6 +738,48 @@ class AppController extends GetxController {
     );
   }
 
+  Widget repeatedIconButton({required String label, required String path, required Function() onPressed}) {
+    return Column(
+      children: [
+        SizedBox(
+          height: 60.h,
+          child: AspectRatio(
+            aspectRatio: 1,
+            child: IconButton(
+              style: ButtonStyle(
+                backgroundColor: WidgetStateProperty.resolveWith<Color?>((states) {
+                  if (states.contains(WidgetState.pressed)) {
+                    return Colors.brown.withValues(alpha: 0.2);
+                  }
+                  return backgroundColor.withValues(alpha: 0.8); 
+                }),
+                shape: WidgetStateProperty.all<RoundedRectangleBorder>(
+                  RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8.r),
+                    side: BorderSide(color: darkBrown, width: 2.w),
+                  ),
+                ),
+                padding: WidgetStateProperty.all(EdgeInsets.zero),
+                overlayColor: WidgetStateProperty.all(Colors.brown.withValues(alpha: 0.1)),
+              ),
+              icon: Padding(
+                padding: EdgeInsets.all(8.w),
+                child: CachedNetworkImage(
+                  imageUrl: path,
+                  placeholder: (context, url) => ShimmerSkeletonLoader(),
+                  errorWidget: (context, url, error) => Icon(Icons.error),
+                  fit: BoxFit.contain,
+                ),
+              ),
+              onPressed: onPressed,
+            ),
+          ),
+        ),
+        MyText(text: label, color: textLight, size: 14.sp )
+      ],
+    );
+  }
+  
   //! SERVICES METHOD -------------------------------------------------------------------------------------------------------
 
   

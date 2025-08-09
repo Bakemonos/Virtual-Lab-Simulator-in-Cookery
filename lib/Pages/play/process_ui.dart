@@ -3,7 +3,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:go_router/go_router.dart';
-import 'package:virtual_lab/Json/equipment.dart';
+import 'package:virtual_lab/Json/equipments.dart';
 import 'package:virtual_lab/components/custom_button.dart';
 import 'package:virtual_lab/components/custom_svg_picture.dart';
 import 'package:virtual_lab/components/custom_text.dart';
@@ -134,7 +134,7 @@ class _MyProcessPageState extends State<MyProcessPage> {
               studentId: controller.userData.value.id!,
               take: 'take_one',
             );
-            controller.equipmentData.add(controller.cookingToolData.value); //TODO ADD EQUIPMENT
+            // controller.equipmentData.add(controller.cookingToolData.value); //TODO ADD EQUIPMENT
           },
           builder: (context, candidateData, rejectedData){
             return Column(

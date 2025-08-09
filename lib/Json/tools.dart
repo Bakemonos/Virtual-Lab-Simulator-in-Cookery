@@ -32,6 +32,7 @@ List<ActionType> getActionsForIngredient(IngredientType type) {
         ActionType.rinse,
         ActionType.soak,
         ActionType.grind,
+        ActionType.slice,
       ];
     case IngredientType.dairy:
       return [
