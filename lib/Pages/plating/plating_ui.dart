@@ -7,7 +7,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/state_manager.dart';
 import 'package:go_router/go_router.dart';
 import 'package:virtual_lab/Components/shimmer.dart';
-import 'package:virtual_lab/Json/coc1.dart';
 import 'package:virtual_lab/components/custom_svg.dart';
 import 'package:virtual_lab/components/custom_text.dart';
 import 'package:virtual_lab/controllers/controller.dart';
@@ -33,6 +32,7 @@ class _MyPlatingUIState extends State<MyPlatingUI> {
   @override
   void dispose() {
     controller.platingOptionToggle.value = false;
+    controller.removeToggle.value = false;
     super.dispose();
   }
 
@@ -122,7 +122,7 @@ class _MyPlatingUIState extends State<MyPlatingUI> {
             color: backgroundColor,
             border: Border.all(width: 8.w, color: backgroundColor),
           ),
-          child: InkWell(
+          child: GestureDetector(
             onTap: () {
               controller.playClickSound();
               context.pop();
@@ -157,18 +157,18 @@ class _MyPlatingUIState extends State<MyPlatingUI> {
               },
             ),
             controller.repeatedIconButton(
-              label: 'Dish',
-              path: dish,
+              label: 'Plating Tools',
+              path: platingTool,
               onPressed: (){
-                controller.selectedOption.value = 'dish';
+                controller.selectedOption.value = 'tools';
                 controller.platingOptionToggler();
               },
             ),
             controller.repeatedIconButton(
-              label: 'Utilities',
+              label: 'Dish',
               path: dish,
               onPressed: (){
-                controller.selectedOption.value = 'utilities';
+                controller.selectedOption.value = 'dish';
                 controller.platingOptionToggler();
               },
             ),
@@ -188,10 +188,10 @@ class _MyPlatingUIState extends State<MyPlatingUI> {
     
     switch(controller.selectedOption.value){
       case 'garnish': 
-        sourceList = ingredientsCOC1;
+        sourceList = garnishList;
         break;
-      case 'utilities': 
-        sourceList = utilities;
+      case 'tools': 
+        sourceList = utilitiesList;
         break;
       default: 
         sourceList = controller.submittedCocList;
@@ -203,39 +203,9 @@ class _MyPlatingUIState extends State<MyPlatingUI> {
       child: Row(
         spacing: 8.w,
         children: [
-          SizedBox(
-            height: 80.h,
-            child: AspectRatio(
-              aspectRatio: 1,
-              child: IconButton(
-                style: ButtonStyle(
-                  backgroundColor: WidgetStateProperty.resolveWith<Color?>((states) {
-                    if (states.contains(WidgetState.pressed)) {
-                      return Colors.brown.withValues(alpha: 0.2);
-                    }
-                    return backgroundColor.withValues(alpha: 0.8);
-                  }),
-                  shape: WidgetStateProperty.all<RoundedRectangleBorder>(
-                    RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8.r),
-                      side: BorderSide(color: darkBrown, width: 2.w),
-                    ),
-                  ),
-                  padding: WidgetStateProperty.all(EdgeInsets.zero),
-                  overlayColor: WidgetStateProperty.all(Colors.brown.withValues(alpha: 0.1)),
-                ),
-                icon: Padding(
-                  padding: EdgeInsets.all(8.w),
-                  child: CachedNetworkImage(
-                    imageUrl: plating,
-                    placeholder: (context, url) => ShimmerSkeletonLoader(),
-                    errorWidget: (context, url, error) => Icon(Icons.error),
-                    fit: BoxFit.contain,
-                  ),
-                ),
-                onPressed: controller.platingOptionToggler,
-              ),
-            ),
+          repeatedButton(
+            image: plating,
+            onPressed: controller.platingOptionToggler,
           ),
           Expanded(
             child: GridView.builder(
@@ -310,7 +280,48 @@ class _MyPlatingUIState extends State<MyPlatingUI> {
               },
             ),
           ),
+          Obx(()=> repeatedButton(
+            image: controller.removeToggle.value ? remove : dontRemove,
+            onPressed: controller.removeToggler,
+          ))
         ],
+      ),
+    );
+  }
+
+  Widget repeatedButton({required void Function()? onPressed, required String image}) {
+    return SizedBox(
+      height: 80.h,
+      child: AspectRatio(
+        aspectRatio: 1,
+        child: IconButton(
+          style: ButtonStyle(
+            backgroundColor: WidgetStateProperty.resolveWith<Color?>((states) {
+              if (states.contains(WidgetState.pressed)) {
+                return Colors.brown.withValues(alpha: 0.2);
+              }
+              return backgroundColor.withValues(alpha: 0.8);
+            }),
+            shape: WidgetStateProperty.all<RoundedRectangleBorder>(
+              RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(8.r),
+                side: BorderSide(color: darkBrown, width: 2.w),
+              ),
+            ),
+            padding: WidgetStateProperty.all(EdgeInsets.zero),
+            overlayColor: WidgetStateProperty.all(Colors.brown.withValues(alpha: 0.1)),
+          ),
+          icon: Padding(
+            padding: EdgeInsets.all(8.w),
+            child: CachedNetworkImage(
+              imageUrl: image,
+              placeholder: (context, url) => ShimmerSkeletonLoader(),
+              errorWidget: (context, url, error) => Icon(Icons.error),
+              fit: BoxFit.contain,
+            ),
+          ),
+          onPressed: onPressed,
+        ),
       ),
     );
   }
@@ -351,36 +362,10 @@ class _MyPlatingUIState extends State<MyPlatingUI> {
   }
 
   Widget _buildImage(_DraggableItem item) {
-    return InkWell(
-      onTapDown: (details) async {
-        final menuItems = <PopupMenuEntry<String>>[];
-
-        if (items.contains(item)) {
-          menuItems.add(
-            PopupMenuItem(
-              value: 'remove',
-              child: MyText(text: 'Remove', size: 14.sp),
-            ),
-          );
-        }
-
-        if (menuItems.isEmpty) return; 
-
-        final selected = await showMenu(
-          context: context,
-          position: RelativeRect.fromLTRB(
-            details.globalPosition.dx,
-            details.globalPosition.dy,
-            details.globalPosition.dx,
-            details.globalPosition.dy,
-          ),
-          items: menuItems,
-        );
-
-        if (selected == 'remove') {
-          setState(() {
-            items.remove(item);
-          });
+    return GestureDetector(
+      onTap: (){
+        if(controller.removeToggle.value){
+          removeItem(item);
         }
       },
       child: SizedBox(
@@ -448,6 +433,11 @@ class _MyPlatingUIState extends State<MyPlatingUI> {
     }
   }
 
+  void removeItem(_DraggableItem item){
+    setState(() {
+      items.remove(item);
+    });
+  }
 }
 
 class _DraggableItem {

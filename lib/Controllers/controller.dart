@@ -82,6 +82,7 @@ class AppController extends GetxController {
   final toolListToggle = false.obs;
   final changeToolToggle = false.obs;
   final platingOptionToggle = false.obs;
+  final removeToggle = false.obs;
   bool tap = false;
   
   RxList<bool> foodLoading = List.generate(foodMenu.length, (_) => false).obs;
@@ -410,6 +411,10 @@ class AppController extends GetxController {
 
   void platingOptionToggler() {
     platingOptionToggle.value = !platingOptionToggle.value;
+  }
+
+  void removeToggler() {
+    removeToggle.value = !removeToggle.value;
   }
 
   void toggleSelection(int index) {

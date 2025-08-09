@@ -26,7 +26,17 @@ List<EquipmentsModel> cookingEquipment = [
 ];
 
 
-List<EquipmentsModel> utilities = [
+List<EquipmentsModel> utilitiesList = [
+  EquipmentsModel(name: 'Apron', image: 'https://res.cloudinary.com/dgvi2di6t/image/upload/v1754738613/apron_rffior.png'),
+  EquipmentsModel(name: 'Plastic gloves', image: 'https://res.cloudinary.com/dgvi2di6t/image/upload/v1754738612/plastic_glove_bj3fcw.png'),
+  EquipmentsModel(name: 'Chef\'s hat', image: 'https://res.cloudinary.com/dgvi2di6t/image/upload/v1754738613/chef_hat_odvvah.png'),
+  EquipmentsModel(name: 'Hair net', image: 'https://res.cloudinary.com/dgvi2di6t/image/upload/v1754738613/Group_hpmg0r.png'),
+  EquipmentsModel(name: 'Oven mitts ', image: 'https://res.cloudinary.com/dgvi2di6t/image/upload/v1754738612/oven_miits_boz61v.png'),
+  EquipmentsModel(name: 'Face mask ', image: 'https://res.cloudinary.com/dgvi2di6t/image/upload/v1754738613/face_mask_kwqovi.png'),
+];
+
+
+List<EquipmentsModel> garnishList = [
   EquipmentsModel(name: 'Apron', image: 'https://res.cloudinary.com/dgvi2di6t/image/upload/v1754738613/apron_rffior.png'),
   EquipmentsModel(name: 'Plastic gloves', image: 'https://res.cloudinary.com/dgvi2di6t/image/upload/v1754738612/plastic_glove_bj3fcw.png'),
   EquipmentsModel(name: 'Chef\'s hat', image: 'https://res.cloudinary.com/dgvi2di6t/image/upload/v1754738613/chef_hat_odvvah.png'),

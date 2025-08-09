@@ -68,3 +68,7 @@ const String plating = "https://res.cloudinary.com/dgvi2di6t/image/upload/v17544
 const String noData = 'https://res.cloudinary.com/dgvi2di6t/image/upload/v1754735616/no_data_orpctv.png';
 const String garnish = 'https://res.cloudinary.com/dgvi2di6t/image/upload/v1754746207/garnish_qnujlk.png';
 const String dish = 'https://res.cloudinary.com/dgvi2di6t/image/upload/v1754746357/dish_vnnf54.png';
+const String platingTool = 'https://res.cloudinary.com/dgvi2di6t/image/upload/v1754748206/plating_tools_jwn0es.png';
+
+const String remove = 'https://res.cloudinary.com/dgvi2di6t/image/upload/v1754749428/remove_vucw4d.png';
+const String dontRemove = 'https://res.cloudinary.com/dgvi2di6t/image/upload/v1754749429/dont_remove_sfmkhr.png';
