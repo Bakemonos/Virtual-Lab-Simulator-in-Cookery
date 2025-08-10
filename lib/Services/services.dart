@@ -345,10 +345,10 @@ class ApiServices extends GetxController {
     }
   }
 
-  Future<void> submitCoc() async {
+  Future<void> submitCoc(BuildContext context) async {
     controller.loader.value = true;
     try {
-
+      context.pop();
       final coc = controller.typeSelected.value!.menu;
       final studentId = controller.userData.value.id;
     
@@ -360,8 +360,20 @@ class ApiServices extends GetxController {
 
       final response = await post('plating/create', data);
 
-      if(response.success!){
+      if(response.success! && context.mounted){
         debugPrint('SUCCESS : ${response.message}');
+        if(context.mounted){
+          quickAlertDialog(
+            context: context,
+            type: QuickAlertType.success,
+            title: 'Submitted Successful!',
+            message: response.message.toString(),
+            onConfirmBtnTap: (){
+              context.pop();
+              context.go(Routes.playUI);
+            }
+          );
+        }
       }{
         debugPrint('FAILED : ${response.message}');
       }
@@ -371,6 +383,14 @@ class ApiServices extends GetxController {
       final errorMessage = helper.getErrorMessage(e);
       debugPrint('Error: $errorMessage');
       debugPrint('STACKTRACE: $t');
+      if (context.mounted) {
+        quickAlertDialog(
+          context: context,
+          type: QuickAlertType.error,
+          title: 'Submitted Failed!',
+          message: errorMessage,
+        );
+      }
     }
   }
   

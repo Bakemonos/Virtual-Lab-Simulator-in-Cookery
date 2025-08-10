@@ -13,7 +13,6 @@ import 'package:virtual_lab/controllers/controller.dart';
 import 'package:virtual_lab/json/equipments.dart';
 import 'package:virtual_lab/services/services.dart';
 import 'package:virtual_lab/utils/properties.dart';
-import 'package:virtual_lab/utils/routes.dart';
 
 class MyPlatingUI extends StatefulWidget {
   const MyPlatingUI({super.key});
@@ -87,13 +86,30 @@ class _MyPlatingUIState extends State<MyPlatingUI> {
                             final renderObject = _repaintKey.currentContext?.findRenderObject() as RenderBox?;
                             if (renderObject != null) {
                               final localPos = renderObject.globalToLocal(details.offset);
+
+                              final containerSize = renderObject.size;
+                              final itemWidth = 80.w * details.data.scale;
+                              final itemHeight = 80.h * details.data.scale;
+
+                              final clampedX = localPos.dx.clamp(0.0, containerSize.width - itemWidth);
+                              final clampedY = localPos.dy.clamp(0.0, containerSize.height - itemHeight);
+
                               setState(() {
-                                items.add(
-                                  details.data.copyWith(offset: localPos),
-                                );
+                                final existingIndex = items.indexWhere((i) => i.id == details.data.id);
+
+                                if (existingIndex != -1) {
+                                  items[existingIndex] = items[existingIndex].copyWith(
+                                    offset: Offset(clampedX, clampedY),
+                                  );
+                                } else {
+                                  items.add(
+                                    details.data.copyWith(offset: Offset(clampedX, clampedY)),
+                                  );
+                                }
                               });
                             }
                           },
+
                           builder: (context, candidateData, rejectedData) {
                             return Stack(
                               children: items.asMap().entries.map((entry) => _buildDraggable(entry.key)).toList(),
@@ -110,13 +126,14 @@ class _MyPlatingUIState extends State<MyPlatingUI> {
               alignment: Alignment.bottomCenter,
               child: Padding(
                 padding: EdgeInsets.all(24.w),
-                child: Obx(() => controller.platingOptionToggle.value ? platingOption(context) : platingMenu(context)),
+                child: Obx(() => controller.hiderToggle.value? SizedBox.shrink() : 
+                  (controller.platingOptionToggle.value ? platingOption(context) : platingMenu(context))),
               ),
             ),
           ],
         ),
         floatingActionButtonLocation: FloatingActionButtonLocation.endTop,
-        floatingActionButton: Container(
+        floatingActionButton: Obx(()=> controller.hiderToggle.value ? SizedBox.shrink() : Container(
           decoration: BoxDecoration(
             shape: BoxShape.circle,
             color: backgroundColor,
@@ -135,7 +152,7 @@ class _MyPlatingUIState extends State<MyPlatingUI> {
               ),
             ),
           ),
-        ),
+        )),
       ),
     );
   }
@@ -159,7 +176,7 @@ class _MyPlatingUIState extends State<MyPlatingUI> {
             controller.repeatedIconButton(
               label: 'Plating Tools',
               path: platingTool,
-              onPressed: (){
+              onPressed: () {
                 controller.selectedOption.value = 'tools';
                 controller.platingOptionToggler();
               },
@@ -167,7 +184,7 @@ class _MyPlatingUIState extends State<MyPlatingUI> {
             controller.repeatedIconButton(
               label: 'Dish',
               path: dish,
-              onPressed: (){
+              onPressed: () {
                 controller.selectedOption.value = 'dish';
                 controller.platingOptionToggler();
               },
@@ -175,7 +192,13 @@ class _MyPlatingUIState extends State<MyPlatingUI> {
             controller.repeatedIconButton(
               label: 'Submit',
               path: plating,
-              onPressed: () async => await submitPlating(context),
+              onPressed: () async {
+                if (controller.tap) return;
+                controller.tap = true;
+                controller.hiderToggler();
+                await submitPlating(context);
+                controller.tap = false; 
+              },
             ),
           ],
         ),
@@ -185,15 +208,15 @@ class _MyPlatingUIState extends State<MyPlatingUI> {
 
   Widget platingOption(BuildContext context) {
     final List<dynamic> sourceList;
-    
-    switch(controller.selectedOption.value){
-      case 'garnish': 
+
+    switch (controller.selectedOption.value) {
+      case 'garnish':
         sourceList = garnishList;
         break;
-      case 'tools': 
-        sourceList = utilitiesList;
+      case 'tools':
+        sourceList = platngToolList;
         break;
-      default: 
+      default:
         sourceList = controller.submittedCocList;
         break;
     }
@@ -221,16 +244,20 @@ class _MyPlatingUIState extends State<MyPlatingUI> {
               itemBuilder: (context, index) {
                 var data = sourceList[index];
 
+                final newItem = _DraggableItem(
+                  id: DateTime.now().microsecondsSinceEpoch.toString(),
+                  name: data.name,
+                  imageUrl: data.image,
+                  offset: Offset.zero,
+                  side: controller.selectedOption.value,
+                  scale: 1.0,
+                );
+
                 return LongPressDraggable<_DraggableItem>(
-                  data: _DraggableItem(
-                    name: data.name,
-                    imageUrl: data.image,
-                    offset: Offset.zero,
-                    side: controller.selectedOption.value,
-                  ),
+                  data: newItem,
                   feedback: SizedBox(
-                    width: 80.w,
-                    height: 80.h,
+                    width: 80.w * newItem.scale,
+                    height: 80.h * newItem.scale,
                     child: CachedNetworkImage(
                       imageUrl: data.image,
                       placeholder: (context, url) => ShimmerSkeletonLoader(),
@@ -280,10 +307,10 @@ class _MyPlatingUIState extends State<MyPlatingUI> {
               },
             ),
           ),
-          Obx(()=> repeatedButton(
-            image: controller.removeToggle.value ? remove : dontRemove,
-            onPressed: controller.removeToggler,
-          ))
+          Obx(() => repeatedButton(
+                image: controller.removeToggle.value ? remove : dontRemove,
+                onPressed: controller.removeToggler,
+              ))
         ],
       ),
     );
@@ -331,7 +358,8 @@ class _MyPlatingUIState extends State<MyPlatingUI> {
     return Positioned(
       left: item.offset.dx,
       top: item.offset.dy,
-      child: Draggable(
+      child: Draggable<_DraggableItem>(
+        data: item,
         feedback: _buildImage(item),
         childWhenDragging: Opacity(opacity: 0.4, child: _buildImage(item)),
         onDragEnd: (details) {
@@ -344,16 +372,17 @@ class _MyPlatingUIState extends State<MyPlatingUI> {
           final localOffset = renderObject.globalToLocal(details.offset);
 
           final containerSize = renderObject.size;
-          final itemWidth = 80.w;
-          final itemHeight = 80.h;
+          final itemWidth = 80.w * item.scale;
+          final itemHeight = 80.h * item.scale;
 
           final clampedX = localOffset.dx.clamp(0.0, containerSize.width - itemWidth);
           final clampedY = localOffset.dy.clamp(0.0, containerSize.height - itemHeight);
 
           setState(() {
-            final draggedItem = items.removeAt(index);
-            final updatedItem = draggedItem.copyWith(offset: Offset(clampedX, clampedY));
-            items.add(updatedItem);
+            final foundIndex = items.indexWhere((i) => i.id == item.id);
+            if (foundIndex != -1) {
+              items[foundIndex] = items[foundIndex].copyWith(offset: Offset(clampedX, clampedY));
+            }
           });
         },
         child: _buildImage(item),
@@ -363,14 +392,16 @@ class _MyPlatingUIState extends State<MyPlatingUI> {
 
   Widget _buildImage(_DraggableItem item) {
     return GestureDetector(
-      onTap: (){
-        if(controller.removeToggle.value){
+      onTap: () {
+        if (controller.removeToggle.value) {
           removeItem(item);
+        } else {
+          _showScaleSlider(item);
         }
       },
       child: SizedBox(
-        width: 80.w,
-        height: 80.h,
+        width: 80.w * item.scale,
+        height: 80.h * item.scale,
         child: CachedNetworkImage(
           imageUrl: item.imageUrl,
           placeholder: (context, url) => const ShimmerLightLoader(),
@@ -408,13 +439,19 @@ class _MyPlatingUIState extends State<MyPlatingUI> {
               actions: [
                 TextButton(
                   onPressed: () async {
-                    context.go(Routes.playUI);
-                    await db.submitCoc();
+                    if (controller.tap) return;
+                    controller.tap = true;
+                    controller.hiderToggler();
+                    await db.submitCoc(context);
+                    controller.tap = false; 
                   },
                   child: MyText(text: 'Confirm', fontWeight: FontWeight.w400),
                 ),
                 TextButton(
-                  onPressed: () => context.pop(),
+                  onPressed: () {
+                    controller.hiderToggler(); 
+                    context.pop();
+                  },
                   child: MyText(text: 'Close', fontWeight: FontWeight.w400),
                 ),
               ],
@@ -433,32 +470,88 @@ class _MyPlatingUIState extends State<MyPlatingUI> {
     }
   }
 
-  void removeItem(_DraggableItem item){
+  void removeItem(_DraggableItem item) {
     setState(() {
-      items.remove(item);
+      items.removeWhere((i) => i.id == item.id);
     });
+  }
+
+  void _showScaleSlider(_DraggableItem item) {
+    double currentScale = item.scale;
+
+    showModalBottomSheet(
+      context: context,
+      builder: (context) {
+        return StatefulBuilder(builder: (context, setModalState) {
+          return Padding(
+            padding: EdgeInsets.all(16.w),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                MyText(text: 'Adjust Size', fontWeight: FontWeight.w500),
+                Slider(
+                  value: currentScale,
+                  min: 0.5,
+                  max: 2.0,
+                  divisions: 30,
+                  label: "${(currentScale * 100).toInt()}%",
+                  onChanged: (value) {
+                    setModalState(() => currentScale = value);
+                    setState(() {
+                      final idx = items.indexWhere((i) => i.id == item.id);
+                      if (idx != -1) {
+                        items[idx] = items[idx].copyWith(scale: value);
+                      }
+                    });
+                  },
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    TextButton(
+                      onPressed: () => Navigator.pop(context),
+                      child: MyText(text: 'Done', fontWeight: FontWeight.w400),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          );
+        });
+      },
+    );
   }
 }
 
 class _DraggableItem {
+  final String id;
   final String name;
   final String imageUrl;
   final String side;
   final Offset offset;
+  final double scale;
 
   _DraggableItem({
+    required this.id,
     required this.name,
     required this.imageUrl,
     required this.offset,
     required this.side,
+    this.scale = 1.0,
   });
 
-  _DraggableItem copyWith({Offset? offset}) {
+  _DraggableItem copyWith({
+    String? id,
+    Offset? offset,
+    double? scale,
+  }) {
     return _DraggableItem(
+      id: id ?? this.id,
       name: name,
       imageUrl: imageUrl,
       offset: offset ?? this.offset,
       side: side,
+      scale: scale ?? this.scale,
     );
   }
 }

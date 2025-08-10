@@ -86,33 +86,34 @@ final List<Map<String, dynamic>> dishCombinations = [
     'name': 'sweet and sour sauce',
     'type': 'sauce',
     'contains': ['vinegar', 'sugar', 'tomato paste'],
-    'image': 'https://res.cloudinary.com/dhceioavi/image/upload/v1753927779/sauce_n4syhg.png',
+    'image': 'https://res.cloudinary.com/dgvi2di6t/image/upload/v1754823051/sauce_4_urj4te.png',
   },
   {
     'name': 'soy garlic sauce',
     'type': 'sauce',
     'contains': ['soy sauce', 'garlic', 'sugar'],
-    'image': 'https://res.cloudinary.com/dhceioavi/image/upload/v1753927779/sauce_n4syhg.png',
+    'image': 'https://res.cloudinary.com/dgvi2di6t/image/upload/v1754823051/sauce_3_lrpzsl.png',
   },
   {
     'name': 'spicy chili sauce',
     'type': 'sauce',
     'contains': ['chili flakes', 'garlic', 'vinegar'],
-    'image': 'https://res.cloudinary.com/dhceioavi/image/upload/v1753927779/sauce_n4syhg.png',
+    'image': 'https://res.cloudinary.com/dgvi2di6t/image/upload/v1754823051/sauce_4_urj4te.png',
   },
   {
     'name': 'butter sauce',
     'type': 'sauce',
     'contains': ['butter', 'garlic', 'onion'],
-    'image': 'https://res.cloudinary.com/dhceioavi/image/upload/v1753927779/sauce_n4syhg.png',
+    'image': 'https://res.cloudinary.com/dgvi2di6t/image/upload/v1754823049/sauce_1_pimwnm.png',
   },
   {
     'name': 'tomato-based sauce',
     'type': 'sauce',
     'contains': ['tomato paste', 'garlic', 'onion', 'sugar'],
-    'image': 'https://res.cloudinary.com/dhceioavi/image/upload/v1753927779/sauce_n4syhg.png',
+    'image': 'https://res.cloudinary.com/dgvi2di6t/image/upload/v1754823051/sauce_4_urj4te.png',
   },
 ];
+
 Map<String, dynamic>? getBestMatchedDish(List<IngredientsModel> selected, String type) {
   final selectedNames = selected.map((i) => i.name.toLowerCase().trim()).toSet();
   int highestScore = 0;
