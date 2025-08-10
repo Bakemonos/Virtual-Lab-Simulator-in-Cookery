@@ -15,6 +15,7 @@ List<ActionType> getActionsForIngredient(IngredientType type) {
       return [
         ActionType.rinse,
         ActionType.cut,
+        ActionType.slice,
         ActionType.marinate,
         ActionType.season,
         ActionType.wash,

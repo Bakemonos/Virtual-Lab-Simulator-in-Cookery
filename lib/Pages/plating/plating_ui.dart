@@ -96,15 +96,12 @@ class _MyPlatingUIState extends State<MyPlatingUI> {
 
                               setState(() {
                                 final existingIndex = items.indexWhere((i) => i.id == details.data.id);
-
                                 if (existingIndex != -1) {
-                                  items[existingIndex] = items[existingIndex].copyWith(
-                                    offset: Offset(clampedX, clampedY),
-                                  );
+                                  final updated = items[existingIndex].copyWith(offset: Offset(clampedX, clampedY));
+                                  items.removeAt(existingIndex);
+                                  items.add(updated);
                                 } else {
-                                  items.add(
-                                    details.data.copyWith(offset: Offset(clampedX, clampedY)),
-                                  );
+                                  items.add(details.data.copyWith(offset: Offset(clampedX, clampedY)));
                                 }
                               });
                             }
@@ -381,7 +378,11 @@ class _MyPlatingUIState extends State<MyPlatingUI> {
           setState(() {
             final foundIndex = items.indexWhere((i) => i.id == item.id);
             if (foundIndex != -1) {
-              items[foundIndex] = items[foundIndex].copyWith(offset: Offset(clampedX, clampedY));
+              // Update position
+              final updated = items[foundIndex].copyWith(offset: Offset(clampedX, clampedY));
+              // Remove and re-add to bring it to front
+              items.removeAt(foundIndex);
+              items.add(updated);
             }
           });
         },

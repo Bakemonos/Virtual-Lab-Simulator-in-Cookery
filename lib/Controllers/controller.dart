@@ -89,11 +89,13 @@ class AppController extends GetxController {
   RxList<bool> foodLoading = List.generate(foodMenu.length, (_) => false).obs;
 
   //? TEXT CONTROLLER
-  final emailController = TextEditingController(text: 'ricojay@gmail.com');
+  final emailController = TextEditingController();
+  final passwordController = TextEditingController();
+  //   final emailController = TextEditingController(text: 'ricojay@gmail.com');
+  // final passwordController = TextEditingController(text: 'password');
   final firstnameController = TextEditingController();
   final lastnameController = TextEditingController();
   final lrnController = TextEditingController();
-  final passwordController = TextEditingController(text: 'password');
   final changePasswordController = TextEditingController();
   final nameDishController = TextEditingController();
 
