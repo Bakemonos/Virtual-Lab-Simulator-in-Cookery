@@ -32,6 +32,7 @@ const lightButtonBackground = Color(0xFF603721);
 
 //? SOUND EFFECTS
 const String clickEffect1 = "effects/click_effect1.wav";
+const String background = "effects/background.mp3";
 
 //? LOGO
 const String logo = "assets/logo/logo.png";

@@ -6,6 +6,7 @@ import 'package:virtual_lab/components/custom_button.dart';
 import 'package:virtual_lab/components/custom_header.dart';
 import 'package:virtual_lab/components/custom_svg_picture.dart';
 import 'package:virtual_lab/controllers/controller.dart';
+import 'package:virtual_lab/main.dart';
 import 'package:virtual_lab/pages/menu.dart';
 import 'package:virtual_lab/utils/properties.dart';
 import 'package:virtual_lab/utils/routes.dart';
@@ -68,53 +69,40 @@ class MySettingsPage extends StatelessWidget {
                                   children: [
                                     Container(
                                       decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(
-                                          16.r,
-                                        ),
+                                        borderRadius: BorderRadius.circular(16.r),
                                         color: backgroundColor,
                                       ),
                                       height: 60.h,
                                       child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceEvenly,
+                                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                         children: [
-                                          Obx(
-                                            () => _settingIconToggle(
-                                              controller: controller,
-                                              path:
-                                                  controller.soundToggle.value
-                                                      ? soundOn
-                                                      : soundOff,
-                                              onTap: () {
-                                                controller.soundToggle.value =
-                                                    !controller
-                                                        .soundToggle
-                                                        .value;
-                                              },
-                                            ),
-                                          ),
-                                          Obx(
-                                            () => _settingIconToggle(
-                                              controller: controller,
-                                              path:
-                                                  controller.musicToggle.value
-                                                      ? musicOn
-                                                      : musicOff,
-                                              onTap: () {
-                                                controller.musicToggle.value =
-                                                    !controller
-                                                        .musicToggle
-                                                        .value;
-                                              },
-                                            ),
-                                          ),
+                                          Obx(() => _settingIconToggle(
+                                            controller: controller,
+                                            path: controller.soundToggle.value ? soundOn : soundOff,
+                                            onTap: () {
+                                              controller.setSoundToggle(!controller.soundToggle.value);
+                                            },
+                                          )),
+                                          Obx(() => _settingIconToggle(
+                                            controller: controller,
+                                            path: controller.musicToggle.value ? musicOn : musicOff,
+                                            onTap: () {
+                                              final newValue = !controller.musicToggle.value;
+                                              controller.setMusicToggle(newValue);
+
+                                              if (newValue) {
+                                                BackgroundMusic.play();
+                                              } else {
+                                                BackgroundMusic.stop();
+                                              }
+                                            },
+                                          )),
                                           _settingIconToggle(
                                             controller: controller,
                                             path: information,
-                                            onTap:
-                                                () => context.push(
-                                                  Routes.information,
-                                                ),
+                                            onTap: () => context.push(
+                                              Routes.information,
+                                            ),
                                           ),
                                         ],
                                       ),
@@ -191,7 +179,7 @@ class MySettingsPage extends StatelessWidget {
   }) {
     return InkWell(
       onTap: () {
-        controller.playClickSound();
+        SoundEffects.playEffect();
         onTap?.call();
       },
       child: Container(

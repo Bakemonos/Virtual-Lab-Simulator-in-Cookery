@@ -11,6 +11,7 @@ import 'package:virtual_lab/components/custom_svg.dart';
 import 'package:virtual_lab/components/custom_text.dart';
 import 'package:virtual_lab/controllers/controller.dart';
 import 'package:virtual_lab/json/equipments.dart';
+import 'package:virtual_lab/main.dart';
 import 'package:virtual_lab/services/services.dart';
 import 'package:virtual_lab/utils/properties.dart';
 
@@ -138,7 +139,7 @@ class _MyPlatingUIState extends State<MyPlatingUI> {
           ),
           child: GestureDetector(
             onTap: () {
-              controller.playClickSound();
+              SoundEffects.playEffect();
               context.pop();
             },
             child: SizedBox(

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:virtual_lab/components/custom_text.dart';
-import 'package:virtual_lab/controllers/controller.dart';
+import 'package:virtual_lab/main.dart';
 import 'package:virtual_lab/utils/properties.dart';
 
 class MyButton extends StatelessWidget {
@@ -24,12 +24,11 @@ class MyButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final controller = AppController.instance;
 
     return ElevatedButton(
       onPressed: () {
         try {
-          controller.playClickSound();
+          SoundEffects.playEffect();
         } catch (e) {
           debugPrint('Sound error: $e');
         }

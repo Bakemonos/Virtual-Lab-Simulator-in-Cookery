@@ -7,6 +7,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:go_router/go_router.dart';
 import 'package:quickalert/models/quickalert_type.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:virtual_lab/Json/tools.dart';
 import 'package:virtual_lab/components/custom_dropdown.dart';
 import 'package:virtual_lab/components/custom_svg.dart';
@@ -16,6 +17,7 @@ import 'package:virtual_lab/components/custom_dalog.dart';
 import 'package:virtual_lab/components/shimmer.dart';
 import 'package:virtual_lab/json/equipments.dart';
 import 'package:virtual_lab/json/food_menu.dart';
+import 'package:virtual_lab/main.dart';
 import 'package:virtual_lab/models/food_menu_model.dart';
 import 'package:virtual_lab/models/ingredients_model.dart';
 import 'package:virtual_lab/models/user_model.dart';
@@ -36,6 +38,7 @@ class AppController extends GetxController {
   @override
   void onClose() {
     _timer?.cancel();
+    _loadSettings();
     super.onClose();
   }
 
@@ -143,6 +146,41 @@ class AppController extends GetxController {
   Rx<EquipmentsModel> cookingToolData = cookingEquipment[0].obs;
 
   var selectedOption = 'plates'.obs;
+
+  var soundEffectsEnabled = true.obs;
+
+  void toggleSoundEffects() {
+    soundEffectsEnabled.value = !soundEffectsEnabled.value;
+  }
+
+  Future<void> _loadSettings() async {
+    final prefs = await SharedPreferences.getInstance();
+    soundToggle.value = prefs.getBool('soundToggle') ?? true;
+    musicToggle.value = prefs.getBool('musicToggle') ?? true;
+  }
+
+  Future<void> setSoundToggle(bool value) async {
+    soundToggle.value = value;
+    final prefs = await SharedPreferences.getInstance();
+    prefs.setBool('soundToggle', value);
+  }
+
+  Future<void> setMusicToggle(bool value) async {
+    musicToggle.value = value;
+    final prefs = await SharedPreferences.getInstance();
+    prefs.setBool('musicToggle', value);
+  }
+  
+  Future<void> loadSettingsIfNeeded() async {
+    if (!_settingsLoaded) {
+      final prefs = await SharedPreferences.getInstance();
+      soundToggle.value = prefs.getBool('soundToggle') ?? true;
+      musicToggle.value = prefs.getBool('musicToggle') ?? true;
+      _settingsLoaded = true;
+    }
+  }
+
+  bool _settingsLoaded = false;
 
   
   //! METHODS ---------------------------------------------------------------------------------------------------------------
@@ -428,9 +466,9 @@ class AppController extends GetxController {
     isSelectedList[index].value = !isSelectedList[index].value;
   }
 
-  void playClickSound() async {
-    await player.play(AssetSource(clickEffect1));
-  }
+  // void playClickSound() async {
+  //   await player.play(AssetSource(clickEffect1));
+  // }
 
   //! WIDGET ----------------------------------------------------------------------------------------------------------------
 
@@ -483,7 +521,7 @@ class AppController extends GetxController {
       right: isLeft ? null : 14.w,
       child: GestureDetector(
         onTap: () {
-          playClickSound();
+          SoundEffects.playEffect();
           onTap();
         },
         child: SizedBox(
