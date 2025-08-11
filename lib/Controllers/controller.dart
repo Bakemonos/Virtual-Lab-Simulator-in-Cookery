@@ -230,7 +230,7 @@ class AppController extends GetxController {
     required String take,
   }) {
 
-    final currentIngredient = ingredientActionData.value.copyWith(used: cookingToolData.value); //TODO TRY DATA
+    final currentIngredient = ingredientActionData.value.copyWith(used: cookingToolData.value);
     
     if (currentIngredient.name.isEmpty) return;
 

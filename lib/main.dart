@@ -105,6 +105,12 @@ class _SplashWrapperState extends ConsumerState<SplashWrapper> {
     loader.update(1.0, 'Done!');
     await Future.delayed(const Duration(milliseconds: 200));
 
+    final controller = Get.find<AppController>();
+    await controller.loadSettingsIfNeeded();
+    if (controller.musicToggle.value) {
+      BackgroundMusic.play();
+    }
+
     if (mounted) {
       context.go('/'); 
     }
@@ -122,7 +128,6 @@ class _SplashWrapperState extends ConsumerState<SplashWrapper> {
   }
 }
 
-/// SPLASH SCREEN
 class SplashScreen extends StatelessWidget {
   final double progress;
   final String message;
@@ -182,7 +187,6 @@ class SplashScreen extends StatelessWidget {
   }
 }
 
-/// EXAMPLE HOME PAGE (replace with your actual one)
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
 
@@ -191,6 +195,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+
   @override
   void initState() {
     super.initState();
