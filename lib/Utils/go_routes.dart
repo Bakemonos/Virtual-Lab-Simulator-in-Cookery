@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:riverpod/riverpod.dart';
 import 'package:virtual_lab/Pages/plating/plating_ui.dart';
+import 'package:virtual_lab/main.dart';
 import 'package:virtual_lab/pages/Information/information.dart';
 import 'package:virtual_lab/pages/about_game.dart';
 import 'package:virtual_lab/pages/achievements/achievement_type.dart';
@@ -20,8 +21,16 @@ import 'package:virtual_lab/utils/routes.dart';
 
 final myRoutesProvider = Provider<GoRouter>((ref) {
   return GoRouter(
+    initialLocation: Routes.splash,
     routes: [
-      GoRoute(path: '/', builder: (context, state) => const MyLoginPage()),
+      GoRoute(
+        path: '/',
+        builder: (context, state) => const MyLoginPage(),
+      ),
+      GoRoute(
+        path: Routes.splash,
+        builder: (context, state) => const SplashWrapper(),
+      ),
       GoRoute(
         path: Routes.signIn,
         builder: (context, state) => const MyLoginPage(),
@@ -30,7 +39,6 @@ final myRoutesProvider = Provider<GoRouter>((ref) {
         path: Routes.signUp,
         builder: (context, state) => const MySignUpPage(),
       ),
-
       //? FORGOT PASSWORD
       GoRoute(
         path: Routes.forgotEnterEmail,

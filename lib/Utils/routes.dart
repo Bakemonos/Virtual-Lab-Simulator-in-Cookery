@@ -14,4 +14,6 @@ class Routes {
   static String ingredientsSelection = '/ingredient_selection';
   static String information = '/information';
   static String plating = '/plating';
+  static String splash = '/splash';
+  
 }

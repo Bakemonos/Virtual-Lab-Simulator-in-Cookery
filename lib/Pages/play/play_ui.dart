@@ -3,11 +3,11 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:virtual_lab/components/custom_svg.dart';
 import 'package:virtual_lab/controllers/controller.dart';
-import 'package:virtual_lab/main.dart';
 import 'package:virtual_lab/models/ingredients_model.dart';
 import 'package:virtual_lab/pages/play/inventory_ui.dart';
 import 'package:virtual_lab/pages/play/procedure_plating_ui.dart';
 import 'package:virtual_lab/pages/play/process_ui.dart';
+import 'package:virtual_lab/utils/effects.dart';
 import 'package:virtual_lab/utils/properties.dart';
 import 'package:virtual_lab/utils/routes.dart';
 

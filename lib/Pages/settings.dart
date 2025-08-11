@@ -6,8 +6,8 @@ import 'package:virtual_lab/components/custom_button.dart';
 import 'package:virtual_lab/components/custom_header.dart';
 import 'package:virtual_lab/components/custom_svg_picture.dart';
 import 'package:virtual_lab/controllers/controller.dart';
-import 'package:virtual_lab/main.dart';
 import 'package:virtual_lab/pages/menu.dart';
+import 'package:virtual_lab/utils/effects.dart';
 import 'package:virtual_lab/utils/properties.dart';
 import 'package:virtual_lab/utils/routes.dart';
 

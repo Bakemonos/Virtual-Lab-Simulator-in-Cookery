@@ -17,11 +17,11 @@ import 'package:virtual_lab/components/custom_dalog.dart';
 import 'package:virtual_lab/components/shimmer.dart';
 import 'package:virtual_lab/json/equipments.dart';
 import 'package:virtual_lab/json/food_menu.dart';
-import 'package:virtual_lab/main.dart';
 import 'package:virtual_lab/models/food_menu_model.dart';
 import 'package:virtual_lab/models/ingredients_model.dart';
 import 'package:virtual_lab/models/user_model.dart';
 import 'package:virtual_lab/services/services.dart';
+import 'package:virtual_lab/utils/effects.dart';
 import 'package:virtual_lab/utils/enum.dart';
 import 'package:virtual_lab/utils/helper.dart';
 import 'package:virtual_lab/utils/properties.dart';
@@ -75,8 +75,6 @@ class AppController extends GetxController {
   final ingredientLimit = 15.obs;
   var seconds = 30.obs;
 
-  final soundToggle = true.obs;
-  final musicToggle = true.obs;
   final loader = false.obs;
   final bagToggle = false.obs;
   final equipmentToggle = false.obs;
@@ -151,7 +149,10 @@ class AppController extends GetxController {
 
   void toggleSoundEffects() {
     soundEffectsEnabled.value = !soundEffectsEnabled.value;
-  }
+  } 
+
+  final soundToggle = true.obs;
+  final musicToggle = true.obs;
 
   Future<void> _loadSettings() async {
     final prefs = await SharedPreferences.getInstance();

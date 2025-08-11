@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:virtual_lab/components/custom_text.dart';
-import 'package:virtual_lab/main.dart';
+import 'package:virtual_lab/utils/effects.dart';
 import 'package:virtual_lab/utils/properties.dart';
 
 class MyButton extends StatelessWidget {
