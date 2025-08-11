@@ -66,17 +66,21 @@ class MyForgotChangePasswordPage extends StatelessWidget {
                             Row(
                               spacing: 16.w,
                               children: [
-                                MyButton(
-                                  text: 'Cancel',
-                                  onTap: () {
-                                    context.go(Routes.signIn);
-                                  },
+                                Expanded(
+                                  child: MyButton(
+                                    text: 'Cancel',
+                                    onTap: () {
+                                      context.go(Routes.signIn);
+                                    },
+                                  ),
                                 ),
-                                MyButton(
-                                  text: 'Submit',
-                                  onTap: () {
-                                    //TODO CHANGE PASSWORD
-                                  },
+                                Expanded(
+                                  child: MyButton(
+                                    text: 'Submit',
+                                    onTap: () {
+                                      //TODO CHANGE PASSWORD
+                                    },
+                                  ),
                                 ),
                               ],
                             ),

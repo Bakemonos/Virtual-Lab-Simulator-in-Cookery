@@ -50,9 +50,7 @@ class _MyAppState extends ConsumerState<MyApp> {
   @override
   void initState() {
     super.initState();
-
     final controller = Get.find<AppController>();
-
     Future.microtask(() async {
       await controller.loadSettingsIfNeeded(); 
       if (controller.musicToggle.value) {
@@ -82,6 +80,7 @@ class _MyAppState extends ConsumerState<MyApp> {
     );
   }
 }
+
 
 class BackgroundMusic {
   static final AudioPlayer _bgPlayer = AudioPlayer(

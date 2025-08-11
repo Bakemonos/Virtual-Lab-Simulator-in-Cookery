@@ -60,18 +60,22 @@ class MyForgotEnterEmailPage extends StatelessWidget {
                             Row(
                               spacing: 16.w,
                               children: [
-                                MyButton(
-                                  text: 'Cancel',
-                                  onTap: () {
-                                    context.pop();
-                                  },
+                                Expanded(
+                                  child: MyButton(
+                                    text: 'Cancel',
+                                    onTap: () {
+                                      context.pop();
+                                    },
+                                  ),
                                 ),
-                                MyButton(
-                                  text: 'Submit',
-                                  onTap: () {
-                                    //TODO SUBMIT EMAIL
-                                    context.go(Routes.forgotChangePassword);
-                                  },
+                                Expanded(
+                                  child: MyButton(
+                                    text: 'Submit',
+                                    onTap: () {
+                                      //TODO SUBMIT EMAIL
+                                      context.go(Routes.forgotChangePassword);
+                                    },
+                                  ),
                                 ),
                               ],
                             ),

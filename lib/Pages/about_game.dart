@@ -69,15 +69,13 @@ class MyAboutGamePage extends StatelessWidget {
                                           size: 24.sp,
                                         ),
                                         MyText(
-                                          text:
-                                              'In this fun and educational game, you\'ll learn how to prepare delicious meals from around the world. Follow recipe s, manage ingredients, and become the ultimate kitchen pro!',
+                                          text: 'In this fun and educational game, you\'ll learn how to prepare delicious meals from around the world. Follow recipe s, manage ingredients, and become the ultimate kitchen pro!',
                                           textAlign: TextAlign.center,
                                           fontWeight: FontWeight.w500,
                                           size: 18.sp,
                                         ),
                                         MyText(
-                                          text:
-                                              'Version: ${controller.version}\nBuild: ${controller.buildNumber}\nLast Updated: May 2025\nDevelopers: Rico Jay & Carlo\nSupport: support@cookingmaster.com',
+                                          text: 'Developers: Rico Jay & Carlo\nSupport: support@cookingmaster.com',
                                           textAlign: TextAlign.center,
                                           fontWeight: FontWeight.w500,
                                           textHeight: 2,
