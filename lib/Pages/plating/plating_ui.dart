@@ -6,7 +6,9 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/state_manager.dart';
 import 'package:go_router/go_router.dart';
+import 'package:quickalert/models/quickalert_type.dart';
 import 'package:virtual_lab/Components/shimmer.dart';
+import 'package:virtual_lab/components/custom_dalog.dart';
 import 'package:virtual_lab/components/custom_svg.dart';
 import 'package:virtual_lab/components/custom_text.dart';
 import 'package:virtual_lab/controllers/controller.dart';
@@ -14,6 +16,7 @@ import 'package:virtual_lab/json/equipments.dart';
 import 'package:virtual_lab/services/services.dart';
 import 'package:virtual_lab/utils/effects.dart';
 import 'package:virtual_lab/utils/properties.dart';
+import 'package:virtual_lab/utils/routes.dart';
 
 class MyPlatingUI extends StatefulWidget {
   const MyPlatingUI({super.key});
@@ -140,7 +143,18 @@ class _MyPlatingUIState extends State<MyPlatingUI> {
           child: GestureDetector(
             onTap: () {
               SoundEffects.playEffect();
-              context.pop();
+              quickAlertDialog(
+                context: context,
+                type: QuickAlertType.warning,
+                title: 'Are you sure?',
+                message: 'This will reset your plating',
+                confirmBtnText: 'Yes',
+                barrierDismissible: true,
+                showCancelBtn: true,
+                onConfirmBtnTap: () {
+                  context.go(Routes.playUI);
+                },
+              );
             },
             child: SizedBox(
               height: 48.h,

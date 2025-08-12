@@ -79,23 +79,25 @@ class _SplashWrapperState extends ConsumerState<SplashWrapper> {
       }
     };
 
-    loader.update(0.1, 'Initializing dependencies...');
-    await GeneralBindings().dependencies();
-    await Future.delayed(const Duration(milliseconds: 300));
-
-    loader.update(0.3, 'Loading environment...');
-    await dotenv.load(fileName: '.env');
-    await Future.delayed(const Duration(milliseconds: 300));
-
-    loader.update(0.5, 'Configuring cloud storage...');
-    cloudinary = CloudinaryObject.fromCloudName(cloudName: cloudName.toString());
-    await Future.delayed(const Duration(milliseconds: 300));
-
-    loader.update(0.7, 'Configuring screen...');
+    loader.update(0.1, 'Configuring screen...');
     await SystemChrome.setPreferredOrientations([
       DeviceOrientation.landscapeLeft,
       DeviceOrientation.landscapeRight,
     ]);
+    await Future.delayed(const Duration(milliseconds: 300));
+
+    loader.update(0.3, 'Initializing dependencies...');
+    await GeneralBindings().dependencies();
+    await Future.delayed(const Duration(milliseconds: 300));
+
+    loader.update(0.5, 'Loading environment...');
+    await dotenv.load(fileName: '.env');
+    await Future.delayed(const Duration(milliseconds: 300));
+
+    loader.update(0.7, 'Configuring cloud storage...');
+    cloudinary = CloudinaryObject.fromCloudName(cloudName: cloudName.toString());
+    await Future.delayed(const Duration(milliseconds: 300));
+
     await SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
     await Future.delayed(const Duration(milliseconds: 300));
 
