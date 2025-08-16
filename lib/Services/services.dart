@@ -105,7 +105,7 @@ class ApiServices extends GetxController {
 
 
 
-  //* SERVICES ---------------------------------------------------------------------------------------------------------------------
+  //* CREATE ---------------------------------------------------------------------------------------------------------------------
 
   Future<void> signup(BuildContext context) async {
     controller.loader.value = true;
@@ -393,7 +393,11 @@ class ApiServices extends GetxController {
       }
     }
   }
-  
+
+
+
+  //* READ ---------------------------------------------------------------------------------------------------------------------
+
   Future<void> getInventory(BuildContext context) async {
     controller.loader.value = true;
     
@@ -501,7 +505,5 @@ class ApiServices extends GetxController {
       debugPrint('STACKTRACE: $t');
     }
   }
-
-  
 
 }

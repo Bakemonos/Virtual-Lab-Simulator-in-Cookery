@@ -13,13 +13,13 @@ class BackgroundMusic {
 
     await _bgPlayer.setAudioContext(AudioContext(
       android: const AudioContextAndroid(
-        contentType: AndroidContentType.music,
-        usageType: AndroidUsageType.media,
-        audioFocus: AndroidAudioFocus.gain,
-        stayAwake: true,
+        contentType: AndroidContentType.sonification,
+        usageType: AndroidUsageType.game,
+        audioFocus: AndroidAudioFocus.gainTransient,
+        stayAwake: false,
       ),
       iOS: AudioContextIOS(
-        category: AVAudioSessionCategory.ambient,
+        category: AVAudioSessionCategory.soloAmbient,
       ),
     ));
 
@@ -31,6 +31,7 @@ class BackgroundMusic {
     await _bgPlayer.stop();
   }
 }
+
 
 class SoundEffects {
   static Future<void> playEffect() async {

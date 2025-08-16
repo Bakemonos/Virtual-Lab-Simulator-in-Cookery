@@ -30,8 +30,11 @@ class LoadingProgress extends ChangeNotifier {
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
+  WidgetsBinding.instance.addObserver(AppLifecycleHandler());
+
   runApp(const ProviderScope(child: MyApp()));
 }
+
 
 class MyApp extends ConsumerWidget {
   const MyApp({super.key});
@@ -217,3 +220,18 @@ class _HomePageState extends State<HomePage> {
     );
   }
 }
+
+class AppLifecycleHandler extends WidgetsBindingObserver {
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.paused) {
+      BackgroundMusic.stop(); 
+    } else if (state == AppLifecycleState.resumed) {
+      final controller = Get.find<AppController>();
+      if (controller.musicToggle.value) {
+        BackgroundMusic.play();
+      }
+    }
+  }
+}
+
