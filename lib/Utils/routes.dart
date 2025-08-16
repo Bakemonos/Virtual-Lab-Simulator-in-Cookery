@@ -15,5 +15,6 @@ class Routes {
   static String information = '/information';
   static String plating = '/plating';
   static String splash = '/splash';
+  static String evaluatedCoc = '/evaluated_coc';
   
 }

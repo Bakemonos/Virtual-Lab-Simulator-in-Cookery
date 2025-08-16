@@ -6,6 +6,7 @@ import 'package:virtual_lab/main.dart';
 import 'package:virtual_lab/pages/Information/information.dart';
 import 'package:virtual_lab/pages/about_game.dart';
 import 'package:virtual_lab/pages/achievements/achievement_type.dart';
+import 'package:virtual_lab/pages/achievements/evaluated_coc.dart';
 import 'package:virtual_lab/pages/achievements/slide_option.dart';
 import 'package:virtual_lab/pages/achievements/view_achievement.dart';
 import 'package:virtual_lab/pages/chooseIngredients/ingredients_selector.dart';
@@ -101,6 +102,11 @@ final myRoutesProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: Routes.plating,
         builder: (context, state) => const MyPlatingUI(),
+      ),
+
+      GoRoute(
+        path: Routes.evaluatedCoc,
+        builder: (context, state) => const MyEvaluatedCoc(),
       ),
 
       

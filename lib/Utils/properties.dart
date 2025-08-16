@@ -34,10 +34,11 @@ const lightButtonBackground = Color(0xFF603721);
 const String clickEffect1 = "effects/click_effect1.wav";
 const String background = "effects/background.mp3";
 
-//? LOGO
+//? IMAGES
 const String logo = "assets/logo/logo.png";
+const String dishImg = "assets/images/dish.png";
 
-//? ICONS / IMAGES
+//? ICONS
 const String characterIcon = "assets/icons/character.svg";
 const String information = "assets/icons/information.svg";
 const String menu = "assets/icons/menu.svg";
@@ -54,6 +55,7 @@ const String basket = "assets/icons/basket.svg";
 const String box = "assets/icons/box.svg";
 const String trashbag = "assets/icons/trashbag.svg";
 const String tap = "assets/icons/tap.svg";
+const String arrow = "assets/icons/arrow.svg";
 
 //? ON
 const String soundOn = "assets/icons/sound_on.svg";

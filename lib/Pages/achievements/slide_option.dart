@@ -36,6 +36,7 @@ class _MySliderOptionPageState extends State<MySliderOptionPage> {
 
   @override
   void dispose() {
+    controller.submittedCocList.clear();
     _pageController.dispose();
     super.dispose();
   }
@@ -63,7 +64,7 @@ class _MySliderOptionPageState extends State<MySliderOptionPage> {
                     var submitted = controller.submittedCocList;
                     if(controller.loader.value) {
                       return loader();
-                    }
+                    } 
             
                     if(submitted.isEmpty){
                       return Row(
@@ -107,7 +108,7 @@ class _MySliderOptionPageState extends State<MySliderOptionPage> {
                             onTap: () {
                               setState(() {
                                 controller.selectedDish.value = item;
-                                context.go(Routes.viewAchievement);
+                                context.push(Routes.viewAchievement);
                                 selectedClass = item.id;
                               });
                             },
@@ -184,8 +185,7 @@ class _MySliderOptionPageState extends State<MySliderOptionPage> {
           controller.floatingButton(
             context: context,
             onTap: () {
-              controller.submittedCocList.clear();
-              context.go(Routes.achievementOption);
+              context.pop();
             },
           ),
         ],

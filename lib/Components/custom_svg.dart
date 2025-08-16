@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 
 class MySvgPicture extends StatefulWidget {
@@ -27,7 +28,7 @@ class _MySvgPictureState extends State<MySvgPicture> {
       widget.path,
       fit: widget.fit!,
       color: widget.iconColor,
-      width: widget.iconSize,
+      width: widget.iconSize?? 24.w,
     );
   }
 }

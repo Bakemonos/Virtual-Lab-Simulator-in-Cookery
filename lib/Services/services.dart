@@ -13,6 +13,7 @@ import 'package:virtual_lab/components/custom_dalog.dart';
 import 'package:virtual_lab/controllers/controller.dart';
 import 'package:virtual_lab/json/coc1.dart';
 import 'package:virtual_lab/json/coc1_combination.dart';
+import 'package:virtual_lab/models/grade_model.dart';
 import 'package:virtual_lab/models/ingredients_model.dart';
 import 'package:virtual_lab/models/user_model.dart';
 import 'package:virtual_lab/services/api_response.dart';
@@ -266,7 +267,7 @@ class ApiServices extends GetxController {
       debugPrint('Error: $e');
     }
   }
-
+ 
   Future<void> createDish(BuildContext context) async {
     controller.loader.value = true;
     try {
@@ -488,14 +489,18 @@ class ApiServices extends GetxController {
 
       if (!context.mounted) return;
 
+      debugPrint('STATUS: ${response.message}');
+
       if (response.success == true && response.data != null) {
         try {
           debugPrint('DATA: ${response.data}');
-
+          controller.grade.value = GradeModel.fromJson(response.data!);
         } catch (e) {
+          controller.submittedCocList.clear();
           debugPrint('PARSING ERROR: $e');
         }
       } else {
+        controller.grade.value = GradeModel.empty();
         debugPrint('Score fetch failed: ${response.message}');
       }
     } catch (e, t) {
@@ -505,5 +510,6 @@ class ApiServices extends GetxController {
       debugPrint('STACKTRACE: $t');
     }
   }
+
 
 }

@@ -18,6 +18,7 @@ import 'package:virtual_lab/components/shimmer.dart';
 import 'package:virtual_lab/json/equipments.dart';
 import 'package:virtual_lab/json/food_menu.dart';
 import 'package:virtual_lab/models/food_menu_model.dart';
+import 'package:virtual_lab/models/grade_model.dart';
 import 'package:virtual_lab/models/ingredients_model.dart';
 import 'package:virtual_lab/models/user_model.dart';
 import 'package:virtual_lab/services/services.dart';
@@ -90,10 +91,10 @@ class AppController extends GetxController {
   RxList<bool> foodLoading = List.generate(foodMenu.length, (_) => false).obs;
 
   //? TEXT CONTROLLER
-  final emailController = TextEditingController();
-  final passwordController = TextEditingController();
-  //   final emailController = TextEditingController(text: 'ricojay@gmail.com');
-  // final passwordController = TextEditingController(text: 'password');
+  // final emailController = TextEditingController();
+  // final passwordController = TextEditingController();
+    final emailController = TextEditingController(text: 'ricojay@gmail.com');
+  final passwordController = TextEditingController(text: 'password');
   final firstnameController = TextEditingController();
   final lastnameController = TextEditingController();
   final lrnController = TextEditingController();
@@ -111,6 +112,9 @@ class AppController extends GetxController {
 
   //? DISH
   Rx<SubmitedCocModel> selectedDish = SubmitedCocModel.empty().obs;
+
+  //? GRADE
+  Rx<GradeModel> grade = GradeModel.empty().obs;
 
   //? DRAG & DROP
   Rx<IngredientsModel> ingredientDragDropData = IngredientsModel.empty().obs;
@@ -142,6 +146,8 @@ class AppController extends GetxController {
   //? EQUIPMENTS 
   RxList<EquipmentsModel> equipmentData = <EquipmentsModel>[].obs;
   Rx<EquipmentsModel> cookingToolData = cookingEquipment[0].obs;
+
+  late FoodMenuModel selectedMenu;
 
   var selectedOption = 'plates'.obs;
 

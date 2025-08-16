@@ -58,9 +58,9 @@ class _MyAchievementTypePageState extends State<MyAchievementTypePage> {
                               ),
                               child: foodChoices(
                                 onTap: () async {
-                                  context.push(Routes.sliderOption);
+                                  controller.selectedMenu = data;
+                                  context.push(Routes.evaluatedCoc);
                                   await db.getScore(context, data.menu!);
-                                  if(context.mounted) await db.getDish(context, type: data.menu);
                                 },
                                 path: data.path,
                                 label: data.label,
@@ -146,6 +146,17 @@ class _MyAchievementTypePageState extends State<MyAchievementTypePage> {
                       size: 14.sp,
                       textAlign: TextAlign.center,
                     ),
+                    // const Spacer(),
+                    // Row( 
+                    //   mainAxisAlignment: MainAxisAlignment.center,
+                    //   crossAxisAlignment: CrossAxisAlignment.end,
+                    //   children: [ 
+                    //     Icon(Icons.star,color: darkBrown,size: 28.w),
+                    //     Icon(Icons.star,color: darkBrown,size: 36.w),
+                    //     Icon(Icons.star,color: darkBrown,size: 28.w),
+                    //   ],
+                    // ),
+                    // SizedBox(height: 24.h),
                   ],
                 ),
               ),

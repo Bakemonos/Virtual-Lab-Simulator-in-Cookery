@@ -122,7 +122,7 @@ class _MyViewAchievementPageState extends State<MyViewAchievementPage> {
           controller.floatingButton(
             context: context,
             onTap: () {
-              context.go(Routes.sliderOption);
+              context.pop();
             },
           ),
         ],
