@@ -28,6 +28,9 @@ const redDark = Color(0xFFA74223);
 const lightGridColor = Color(0xFFDAB66F);
 const darkGridColor = Color(0xFFAD886E);
 
+const lightYellowColor = Color(0xFFF9D545);
+const darkYellowColor = Color(0xFFD8B21C);
+
 const lightButtonBackground = Color(0xFF603721);
 
 //? SOUND EFFECTS

@@ -15,6 +15,7 @@ import 'package:virtual_lab/json/coc1.dart';
 import 'package:virtual_lab/json/coc1_combination.dart';
 import 'package:virtual_lab/models/grade_model.dart';
 import 'package:virtual_lab/models/ingredients_model.dart';
+import 'package:virtual_lab/models/progress_model.dart';
 import 'package:virtual_lab/models/user_model.dart';
 import 'package:virtual_lab/services/api_response.dart';
 import 'package:virtual_lab/utils/helper.dart';
@@ -172,8 +173,11 @@ class ApiServices extends GetxController {
       final response = await post('auth/loginStudent', data);
 
       if (response.success!) {
+        final data = UserModel.fromJson(response.data!);
         controller.loader.value = false;
         debugPrint('SUCCESS : ${response.message}');
+
+        if(context.mounted) await getProgress(context, data.id!);
 
         if (context.mounted) {
           quickAlertDialog(
@@ -184,7 +188,7 @@ class ApiServices extends GetxController {
             onConfirmBtnTap: () {
               controller.loader.value = false;
               controller.resetSignin();
-              controller.userData.value = UserModel.fromJson(response.data!);
+              controller.userData.value = data;
               context.go(Routes.menu);
             },
           );
@@ -489,14 +493,11 @@ class ApiServices extends GetxController {
 
       if (!context.mounted) return;
 
-      debugPrint('STATUS: ${response.message}');
-
       if (response.success == true && response.data != null) {
         try {
-          debugPrint('DATA: ${response.data}');
           controller.grade.value = GradeModel.fromJson(response.data!);
         } catch (e) {
-          controller.submittedCocList.clear();
+          controller.grade.value = GradeModel.empty();
           debugPrint('PARSING ERROR: $e');
         }
       } else {
@@ -511,5 +512,33 @@ class ApiServices extends GetxController {
     }
   }
 
+  Future<void> getProgress(BuildContext context, String studentId) async {
+    controller.loader.value = true;
+    try {   
+      final response = await get('stage/read/$studentId');
+      controller.loader.value = false;
 
+      if (!context.mounted) return;
+
+      debugPrint('\nDATA : ${response.data}\n');
+
+      if (response.success == true && response.data != null) {
+        try {
+          controller.progress.value = ProgressModel.fromJson(response.data!);
+        } catch (e) {
+          controller.progress.value = ProgressModel.empty();
+          debugPrint('PARSING ERROR: $e');
+        }
+      } else {
+        controller.progress.value = ProgressModel.empty();
+        debugPrint('Score fetch failed: ${response.message}');
+      }
+    } catch (e, t) {
+      controller.loader.value = false;
+      final errorMessage = helper.getErrorMessage(e);
+      debugPrint('Error: $errorMessage');
+      debugPrint('STACKTRACE: $t');
+    }
+  }
+ 
 }

@@ -20,6 +20,7 @@ import 'package:virtual_lab/json/food_menu.dart';
 import 'package:virtual_lab/models/food_menu_model.dart';
 import 'package:virtual_lab/models/grade_model.dart';
 import 'package:virtual_lab/models/ingredients_model.dart';
+import 'package:virtual_lab/models/progress_model.dart';
 import 'package:virtual_lab/models/user_model.dart';
 import 'package:virtual_lab/services/services.dart';
 import 'package:virtual_lab/utils/effects.dart';
@@ -106,7 +107,7 @@ class AppController extends GetxController {
 
   //? USER DATA
   Rx<UserModel> userData = UserModel.empty().obs;
-
+ 
   //? USER INVENTORY DATA
   Rx<InventoryModel> typeInventory = InventoryModel.empty().obs;
 
@@ -115,6 +116,9 @@ class AppController extends GetxController {
 
   //? GRADE
   Rx<GradeModel> grade = GradeModel.empty().obs;
+
+  //? PROGRESS
+  Rx<ProgressModel> progress = ProgressModel.empty().obs;
 
   //? DRAG & DROP
   Rx<IngredientsModel> ingredientDragDropData = IngredientsModel.empty().obs;

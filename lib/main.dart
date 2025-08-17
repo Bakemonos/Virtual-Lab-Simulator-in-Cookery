@@ -46,13 +46,16 @@ class MyApp extends ConsumerWidget {
     return ScreenUtilInit(
       designSize: const Size(800, 360),
       minTextAdapt: true,
-      child: MaterialApp.router(
-        debugShowCheckedModeBanner: false,
-        theme: ThemeData(
-          fontFamily: 'Poppins',
-          scaffoldBackgroundColor: backgroundColor,
+      child: GestureDetector(
+        onTap: ()=> FocusScope.of(context).unfocus(),
+        child: MaterialApp.router(
+          debugShowCheckedModeBanner: false,
+          theme: ThemeData(
+            fontFamily: 'Poppins',
+            scaffoldBackgroundColor: backgroundColor,
+          ),
+          routerConfig: myRoutes,
         ),
-        routerConfig: myRoutes,
       ),
     );
   }

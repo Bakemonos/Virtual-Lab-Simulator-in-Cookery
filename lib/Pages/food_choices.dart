@@ -24,11 +24,30 @@ class MyFoodChoicesPage extends StatefulWidget {
 class _MyFoodChoicesPageState extends State<MyFoodChoicesPage> {
   final controller = AppController.instance;
   final db = ApiServices.instance;
-  final List<bool> unlocked = [true, false, false];
+
+  /// Each button can be: "locked", "playable", "complete"
+  List<String> get buttonStates {
+    final progress = controller.progress.value;
+
+    // COC1: always unlocked
+    String coc1State =
+        progress.coc1 == "complete" ? "complete" : "playable";
+
+    // COC2: unlocked only if coc1 is complete
+    String coc2State = progress.coc1 == "complete"
+        ? (progress.coc2 == "complete" ? "complete" : "playable")
+        : "locked";
+
+    // COC3: unlocked only if coc2 is complete
+    String coc3State = progress.coc2 == "complete"
+        ? (progress.coc3 == "complete" ? "complete" : "playable")
+        : "locked";
+
+    return [coc1State, coc2State, coc3State];
+  }
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       resizeToAvoidBottomInset: false,
       body: Stack(
@@ -49,44 +68,50 @@ class _MyFoodChoicesPageState extends State<MyFoodChoicesPage> {
                       ),
                       child: Padding(
                         padding: EdgeInsets.fromLTRB(24.w, 40.h, 24.w, 8.h),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: List.generate(3, (index) {
-                            var data = foodMenu[index];
+                        child: Obx(() {
+                          return Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: List.generate(3, (index) {
+                              var data = foodMenu[index];
 
-                            return Padding(
-                              padding: EdgeInsets.only(
-                                right: index != 2 ? 24.w : 0,
-                              ),
-                              child: foodChoices(
-                                index: index,
-                                instructionFunction: () => controller.instruction(context, data),
-                                onTap: () async {
-                                  if (controller.foodLoading[index]) return;
+                              return Padding(
+                                padding: EdgeInsets.only(
+                                  right: index != 2 ? 24.w : 0,
+                                ),
+                                child: foodChoices(
+                                  index: index,
+                                  instructionFunction: () =>
+                                      controller.instruction(context, data),
+                                  onTap: () async {
+                                    if (controller.foodLoading[index]) return;
 
-                                  controller.foodLoading[index] = true;
+                                    controller.foodLoading[index] = true;
+                                    controller.tap = true;
 
-                                  controller.tap = true;
-                                  debugPrint('\n SELECTED : ${data.menu}\n');
-                                  controller.typeSelected.value = data;
- 
-                                  await db.getDish(context, type: data.menu);
-                                  if(context.mounted) await db.getInventory(context);
+                                    debugPrint('\n SELECTED : ${data.menu}\n');
+                                    controller.typeSelected.value = data;
 
-                                  controller.tap = false;
-                                  controller.foodLoading[index] = false;
-                                },
-                                unlocked: unlocked[index],
-                                path: data.path,
-                                label: data.label,
-                              ),
-                            );
-                          }),
-                        ),
+                                    await db.getDish(context,
+                                        type: data.menu);
+                                    if (context.mounted) {
+                                      await db.getInventory(context);
+                                    }
+
+                                    controller.tap = false;
+                                    controller.foodLoading[index] = false;
+                                  },
+                                  state: buttonStates[index],
+                                  path: data.path,
+                                  label: data.label,
+                                ),
+                              );
+                            }),
+                          );
+                        }),
                       ),
                     ),
                   ),
-                  MyHeader(text: 'CHOICES'),
+                  const MyHeader(text: 'CHOICES'),
                 ],
               ),
             ),
@@ -113,11 +138,14 @@ class _MyFoodChoicesPageState extends State<MyFoodChoicesPage> {
   Widget foodChoices({
     required String path,
     required String label,
-    required bool unlocked,
+    required String state,
     required Function() onTap,
     required Function() instructionFunction,
     required int index,
   }) {
+    bool isComplete = state == "complete";
+    bool isLocked = state == "locked";
+
     return SizedBox(
       width: 180.w,
       child: Stack(
@@ -149,8 +177,10 @@ class _MyFoodChoicesPageState extends State<MyFoodChoicesPage> {
                               child: Center(
                                 child: CachedNetworkImage(
                                   imageUrl: path,
-                                  placeholder: (context, url) => ShimmerSkeletonLoader(),
-                                  errorWidget: (context, url, error) => Icon(Icons.error),
+                                  placeholder: (context, url) =>
+                                      ShimmerSkeletonLoader(),
+                                  errorWidget: (context, url, error) =>
+                                      const Icon(Icons.error),
                                   fit: BoxFit.cover,
                                 ),
                               ),
@@ -202,13 +232,28 @@ class _MyFoodChoicesPageState extends State<MyFoodChoicesPage> {
               padding: EdgeInsets.symmetric(horizontal: 12.w),
               child: SizedBox(
                 height: 48.h,
-                child: Obx(()=> MyButton(
+                child: Obx(() => MyButton(
                   loading: controller.foodLoading[index],
-                  borderColor: unlocked ? null : redDark,
-                  gradientColor: unlocked ? null : [redLighter, redLighter],
-                  text: unlocked ? 'Play' : 'Locked',
-                  onTap: unlocked ? onTap : () {},
-                ))
+                  borderColor: isLocked ? redDark : isComplete? darkYellowColor : null,
+                  gradientColor: isLocked
+                      ? [redLighter, redLighter]
+                      : (isComplete ? [lightYellowColor, darkYellowColor] : null),
+                  text: isLocked
+                      ? 'Locked'
+                      : (isComplete ? 'Completed' : 'Play'),
+                  onTap: () {
+                    if (isLocked) return;
+                    if (isComplete) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text("This stage is already finished!"),
+                        ),
+                      );
+                      return;
+                    }
+                    onTap(); 
+                  },
+                )),
               ),
             ),
           ),
