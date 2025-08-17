@@ -25,24 +25,13 @@ class _MyFoodChoicesPageState extends State<MyFoodChoicesPage> {
   final controller = AppController.instance;
   final db = ApiServices.instance;
 
-  /// Each button can be: "locked", "playable", "complete"
   List<String> get buttonStates {
     final progress = controller.progress.value;
-
-    // COC1: always unlocked
-    String coc1State =
-        progress.coc1 == "complete" ? "complete" : "playable";
-
-    // COC2: unlocked only if coc1 is complete
+    String coc1State = progress.coc1 == "complete" ? "complete" : "playable";
     String coc2State = progress.coc1 == "complete"
-        ? (progress.coc2 == "complete" ? "complete" : "playable")
-        : "locked";
-
-    // COC3: unlocked only if coc2 is complete
+      ? (progress.coc2 == "complete" ? "complete" : "playable") : "locked";
     String coc3State = progress.coc2 == "complete"
-        ? (progress.coc3 == "complete" ? "complete" : "playable")
-        : "locked";
-
+      ? (progress.coc3 == "complete" ? "complete" : "playable") : "locked";
     return [coc1State, coc2State, coc3State];
   }
 
@@ -177,10 +166,8 @@ class _MyFoodChoicesPageState extends State<MyFoodChoicesPage> {
                               child: Center(
                                 child: CachedNetworkImage(
                                   imageUrl: path,
-                                  placeholder: (context, url) =>
-                                      ShimmerSkeletonLoader(),
-                                  errorWidget: (context, url, error) =>
-                                      const Icon(Icons.error),
+                                  placeholder: (context, url) => ShimmerSkeletonLoader(),
+                                  errorWidget: (context, url, error) => const Icon(Icons.error),
                                   fit: BoxFit.cover,
                                 ),
                               ),
@@ -197,9 +184,7 @@ class _MyFoodChoicesPageState extends State<MyFoodChoicesPage> {
                                   child: IconButton(
                                     onPressed: instructionFunction,
                                     style: ButtonStyle(
-                                      backgroundColor: WidgetStatePropertyAll(
-                                        backgroundColor,
-                                      ),
+                                      backgroundColor: WidgetStatePropertyAll(backgroundColor),
                                     ),
                                     icon: Center(
                                       child: MySvgPicture(
@@ -243,11 +228,10 @@ class _MyFoodChoicesPageState extends State<MyFoodChoicesPage> {
                       : (isComplete ? 'Completed' : 'Play'),
                   onTap: () {
                     if (isLocked) return;
-                    if (isComplete) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text("This stage is already finished!"),
-                        ),
+                    if (isComplete) { 
+                       controller.showFloatingSnackbar(
+                        context: context,
+                        message: 'This stage is already finished!',
                       );
                       return;
                     }
