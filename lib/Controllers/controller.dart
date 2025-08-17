@@ -448,7 +448,7 @@ class AppController extends GetxController {
     _timer?.cancel();
   }
 
-  void resetTimer([int startFrom = 60]) {
+  void resetTimer([int startFrom = 30]) {
     seconds.value = startFrom;
     stopTimer();
   }

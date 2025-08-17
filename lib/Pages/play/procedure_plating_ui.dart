@@ -370,31 +370,33 @@ class _MyProcedurePlatingPageState extends State<MyProcedurePlatingPage> with Ti
         Row(
           spacing: 16.w,
           children: [
-            Obx(() => Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: controller.typeSelected.value?.instructions != null
-              ? controller.typeSelected.value!.instructions.asMap().entries.map((entry) {
-                final index = entry.key + 1;
-                final goal = entry.value;
-                final goalCategory = goal.name;
-
-                final alreadySubmitted = controller.submittedCocList.any((item) {
-                  return item.category == helper.toCamelCase(goalCategory);
-                });
-
-                return Padding(
-                  padding: EdgeInsets.symmetric(vertical: 2.h),
-                  child: MyText(
-                    text: '$index. ${goal.name}',
-                    fontWeight: FontWeight.w500,
-                    color: textLight,
-                    size: 16.sp,
-                    decoration: alreadySubmitted ? TextDecoration.lineThrough : TextDecoration.none,
-                  ),
-                );
-              }).toList() : [],
+            Obx(() => Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: controller.typeSelected.value?.instructions != null
+                ? controller.typeSelected.value!.instructions.asMap().entries.map((entry) {
+                  final index = entry.key + 1;
+                  final goal = entry.value;
+                  final goalCategory = goal.name;
+              
+                  final alreadySubmitted = controller.submittedCocList.any((item) {
+                    return item.category == helper.toCamelCase(goalCategory);
+                  });
+              
+                  return Padding(
+                    padding: EdgeInsets.symmetric(vertical: 2.h),
+                    child: MyText(
+                      text: '$index. ${goal.name}',
+                      fontWeight: FontWeight.w500,
+                      color: textLight,
+                      size: 16.sp,
+                      decoration: alreadySubmitted ? TextDecoration.lineThrough : TextDecoration.none,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  );
+                }).toList() : [],
+              ),
             )),
-            const Spacer(),
             controller.repeatedIconButton(
               label: 'Equipment',
               path: equipment, 

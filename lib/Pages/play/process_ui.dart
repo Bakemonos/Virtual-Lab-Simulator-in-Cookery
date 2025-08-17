@@ -125,6 +125,7 @@ class _MyProcessPageState extends State<MyProcessPage> {
 
   Widget processUI() {
     return Column(
+      mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: [
         DragTarget<IngredientsModel>(
           onWillAcceptWithDetails: (details) => details.data.dragKey == 'submit' && details.data.actions.isEmpty,
@@ -144,7 +145,7 @@ class _MyProcessPageState extends State<MyProcessPage> {
                   child: InkWell(
                     onTap: controller.changeToolToggler,
                     child: SizedBox(
-                      width: 200.w, height: 200.h,
+                      width: 180.w, height: 180.h,
                       child: Stack(
                         children: [
                           Container(
@@ -181,27 +182,25 @@ class _MyProcessPageState extends State<MyProcessPage> {
             );
           },
         ),
-        const Spacer(),
         Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          spacing: 24.w,
+          mainAxisAlignment: MainAxisAlignment.end,
           children: [
-            Spacer(),
-            SizedBox(
-              width: 80.w,
-              child: Column(
-                spacing: 8.h,
-                children: [
-                  controller.actionButton(text: 'Check', onPressed: checkStatus),
-                  controller.actionButton(text: 'Submit', onPressed: (){
-                    controller.resetErrorHandler();
-                    submitCreateDish();
-                  }),
-                ],
-              ),
+            controller.repeatedIconButton(
+              label: 'Check',
+              path: check, 
+              onPressed: checkStatus,
+            ),
+            controller.repeatedIconButton(
+              label: 'Submit',
+              path: dish, 
+              onPressed: (){ 
+                controller.resetErrorHandler();
+                submitCreateDish();
+              },
             ),
           ],
         ),
-      
       ],
     );
   }

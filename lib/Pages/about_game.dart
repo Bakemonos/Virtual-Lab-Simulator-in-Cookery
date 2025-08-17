@@ -75,7 +75,7 @@ class MyAboutGamePage extends StatelessWidget {
                                           size: 18.sp,
                                         ),
                                         MyText(
-                                          text: 'Developers: Rico Jay & Carlo\nSupport: support@cookingmaster.com',
+                                          text: 'Developers: Rico Jay & Carlo\nSupport: developerteam2002@gmail.com',
                                           textAlign: TextAlign.center,
                                           fontWeight: FontWeight.w500,
                                           textHeight: 2,

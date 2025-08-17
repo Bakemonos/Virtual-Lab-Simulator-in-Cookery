@@ -69,6 +69,7 @@ const String soundOff = "assets/icons/sound_off.svg";
 const String musicOff = "assets/icons/music_off.svg";
 
 
+const String check = "https://res.cloudinary.com/dgvi2di6t/image/upload/v1755432632/check_bdl1gn.png";
 const String equipment = "https://res.cloudinary.com/dgvi2di6t/image/upload/v1754402329/equipment_ioey5d.png";
 const String plating = "https://res.cloudinary.com/dgvi2di6t/image/upload/v1754402328/plating_jcxuar.png";
 const String noData = 'https://res.cloudinary.com/dgvi2di6t/image/upload/v1754735616/no_data_orpctv.png';
