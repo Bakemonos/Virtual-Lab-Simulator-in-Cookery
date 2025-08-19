@@ -182,25 +182,38 @@ class _MyProcessPageState extends State<MyProcessPage> {
             );
           },
         ),
-        Row(
-          spacing: 24.w,
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: [
-            controller.repeatedIconButton(
-              label: 'Check',
-              path: check, 
-              onPressed: checkStatus,
-            ),
-            controller.repeatedIconButton(
-              label: 'Submit',
-              path: dish, 
-              onPressed: (){ 
-                controller.resetErrorHandler();
-                submitCreateDish();
-              },
-            ),
-          ],
-        ),
+        Obx((){
+          final isReady = controller.preparedData.value.ingredients.isNotEmpty;
+          return Row(
+            spacing: 24.w,
+            mainAxisAlignment: isReady ? MainAxisAlignment.spaceEvenly : MainAxisAlignment.end,
+            children: [
+              if(isReady) controller.repeatedIconButton(
+                label: 'Clear',
+                path: trashbag, 
+                onPressed: (){
+                  controller.preparedIngredients.clear();
+                  controller.preparedData.update((data) {
+                    data?.ingredients.clear();
+                  });
+                },
+              ),
+              if(isReady) controller.repeatedIconButton(
+                label: 'Check',
+                path: check, 
+                onPressed: checkStatus,
+              ),
+              if(isReady) controller.repeatedIconButton(
+                label: 'Submit',
+                path: dish, 
+                onPressed: (){ 
+                  controller.resetErrorHandler();
+                  submitCreateDish();
+                }
+              )
+            ],
+          );
+        })
       ],
     );
   }
@@ -441,6 +454,8 @@ class _MyProcessPageState extends State<MyProcessPage> {
   }
 
   void submitCreateDish() {
+    controller.category.value = '';
+    controller.nameDishController.clear();
     final borderColor = lightBrown.withValues(alpha: 0.3);
     showDialog(
       context: context,

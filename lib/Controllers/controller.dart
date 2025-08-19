@@ -828,12 +828,12 @@ class AppController extends GetxController {
               ),
               icon: Padding(
                 padding: EdgeInsets.all(8.w),
-                child: CachedNetworkImage(
+                child: helper.isValidUrl(path)? CachedNetworkImage(
                   imageUrl: path,
                   placeholder: (context, url) => ShimmerSkeletonLoader(),
                   errorWidget: (context, url, error) => Icon(Icons.error),
                   fit: BoxFit.contain,
-                ),
+                ) : MySvgPicture(path: path),
               ),
               onPressed: onPressed,
             ),

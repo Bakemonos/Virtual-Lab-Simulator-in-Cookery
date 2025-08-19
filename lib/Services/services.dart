@@ -290,7 +290,7 @@ class ApiServices extends GetxController {
         debugPrint('Found ingredient with empty name!');
         for (var i in ingredients) {
           debugPrint('${i.name} | ${i.category} | ${i.image}');
-        }
+        } 
       }
 
       final matchedDish = getBestMatchedDish(
@@ -316,8 +316,9 @@ class ApiServices extends GetxController {
         debugPrint('SUCCESS : ${response.message}');
         controller.submitResetErrorHandler();
         controller.preparedIngredients.clear();
-        // preparedData.value = InventoryModel.empty();
         if(context.mounted){
+          controller.category.value = '';
+          controller.nameDishController.clear();
           quickAlertDialog(
             context: context,
             type: QuickAlertType.success,

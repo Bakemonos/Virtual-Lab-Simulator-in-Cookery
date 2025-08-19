@@ -220,6 +220,7 @@ class _MyPlatingUIState extends State<MyPlatingUI> {
 
   Widget platingOption(BuildContext context) {
     final List<dynamic> sourceList;
+    bool hider = false;
 
     switch (controller.selectedOption.value) {
       case 'garnish':
@@ -229,6 +230,7 @@ class _MyPlatingUIState extends State<MyPlatingUI> {
         sourceList = platngToolList;
         break;
       default:
+        hider = true;
         sourceList = controller.submittedCocList;
         break;
     }
@@ -293,7 +295,7 @@ class _MyPlatingUIState extends State<MyPlatingUI> {
                           ),
                         ),
                       ),
-                      Align(
+                      if(hider) Align(
                         alignment: Alignment.bottomCenter,
                         child: Container(
                           width: double.infinity,

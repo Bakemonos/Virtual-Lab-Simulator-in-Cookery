@@ -76,4 +76,14 @@ class Helper extends GetxController {
     return '• $label$suffix: $text';
   }
 
+  bool isValidUrl(String? url) {
+    if (url == null || url.isEmpty) return false;
+    try {
+      final uri = Uri.parse(url);
+      return uri.hasScheme && (uri.isScheme("http") || uri.isScheme("https"));
+    } catch (_) {
+      return false;
+    }
+  }
+
 }
