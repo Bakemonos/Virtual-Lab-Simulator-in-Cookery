@@ -1,6 +1,6 @@
-import 'package:virtual_lab/models/ingredients_model.dart';
 
-final List<Map<String, dynamic>> dishCombinations = [
+final List<Map<String, dynamic>> dishCombinationsCoc1 = [
+  //? SOUP
   {
     'name': 'fish soup',
     'type': 'soup',
@@ -39,6 +39,7 @@ final List<Map<String, dynamic>> dishCombinations = [
   },
 
 
+  //? MAIN DISH
   {
     'name': 'fried rice',
     'type': 'mainDish',
@@ -82,6 +83,7 @@ final List<Map<String, dynamic>> dishCombinations = [
     'image': 'https://res.cloudinary.com/dgvi2di6t/image/upload/v1753804253/mushroom_rice_anxlez.png',
   },
 
+  //? SAUCE
   {
     'name': 'sweet and sour sauce',
     'type': 'sauce',
@@ -114,30 +116,7 @@ final List<Map<String, dynamic>> dishCombinations = [
   },
 ];
 
-Map<String, dynamic>? getBestMatchedDish(List<IngredientsModel> selected, String type) {
-  final selectedNames = selected.map((i) => i.name.toLowerCase().trim()).toSet();
-  int highestScore = 0;
-  Map<String, dynamic>? bestMatch;
 
-  for (final dish in dishCombinations.where((d) => d['type'].toString().toLowerCase().trim() == type.toLowerCase().trim())) {
-    final required = List<String>.from((dish['contains'] as List).map((e) => e.toLowerCase().trim()));
-    final score = required.where((item) => selectedNames.contains(item)).length;
-
-    if (score > highestScore) {
-      highestScore = score;
-      bestMatch = dish;
-    }
-  }
-
-  if (bestMatch == null || highestScore == 0) {
-    bestMatch = dishCombinations.firstWhere(
-      (d) => d['type'].toString().toLowerCase().trim() == type.toLowerCase().trim(),
-      orElse: () => {},
-    );
-  }
-
-  return bestMatch;
-}
 
 
 

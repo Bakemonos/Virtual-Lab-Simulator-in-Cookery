@@ -203,6 +203,31 @@ class AppController extends GetxController {
   
   //! METHODS ---------------------------------------------------------------------------------------------------------------
 
+  Map<String, dynamic>? getBestMatchedDish(List<IngredientsModel> selected, String type, List<Map<String, dynamic>> combinationList) {
+    final selectedNames = selected.map((i) => i.name.toLowerCase().trim()).toSet();
+    int highestScore = 0;
+    Map<String, dynamic>? bestMatch;
+
+    for (final dish in combinationList.where((d) => d['type'].toString().toLowerCase().trim() == type.toLowerCase().trim())) {
+      final required = List<String>.from((dish['contains'] as List).map((e) => e.toLowerCase().trim()));
+      final score = required.where((item) => selectedNames.contains(item)).length;
+
+      if (score > highestScore) {
+        highestScore = score;
+        bestMatch = dish;
+      }
+    }
+
+    if (bestMatch == null || highestScore == 0) {
+      bestMatch = combinationList.firstWhere(
+        (d) => d['type'].toString().toLowerCase().trim() == type.toLowerCase().trim(),
+        orElse: () => {},
+      );
+    }
+
+    return bestMatch;
+  }
+
   //? ADD INGREDIENTS ACTIONS 
   void actionPerform(BuildContext context) {
     final status = handleTap(context).name;
@@ -511,7 +536,6 @@ class AppController extends GetxController {
       ),
     );
   }
-
 
   BoxDecoration designUI({Color? backGround = lightBrown}) {
     return BoxDecoration(
@@ -858,8 +882,5 @@ class AppController extends GetxController {
       ],
     );
   }
-  
-  //! SERVICES METHOD -------------------------------------------------------------------------------------------------------
-
   
 } 

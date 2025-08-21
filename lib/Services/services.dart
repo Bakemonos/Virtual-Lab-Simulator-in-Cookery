@@ -12,6 +12,7 @@ import 'package:quickalert/models/quickalert_type.dart';
 import 'package:virtual_lab/components/custom_dalog.dart';
 import 'package:virtual_lab/controllers/controller.dart';
 import 'package:virtual_lab/json/coc1_combination.dart';
+import 'package:virtual_lab/json/coc2_combination.dart';
 import 'package:virtual_lab/models/grade_model.dart';
 import 'package:virtual_lab/models/ingredients_model.dart';
 import 'package:virtual_lab/models/progress_model.dart';
@@ -292,9 +293,26 @@ class ApiServices extends GetxController {
         } 
       }
 
-      final matchedDish = getBestMatchedDish(
+      late List<Map<String, dynamic>> combination;
+
+      switch (coc) {
+        case 'coc1':
+          combination = dishCombinationsCoc1;
+          break;
+        case 'coc2':
+          combination = dishCombinationsCoc2;
+          break;
+        case 'coc3':
+          combination = [];
+          break;
+        default:
+          combination = [];
+      }
+
+      final matchedDish = controller.getBestMatchedDish(
         ingredients,
         helper.toCamelCase(controller.category.value), 
+        combination
       );
 
       final data = SubmitedCocModel(
