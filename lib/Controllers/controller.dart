@@ -17,6 +17,7 @@ import 'package:virtual_lab/components/custom_dalog.dart';
 import 'package:virtual_lab/components/shimmer.dart';
 import 'package:virtual_lab/json/equipments.dart';
 import 'package:virtual_lab/json/food_menu.dart';
+import 'package:virtual_lab/json/ingredients_list.dart';
 import 'package:virtual_lab/models/food_menu_model.dart';
 import 'package:virtual_lab/models/grade_model.dart';
 import 'package:virtual_lab/models/ingredients_model.dart';
@@ -90,6 +91,12 @@ class AppController extends GetxController {
   bool tap = false;
   
   RxList<bool> foodLoading = List.generate(foodMenu.length, (_) => false).obs;
+
+  List<IngredientsModel> get filteredIngredients {
+    return ingredientJson
+      .where((item) => item.tags!.contains(typeSelected.value!.menu))
+      .toList();
+  }
 
   //? TEXT CONTROLLER
   // final emailController = TextEditingController();
@@ -483,20 +490,28 @@ class AppController extends GetxController {
 
   //! WIDGET ----------------------------------------------------------------------------------------------------------------
 
-  void showFloatingSnackbar({required BuildContext context, required String message}) {
+  void showFloatingSnackbar({
+    required BuildContext context,
+    required String message,
+  }) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         backgroundColor: textLight,
         behavior: SnackBarBehavior.floating,
         duration: const Duration(seconds: 3),
-        content: MyText(text: message, fontWeight: FontWeight.w400),
-        margin: EdgeInsets.symmetric(horizontal: 24.w, vertical: 24.h),
+        content: Center(
+          child: MyText(
+            text: message,
+            fontWeight: FontWeight.w400,
+          ),
+        ),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(12.r),
         ),
       ),
     );
   }
+
 
   BoxDecoration designUI({Color? backGround = lightBrown}) {
     return BoxDecoration(

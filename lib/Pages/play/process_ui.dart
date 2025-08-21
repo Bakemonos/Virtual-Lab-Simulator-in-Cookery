@@ -135,7 +135,6 @@ class _MyProcessPageState extends State<MyProcessPage> {
               studentId: controller.userData.value.id!,
               take: 'take_one',
             );
-            // controller.equipmentData.add(controller.cookingToolData.value); //TODO ADD EQUIPMENT
           },
           builder: (context, candidateData, rejectedData){
             return Column(
@@ -186,9 +185,9 @@ class _MyProcessPageState extends State<MyProcessPage> {
           final isReady = controller.preparedData.value.ingredients.isNotEmpty;
           return Row(
             spacing: 24.w,
-            mainAxisAlignment: isReady ? MainAxisAlignment.spaceEvenly : MainAxisAlignment.end,
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              if(isReady) controller.repeatedIconButton(
+              controller.repeatedIconButton(
                 label: 'Clear',
                 path: trashbag, 
                 onPressed: (){
@@ -198,18 +197,18 @@ class _MyProcessPageState extends State<MyProcessPage> {
                   });
                 },
               ),
-              if(isReady) controller.repeatedIconButton(
+              controller.repeatedIconButton(
                 label: 'Check',
                 path: check, 
-                onPressed: checkStatus,
+                onPressed: isReady? checkStatus : (){},
               ),
-              if(isReady) controller.repeatedIconButton(
+              controller.repeatedIconButton(
                 label: 'Submit',
                 path: dish, 
-                onPressed: (){ 
+                onPressed: isReady ? (){ 
                   controller.resetErrorHandler();
                   submitCreateDish();
-                }
+                } : (){}
               )
             ],
           );

@@ -7,7 +7,6 @@ import 'package:virtual_lab/components/custom_button.dart';
 import 'package:virtual_lab/components/custom_header.dart';
 import 'package:virtual_lab/components/shimmer.dart';
 import 'package:virtual_lab/controllers/controller.dart';
-import 'package:virtual_lab/json/ingredients_list.dart';
 import 'package:virtual_lab/components/custom_text.dart';
 import 'package:virtual_lab/services/services.dart';
 import 'package:virtual_lab/utils/helper.dart';
@@ -30,7 +29,7 @@ class _MyIngredientsSelectionPageState extends State<MyIngredientsSelectionPage>
   void initState() {
     super.initState();
     controller.selectedList = List.generate(
-      ingredientJson.length,
+      controller.filteredIngredients.length,
       (_) => false.obs,
     );
     controller.startTimer();
@@ -85,9 +84,9 @@ class _MyIngredientsSelectionPageState extends State<MyIngredientsSelectionPage>
                                   mainAxisSpacing: 8,
                                   childAspectRatio: 1,
                                 ),
-                                itemCount: ingredientJson.length,
+                                itemCount: controller.filteredIngredients.length,
                                 itemBuilder: (context, index) {
-                                  var data = ingredientJson[index];
+                                  var data = controller.filteredIngredients[index];
                                   var isSelected = controller.selectedList[index];
 
                                   return InkWell(

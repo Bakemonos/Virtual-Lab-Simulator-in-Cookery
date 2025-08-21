@@ -11,7 +11,6 @@ import 'package:http_parser/http_parser.dart';
 import 'package:quickalert/models/quickalert_type.dart';
 import 'package:virtual_lab/components/custom_dalog.dart';
 import 'package:virtual_lab/controllers/controller.dart';
-import 'package:virtual_lab/json/ingredients_list.dart';
 import 'package:virtual_lab/json/coc1_combination.dart';
 import 'package:virtual_lab/models/grade_model.dart';
 import 'package:virtual_lab/models/ingredients_model.dart';
@@ -32,7 +31,7 @@ class ApiServices extends GetxController {
   //* API HERE ---------------------------------------------------------------------------------------------------------------------
 
   Future<ApiResponse> get(String endpoint) async {
-    print('\nENDPOINT : $apiKey/$endpoint\n');
+    debugPrint('\nENDPOINT : $apiKey/$endpoint\n');
 
     try {
       final response = await http.get(Uri.parse('$apiKey/$endpoint')).timeout(Duration(seconds: 15));
@@ -57,7 +56,7 @@ class ApiServices extends GetxController {
   }
 
   Future<ApiResponse> post(String endpoint, Map<String, dynamic> data) async {
-    print('\nENDPOINT : $apiKey/$endpoint\n');
+    debugPrint('\nENDPOINT : $apiKey/$endpoint\n');
 
     final response = await http.post(
       Uri.parse('$apiKey/$endpoint'),
@@ -216,13 +215,13 @@ class ApiServices extends GetxController {
       final user = controller.userData.value;
       controller.ingredientsData.clear();
 
-      for (int i = 0; i < ingredientJson.length; i++) {
+      for (int i = 0; i < controller.filteredIngredients.length; i++) {
         if (controller.selectedList[i].value) {
           controller.ingredientsData.add(
             IngredientsModel(
-              name: ingredientJson[i].name,
-              image: ingredientJson[i].image,
-              category: ingredientJson[i].category,
+              name: controller.filteredIngredients[i].name,
+              image: controller.filteredIngredients[i].image,
+              category: controller.filteredIngredients[i].category,
             ),
           );
         }

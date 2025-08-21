@@ -27,7 +27,9 @@ class _MySvgPictureState extends State<MySvgPicture> {
     return SvgPicture.asset(
       widget.path,
       fit: widget.fit!,
-      color: widget.iconColor,
+      colorFilter: widget.iconColor != null
+        ? ColorFilter.mode(widget.iconColor!, widget.blendMode ?? BlendMode.srcIn)
+        : null,
       width: widget.iconSize?? 24.w,
     );
   }

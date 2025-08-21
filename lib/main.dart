@@ -81,7 +81,6 @@ class _SplashWrapperState extends ConsumerState<SplashWrapper> {
     FlutterError.onError = (FlutterErrorDetails details) {
       FlutterError.presentError(details);
       if (kReleaseMode) {
-        // TODO: Send error to analytics
       }
     };
 

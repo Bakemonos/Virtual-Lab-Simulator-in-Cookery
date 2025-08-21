@@ -78,7 +78,6 @@ class MyForgotChangePasswordPage extends StatelessWidget {
                                   child: MyButton(
                                     text: 'Submit',
                                     onTap: () {
-                                      //TODO CHANGE PASSWORD
                                     },
                                   ),
                                 ),

@@ -525,7 +525,7 @@ class _MyProcedurePlatingPageState extends State<MyProcedurePlatingPage> with Ti
                           height: 32.h,
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(4.r),
-                            color: lightButtonBackground.withOpacity(0.3),
+                            color: lightButtonBackground.withValues(alpha: 0.3),
                           ),
                           child: Center(
                             child: MySvgPicture(path: close, iconColor: darkBrown),
