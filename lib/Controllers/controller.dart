@@ -56,7 +56,7 @@ class AppController extends GetxController {
   final gender = ''.obs;
   final gradeLevel = ''.obs;
 
-  final emailErrorText = ''.obs;
+  final usernameErrorText = ''.obs;
   final changePasswordErrorText = ''.obs;
   final passwordErrorText = ''.obs;
   final genderErrorText = ''.obs;
@@ -94,8 +94,8 @@ class AppController extends GetxController {
   //? TEXT CONTROLLER
   // final emailController = TextEditingController();
   // final passwordController = TextEditingController();
-    final emailController = TextEditingController(text: 'ricojay@gmail.com');
-  final passwordController = TextEditingController(text: 'password');
+  final usernameController = TextEditingController(text: 'ricojay1818');
+  final passwordController = TextEditingController(text: 'qweqweqwe');
   final firstnameController = TextEditingController();
   final lastnameController = TextEditingController();
   final lrnController = TextEditingController();
@@ -349,7 +349,7 @@ class AppController extends GetxController {
   }
 
   void resetErrorHandler() {
-    emailErrorText.value = '';
+    usernameErrorText.value = '';
     changePasswordErrorText.value = '';
     passwordErrorText.value = '';
     genderErrorText.value = '';
@@ -367,10 +367,10 @@ class AppController extends GetxController {
   }
 
   void errorHandlerSignin() {
-    if (emailController.text.isEmpty) {
-      emailErrorText.value = 'Email is required';
+    if (usernameController.text.isEmpty) {
+      usernameErrorText.value = 'Username is required';
     } else {
-      emailErrorText.value = '';
+      usernameErrorText.value = '';
     }
 
     if (passwordController.text.isEmpty) {
@@ -395,7 +395,7 @@ class AppController extends GetxController {
   }
 
   void errorHandlerSignup() {
-    emailErrorText.value = emailController.text.isEmpty ? 'Email is required' : '';
+    usernameErrorText.value = usernameController.text.isEmpty ? 'Username is required' : '';
     passwordErrorText.value = passwordController.text.isEmpty ? 'Password is required' : '';
     changePasswordErrorText.value = changePasswordController.text.isEmpty ? 'Confirm Password is required' : '';
     lrnErrorText.value = lrnController.text.isEmpty ? 'LRN is required' : '';
@@ -409,14 +409,14 @@ class AppController extends GetxController {
     lrnController.clear();
     firstnameController.clear();
     lastnameController.clear();
-    emailController.clear();
+    usernameController.clear();
+    passwordController.clear();
     gender.value = '';
     gradeLevel.value = '';
-    passwordController.clear();
   }
 
   void resetSignin() {
-    emailController.clear();
+    usernameController.clear();
     passwordController.clear();
   }
 

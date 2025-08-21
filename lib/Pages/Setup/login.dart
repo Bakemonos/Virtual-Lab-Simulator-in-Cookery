@@ -70,9 +70,9 @@ class _MyLoginPageState extends State<MyLoginPage> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 controller.repeatedTextInput(
-                                  errorText: controller.emailErrorText,
-                                  controller: controller.emailController,
-                                  label: 'Email',
+                                  errorText: controller.usernameErrorText,
+                                  controller: controller.usernameController,
+                                  label: 'Username',
                                 ),
                                 controller.repeatedTextInput(
                                   obscureText: true,
@@ -81,7 +81,7 @@ class _MyLoginPageState extends State<MyLoginPage> {
                                   label: 'Password',
                                 ),
                                 InkWell(
-                                  onTap: () => context.push(Routes.forgotEnterEmail),
+                                  onTap: () => context.push(Routes.forgotEnterUsername),
                                   child: MyText(
                                     text: 'Forgot password',
                                     size: 14.sp,

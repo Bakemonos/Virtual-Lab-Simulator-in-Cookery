@@ -13,7 +13,7 @@ import 'package:virtual_lab/pages/chooseIngredients/ingredients_selector.dart';
 import 'package:virtual_lab/pages/food_choices.dart';
 import 'package:virtual_lab/pages/Setup/login.dart';
 import 'package:virtual_lab/pages/forgotPassword/change_password.dart';
-import 'package:virtual_lab/pages/forgotPassword/enter_email.dart';
+import 'package:virtual_lab/pages/forgotPassword/enter_username.dart';
 import 'package:virtual_lab/pages/menu.dart';
 import 'package:virtual_lab/pages/play/play_ui.dart';
 import 'package:virtual_lab/pages/settings.dart';
@@ -42,8 +42,8 @@ final myRoutesProvider = Provider<GoRouter>((ref) {
       ),
       //? FORGOT PASSWORD
       GoRoute(
-        path: Routes.forgotEnterEmail,
-        builder: (context, state) => const MyForgotEnterEmailPage(),
+        path: Routes.forgotEnterUsername,
+        builder: (context, state) => const MyForgotEnterUsernamePage(),
       ),
       GoRoute(
         path: Routes.forgotChangePassword,

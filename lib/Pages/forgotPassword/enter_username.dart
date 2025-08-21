@@ -7,8 +7,8 @@ import 'package:virtual_lab/controllers/controller.dart';
 import 'package:virtual_lab/utils/properties.dart';
 import 'package:virtual_lab/utils/routes.dart';
 
-class MyForgotEnterEmailPage extends StatelessWidget {
-  const MyForgotEnterEmailPage({super.key});
+class MyForgotEnterUsernamePage extends StatelessWidget {
+  const MyForgotEnterUsernamePage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -52,9 +52,9 @@ class MyForgotEnterEmailPage extends StatelessWidget {
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             controller.repeatedTextInput(
-                              errorText: controller.emailErrorText,
-                              controller: controller.emailController,
-                              label: 'Email',
+                              errorText: controller.usernameErrorText,
+                              controller: controller.usernameController,
+                              label: 'Username',
                             ),
                             SizedBox(height: 24.h),
                             Row(
@@ -72,7 +72,6 @@ class MyForgotEnterEmailPage extends StatelessWidget {
                                   child: MyButton(
                                     text: 'Submit',
                                     onTap: () {
-                                      //TODO SUBMIT EMAIL
                                       context.go(Routes.forgotChangePassword);
                                     },
                                   ),
@@ -86,7 +85,7 @@ class MyForgotEnterEmailPage extends StatelessWidget {
                   ),
                 ),
               ),
-              MyHeader(text: 'ENTER EMAIL'),
+              MyHeader(text: 'ENTER USERNAME'),
             ],
           ),
         ),

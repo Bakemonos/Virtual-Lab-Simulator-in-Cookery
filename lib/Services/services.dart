@@ -11,7 +11,7 @@ import 'package:http_parser/http_parser.dart';
 import 'package:quickalert/models/quickalert_type.dart';
 import 'package:virtual_lab/components/custom_dalog.dart';
 import 'package:virtual_lab/controllers/controller.dart';
-import 'package:virtual_lab/json/coc1.dart';
+import 'package:virtual_lab/json/ingredients_list.dart';
 import 'package:virtual_lab/json/coc1_combination.dart';
 import 'package:virtual_lab/models/grade_model.dart';
 import 'package:virtual_lab/models/ingredients_model.dart';
@@ -116,7 +116,7 @@ class ApiServices extends GetxController {
         lrn: controller.lrnController.text,
         firstName: controller.firstnameController.text,
         lastName: controller.lastnameController.text,
-        email: controller.emailController.text,
+        username: controller.usernameController.text,
         gender: controller.gender.value,
         password: controller.passwordController.text,
         gradeLevel: controller.gradeLevel.value,
@@ -166,7 +166,7 @@ class ApiServices extends GetxController {
     controller.loader.value = true;
     try {
       final data = {
-        'email': controller.emailController.text,
+        'username': controller.usernameController.text,
         'password': controller.passwordController.text,
       };
 
@@ -216,13 +216,13 @@ class ApiServices extends GetxController {
       final user = controller.userData.value;
       controller.ingredientsData.clear();
 
-      for (int i = 0; i < ingredientsCOC1.length; i++) {
+      for (int i = 0; i < ingredientJson.length; i++) {
         if (controller.selectedList[i].value) {
           controller.ingredientsData.add(
             IngredientsModel(
-              name: ingredientsCOC1[i].name,
-              image: ingredientsCOC1[i].image,
-              category: ingredientsCOC1[i].category,
+              name: ingredientJson[i].name,
+              image: ingredientJson[i].image,
+              category: ingredientJson[i].category,
             ),
           );
         }

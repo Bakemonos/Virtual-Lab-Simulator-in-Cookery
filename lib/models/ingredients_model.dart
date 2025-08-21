@@ -58,7 +58,6 @@ class SubmitedCocModel {
   }
 }
 
-
 class InventoryModel {
   final String? id;
   final String type;
@@ -106,6 +105,7 @@ class IngredientsModel {
   final String category;
   final List<ActionsModel> actions;
   final EquipmentsModel? used;
+  final List<String>? tags;
 
   IngredientsModel({
     this.dragKey,
@@ -114,6 +114,7 @@ class IngredientsModel {
     required this.category,
     this.actions = const [],
     this.used,
+    this.tags = const [],
   });
 
   factory IngredientsModel.fromJson(Map<String, dynamic> map) {
@@ -145,6 +146,7 @@ class IngredientsModel {
       category: '',
       actions: [],
       used: null,
+      tags: [],
     );
   }
 

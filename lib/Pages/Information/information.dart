@@ -84,7 +84,7 @@ class MyInformationPage extends StatelessWidget {
                                             CrossAxisAlignment.start,
                                         children: [
                                           controller.repeatedInformation(label: 'LRN', value: user.lrn),
-                                          controller.repeatedInformation(label: 'Email', value: user.email),
+                                          controller.repeatedInformation(label: 'Username', value: user.username),
                                           controller.repeatedInformation(label: 'Fullname', value: '${user.firstName} ${user.lastName}'),
                                           controller.repeatedInformation(label: 'Gender', value: user.gender),
                                           controller.repeatedInformation(label: 'Grade Level',value: user.gradeLevel),

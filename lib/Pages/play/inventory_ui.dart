@@ -6,6 +6,7 @@ import 'package:virtual_lab/components/custom_svg.dart';
 import 'package:virtual_lab/components/custom_text.dart';
 import 'package:virtual_lab/components/shimmer.dart';
 import 'package:virtual_lab/controllers/controller.dart';
+import 'package:virtual_lab/json/default_ingredients.dart';
 import 'package:virtual_lab/models/ingredients_model.dart';
 import 'package:virtual_lab/services/services.dart';
 import 'package:virtual_lab/utils/properties.dart';
@@ -151,7 +152,11 @@ class _MyInventoryPageState extends State<MyInventoryPage> {
         Flexible(
           fit: FlexFit.loose,
           child: Obx(() {
-            final ingredients = controller.typeInventory.value.ingredients;
+            final ingredients = [
+              ...defaultIngredients,
+              ...controller.typeInventory.value.ingredients,
+            ];
+            
             return GridView.builder(
               padding: EdgeInsets.zero,
               physics: AlwaysScrollableScrollPhysics(),

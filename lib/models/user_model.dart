@@ -3,7 +3,7 @@ class UserModel {
   final String lrn;
   final String firstName;
   final String lastName;
-  final String email;
+  final String username;
   final String gender;
   final String password;
   final String gradeLevel;
@@ -14,7 +14,7 @@ class UserModel {
     required this.lrn,
     required this.firstName,
     required this.lastName,
-    required this.email,
+    required this.username,
     required this.gender,
     required this.password,
     required this.gradeLevel,
@@ -27,7 +27,7 @@ class UserModel {
       lrn: map['lrn'],
       firstName: map['firstName'],
       lastName: map['lastName'],
-      email: map['email'],
+      username: map['username'],
       gender: map['gender'],
       password: map['password'],
       gradeLevel: map['gradeLevel'],
@@ -41,7 +41,7 @@ class UserModel {
       'lrn': lrn,
       'firstName': firstName,
       'lastName': lastName,
-      'email': email,
+      'username': username,
       'gender': gender,
       'password': password,
       'gradeLevel': gradeLevel,
@@ -55,7 +55,7 @@ class UserModel {
       lrn: '',
       firstName: '',
       lastName: '',
-      email: '',
+      username: '',
       gender: '',
       password: '',
       gradeLevel: '',

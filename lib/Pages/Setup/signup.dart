@@ -95,10 +95,10 @@ class MySignUpPage extends StatelessWidget {
                                           ),
                                           controller.repeatedTextInput(
                                             errorText:
-                                                controller.emailErrorText,
+                                                controller.usernameErrorText,
                                             controller:
-                                                controller.emailController,
-                                            label: 'Email',
+                                                controller.usernameController,
+                                            label: 'Username',
                                           ),
                                           Obx(
                                             () => controller.repeatedDropdown(
