@@ -90,7 +90,9 @@ class _MyIngredientsSelectionPageState extends State<MyIngredientsSelectionPage>
                                   var isSelected = controller.selectedList[index];
 
                                   return InkWell(
-                                    onTap: () {
+                                    onTap: controller.seconds.value == 0 ? (){
+                                      debugPrint('Time out!!');
+                                    } : () {
                                       setState(() {
                                         final selectedCount = controller.selectedList.where((item) => item.value).length;
 
