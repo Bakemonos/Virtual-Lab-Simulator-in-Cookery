@@ -1,7 +1,5 @@
 import 'package:virtual_lab/models/ingredients_model.dart';
 
-
-
 List<IngredientsModel> ingredientJson = [
   IngredientsModel(
     tags: ['coc1'],
@@ -74,13 +72,6 @@ List<IngredientsModel> ingredientJson = [
     actions: [ActionsModel(action: '', status: '', tool: '')],
   ),
   IngredientsModel(
-    tags: ['coc1'],
-    name: 'salt',
-    category: 'grain',
-    image: 'https://res.cloudinary.com/dgvi2di6t/image/upload/v1753612124/salt_zklonn.png',
-    actions: [ActionsModel(action: '', status: '', tool: '')],
-  ),
-  IngredientsModel(
     tags: ['coc1', 'coc2'],
     name: 'bell pepper',
     category: 'spice',
@@ -96,23 +87,9 @@ List<IngredientsModel> ingredientJson = [
   ),
   IngredientsModel(
     tags: ['coc1'],
-    name: 'cooking oil',
-    category: 'spice',
-    image: 'https://res.cloudinary.com/dgvi2di6t/image/upload/v1752288722/oil_nkxoqu.png',
-    actions: [ActionsModel(action: '', status: '', tool: '')],
-  ),
-  IngredientsModel(
-    tags: ['coc1'],
     name: 'vinegar',
     category: 'spice',
     image: 'https://res.cloudinary.com/dgvi2di6t/image/upload/v1753612871/vinegar_gis45c.png',
-    actions: [ActionsModel(action: '', status: '', tool: '')],
-  ),
-  IngredientsModel(
-    tags: ['coc1', 'coc2'],
-    name: 'sugar',
-    category: 'spice',
-    image: 'https://res.cloudinary.com/dgvi2di6t/image/upload/v1753613141/sugar_d98inb.png',
     actions: [ActionsModel(action: '', status: '', tool: '')],
   ),
   IngredientsModel(
@@ -137,14 +114,14 @@ List<IngredientsModel> ingredientJson = [
     actions: [ActionsModel(action: '', status: '', tool: '')],
   ),
   IngredientsModel(
-    tags: ['coc1', 'coc2'],
+    tags: ['coc1', 'coc2', 'coc3'],
     name: 'butter',
     category: 'dairy',
     image: 'https://res.cloudinary.com/dgvi2di6t/image/upload/v1753612871/butter_ioltgx.png',
     actions: [ActionsModel(action: '', status: '', tool: '')],
   ),
   IngredientsModel(
-    tags: ['coc1', 'coc2'],
+    tags: ['coc1', 'coc2', 'coc3'],
     name: 'cornstarch',
     category: 'grain',
     image: 'https://res.cloudinary.com/dgvi2di6t/image/upload/v1753612869/cornstarch_nociat.png',
@@ -165,7 +142,7 @@ List<IngredientsModel> ingredientJson = [
     actions: [ActionsModel(action: '', status: '', tool: '')],
   ),
   IngredientsModel(
-    tags: ['coc1'],
+    tags: ['coc1', 'coc3'],
     name: 'egg',
     category: 'dairy',
     image: 'https://res.cloudinary.com/dgvi2di6t/image/upload/v1753612869/egg_oqccce.png',
@@ -192,10 +169,6 @@ List<IngredientsModel> ingredientJson = [
     image: 'https://res.cloudinary.com/dgvi2di6t/image/upload/v1753612869/flour_g3dt1n.png',
     actions: [ActionsModel(action: '', status: '', tool: '')],
   ),
-
-
-
-  //? NEW
   IngredientsModel(
     tags: ['coc2'],
     name: 'lettuce',
@@ -249,7 +222,7 @@ List<IngredientsModel> ingredientJson = [
     tags: ['coc2'],
     name: 'mustard',
     category: 'spice',
-    image: 'https://res.cloudinary.com/dgvi2di6t/image/upload/v1755781940/mustard_pebdcy.png',
+    image: 'https://res.cloudinary.com/dgvi2di6t/image/upload/v1755930187/mustard_btd41j.png',
     actions: [ActionsModel(action: '', status: '', tool: '')],
   ),
   IngredientsModel(
@@ -260,11 +233,82 @@ List<IngredientsModel> ingredientJson = [
     actions: [ActionsModel(action: '', status: '', tool: '')],
   ),
   IngredientsModel(
-    tags: ['coc2'],
+    tags: ['coc2', 'coc3' ],
     name: 'lemon',
     category: 'vegetable',
-    image: 'https://res.cloudinary.com/dgvi2di6t/image/upload/v1755781940/lemon_czovhy.png',
+    image: 'https://res.cloudinary.com/dgvi2di6t/image/upload/v1755930188/lemon_mfzul3.png',
     actions: [ActionsModel(action: '', status: '', tool: '')],
   ),
-  
+  IngredientsModel(
+    tags: ['coc3'],
+    name: 'dark chocolate',
+    category: 'spice',
+    image: 'https://res.cloudinary.com/dgvi2di6t/image/upload/v1755931433/dark_chocolate_mlkb1l.png',
+    actions: [ActionsModel(action: '', status: '', tool: '')],
+  ),
+  IngredientsModel(
+    tags: ['coc3'],
+    name: 'cream',
+    category: 'dairy',
+    image: 'https://res.cloudinary.com/dgvi2di6t/image/upload/v1755931433/cream_hsqdfn.png',
+    actions: [ActionsModel(action: '', status: '', tool: '')],
+  ),
+  IngredientsModel(
+    tags: ['coc3'],
+    name: 'cocoa powder',
+    category: 'spice',
+    image: 'https://res.cloudinary.com/dgvi2di6t/image/upload/v1755931432/cocoa_powder_qdxixt.png',
+    actions: [ActionsModel(action: '', status: '', tool: '')],
+  ),
+  IngredientsModel(
+    tags: ['coc3'],
+    name: 'brown sugar',
+    category: 'spice',
+    image: 'https://res.cloudinary.com/dgvi2di6t/image/upload/v1755931413/brown_sugar_uvwuyj.png',
+    actions: [ActionsModel(action: '', status: '', tool: '')],
+  ),
+  IngredientsModel(
+    tags: ['coc3'],
+    name: 'berries',
+    category: 'fruit',
+    image: 'https://res.cloudinary.com/dgvi2di6t/image/upload/v1755931383/berries_uaj5wi.png',
+    actions: [ActionsModel(action: '', status: '', tool: '')],
+  ),
+  IngredientsModel(
+    tags: ['coc3'],
+    name: 'baking soda',
+    category: 'spice', 
+    image: 'https://res.cloudinary.com/dgvi2di6t/image/upload/v1755931382/baking_soda_yhqsdv.png',
+    actions: [ActionsModel(action: '', status: '', tool: '')],
+  ),
+  IngredientsModel(
+    tags: ['coc3'],
+    name: 'plain flour',
+    category: 'grain',
+    image: 'https://res.cloudinary.com/dgvi2di6t/image/upload/v1755931381/plain_flour_guuhx4.png',
+    actions: [ActionsModel(action: '', status: '', tool: '')],
+  ),
+  IngredientsModel(
+    tags: ['coc3'],
+    name: 'gelatin',
+    category: 'meat', 
+    image: 'https://res.cloudinary.com/dgvi2di6t/image/upload/v1755931381/gelatin_xeajp7.png',
+    actions: [ActionsModel(action: '', status: '', tool: '')],
+  ),
+  IngredientsModel(
+    tags: ['coc3'],
+    name: 'milk',
+    category: 'dairy',
+    image: 'https://res.cloudinary.com/dgvi2di6t/image/upload/v1755931381/milk_wigszt.png',
+    actions: [ActionsModel(action: '', status: '', tool: '')],
+  ),
+  IngredientsModel(
+    tags: ['coc3'],
+    name: 'vanilla extract',
+    category: 'spice', 
+    image: 'https://res.cloudinary.com/dgvi2di6t/image/upload/v1755931381/vanilla_extract_o9nrbe.png',
+    actions: [ActionsModel(action: '', status: '', tool: '')],
+  ),
+
+    
 ];

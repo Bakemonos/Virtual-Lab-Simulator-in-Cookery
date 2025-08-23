@@ -13,6 +13,7 @@ import 'package:virtual_lab/components/custom_dalog.dart';
 import 'package:virtual_lab/controllers/controller.dart';
 import 'package:virtual_lab/json/coc1_combination.dart';
 import 'package:virtual_lab/json/coc2_combination.dart';
+import 'package:virtual_lab/json/coc3_combination.dart';
 import 'package:virtual_lab/models/grade_model.dart';
 import 'package:virtual_lab/models/ingredients_model.dart';
 import 'package:virtual_lab/models/progress_model.dart';
@@ -303,7 +304,7 @@ class ApiServices extends GetxController {
           combination = dishCombinationsCoc2;
           break;
         case 'coc3':
-          combination = [];
+          combination = dishCombinationsCoc3;
           break;
         default:
           combination = [];

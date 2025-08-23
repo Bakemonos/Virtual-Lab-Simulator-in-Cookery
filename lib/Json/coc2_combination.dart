@@ -1,87 +1,97 @@
 final List<Map<String, dynamic>> dishCombinationsCoc2 = [
-  //? SANDWICH
+  //? APPETIZERS
   {
-    'name': 'classic cheese sandwich',
-    'type': 'sandwich',
-    'contains': ['bread', 'cheese', 'butter'],
+    'name': 'chicken skewers',
+    'type': 'appetizer',
+    'contains': ['chicken', 'garlic', 'soy_sauce', 'ginger', 'cooking_oil'],
     'image': '',
   },
   {
-    'name': 'club sandwich',
-    'type': 'sandwich',
-    'contains': ['bread', 'lettuce', 'tomato', 'mayonnaise'],
+    'name': 'tofu veggie rolls',
+    'type': 'appetizer',
+    'contains': ['tofu', 'cabbage', 'carrot', 'soy_sauce', 'rice_paper'],
     'image': '',
   },
   {
-    'name': 'avocado sandwich',
-    'type': 'sandwich',
-    'contains': ['bread', 'avocado', 'cheese'],
+    'name': 'mini potato croquettes',
+    'type': 'appetizer',
+    'contains': ['potato', 'garlic', 'onion', 'egg', 'cornstarch'],
     'image': '',
   },
   {
-    'name': 'tomato & lettuce sandwich',
-    'type': 'sandwich',
-    'contains': ['bread', 'tomato', 'lettuce', 'butter'],
+    'name': 'mushroom & onion bites',
+    'type': 'appetizer',
+    'contains': ['mushrooms', 'onion', 'garlic', 'butter', 'soy_sauce'],
     'image': '',
   },
   {
-    'name': 'mustard mayo sandwich',
+    'name': 'chicken and vegetable dumplings',
+    'type': 'appetizer',
+    'contains': ['chicken', 'cabbage', 'carrot', 'garlic', 'soy_sauce', 'cornstarch'],
+    'image': '',
+  },
+
+  //? SANDWICHES
+  {
+    'name': 'grilled chicken sandwich',
     'type': 'sandwich',
-    'contains': ['bread', 'cheese', 'mustard', 'mayonnaise'],
+    'contains': ['chicken', 'bread', 'onion', 'garlic', 'butter', 'soy_sauce'],
+    'image': '',
+  },
+  {
+    'name': 'tofu and veggie sandwich',
+    'type': 'sandwich',
+    'contains': ['tofu', 'bread', 'bell_pepper', 'carrot', 'garlic', 'soy_sauce'],
+    'image': '',
+  },
+  {
+    'name': 'egg and veggie sandwich',
+    'type': 'sandwich',
+    'contains': ['egg', 'bread', 'onion', 'bell_pepper', 'cooking_oil'],
+    'image': '',
+  },
+  {
+    'name': 'beef and onion sandwich',
+    'type': 'sandwich',
+    'contains': ['beef', 'bread', 'onion', 'garlic', 'butter'],
+    'image': '',
+  },
+  {
+    'name': 'pork & cabbage sandwich',
+    'type': 'sandwich',
+    'contains': ['pork', 'bread', 'cabbage', 'garlic', 'soy_sauce'],
     'image': '',
   },
 
   //? SALADS
   {
-    'name': 'garden salad',
+    'name': 'cabbage and carrot salad',
     'type': 'salad',
-    'contains': ['lettuce', 'tomato', 'parsley'],
+    'contains': ['cabbage', 'carrot', 'vinegar', 'sugar', 'soy_sauce'],
     'image': '',
   },
   {
-    'name': 'greek salad',
+    'name': 'chicken and veggie salad',
     'type': 'salad',
-    'contains': ['lettuce', 'tomato', 'cheese', 'olives'],
+    'contains': ['chicken', 'bell_pepper', 'carrot', 'soy_sauce', 'vinegar'],
     'image': '',
   },
   {
-    'name': 'avocado salad',
+    'name': 'tofu and cabbage salad',
     'type': 'salad',
-    'contains': ['avocado', 'tomato', 'lemon', 'parsley'],
-    'image': '',
-  },
-
-  //? APPETIZERS
-  {
-    'name': 'garlic bread',
-    'type': 'appetizer',
-    'contains': ['bread', 'butter', 'garlic', 'parsley'],
+    'contains': ['tofu', 'cabbage', 'soy_sauce', 'garlic', 'vinegar'],
     'image': '',
   },
   {
-    'name': 'cheese sticks',
-    'type': 'appetizer',
-    'contains': ['cheese', 'bread', 'butter'],
+    'name': 'beef and onion salad',
+    'type': 'salad',
+    'contains': ['beef', 'onion', 'bell_pepper', 'vinegar', 'soy_sauce'],
     'image': '',
   },
   {
-    'name': 'bruschetta',
-    'type': 'appetizer',
-    'contains': ['bread', 'tomato', 'parsley', 'olive_oil'],
-    'image': '',
-  },
-
-  //? SALAD DRESSINGS
-  {
-    'name': 'honey mustard dressing',
-    'type': 'salad_dressing',
-    'contains': ['mustard', 'sugar', 'lemon'],
-    'image': '',
-  },
-  {
-    'name': 'garlic mayo dressing',
-    'type': 'salad_dressing',
-    'contains': ['mayonnaise', 'garlic', 'lemon'],
+    'name': 'potato salad',
+    'type': 'salad',
+    'contains': ['potato', 'egg', 'onion', 'vinegar', 'mustard'],
     'image': '',
   },
 ];

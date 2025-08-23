@@ -99,9 +99,7 @@ class AppController extends GetxController {
   }
 
   //? TEXT CONTROLLER
-  // final emailController = TextEditingController();
-  // final passwordController = TextEditingController();
-  final usernameController = TextEditingController(text: 'ricojay1818');
+  final usernameController = TextEditingController(text: 'ricojay18');
   final passwordController = TextEditingController(text: 'qweqweqwe');
   final firstnameController = TextEditingController();
   final lastnameController = TextEditingController();
