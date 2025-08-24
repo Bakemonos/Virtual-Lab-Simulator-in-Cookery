@@ -14,29 +14,39 @@ class MyInformationPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final controller = AppController.instance;
     final user = controller.userData.value;
+
     final progress = controller.progress.value;
 
+    String normalize(String? status) => status?.toLowerCase() ?? "";
+
+    final coc1Status = normalize(progress.coc1);
+    final coc2Status = normalize(progress.coc2);
+
     bool coc1Unlocked = true;
-    bool coc2Unlocked = progress.coc1 == "complete";
-    bool coc3Unlocked = progress.coc2 == "complete";
+    bool coc2Unlocked = coc1Status == "completed";
+    bool coc3Unlocked = coc2Status == "completed";
 
     String cocStatus(String coc, bool unlocked) {
-      if (coc == "complete") return "COMPLETED";
+      final status = normalize(coc);
+
+      if (status == "completed") return "COMPLETED";
       if (!unlocked) return "NOT UNLOCKED YET";
       return "PENDING";
     }
-
     Color borderColor(String coc, bool unlocked) {
-      if (coc == "complete") return greenDark;
+      final status = coc.toLowerCase();
+      if (status == "completed") return greenDark;
       if (!unlocked) return redDark;
       return darkYellowColor;
     }
 
     List<Color> gradientColor(String coc, bool unlocked) {
-      if (coc == "complete") return [greenLighter, greenLight];
+      final status = coc.toLowerCase();
+      if (status == "completed") return [greenLighter, greenLight];
       if (!unlocked) return [redLighter, redLight];
       return [lightYellowColor, darkYellowColor];
     }
+
 
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),

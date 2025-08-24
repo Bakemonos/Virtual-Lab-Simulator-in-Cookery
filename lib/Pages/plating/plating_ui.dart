@@ -446,6 +446,7 @@ class _MyPlatingUIState extends State<MyPlatingUI> {
         if (context.mounted) {
           showDialog(
             context: context,
+            barrierDismissible: false,
             builder: (_) => AlertDialog(
               title: MyText(text: 'Preview Uploaded Image', fontWeight: FontWeight.w500),
               content: CachedNetworkImage(

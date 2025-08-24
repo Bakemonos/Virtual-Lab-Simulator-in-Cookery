@@ -512,20 +512,37 @@ class _MyProcessPageState extends State<MyProcessPage> {
                               key: submitDishFormKey,
                               child: Column(
                                 children: [
-                                  Obx(
-                                    () => controller.repeatedDropdown(
+                                  Obx(() {
+                                    final coc = controller.typeSelected.value!.menu;
+                                    List<String> type = [];
+                                    switch(coc){
+                                      case 'coc2':{
+                                        type = ['Appetizer', 'Sandwich', 'Salad and Salad Dress'];
+                                        break;
+                                      }
+                                      case 'coc3':{
+                                        type = ['Hot Dessert', 'Cold Dessert'];
+                                        break;
+                                      }
+                                      default: {
+                                        type = ['Sauce', 'Main dish', 'Soup'];
+                                        break;
+                                      }
+                                    }
+
+                                    return controller.repeatedDropdown(
                                       hasError: controller.typeErrorText.value.isNotEmpty,
                                       errorText: controller.typeErrorText,
                                       selectedValue: controller.category.value,
                                       defaultBorderColor: borderColor, 
                                       label: 'Type',
                                       hint: 'Select Type', 
-                                      items: ['Sauce', 'Main dish', 'Soup'],
+                                      items: type,
                                       onChanged: (value) {
                                         controller.category.value = value!;
                                       },
-                                    ),
-                                  ),
+                                    );
+                                  }),
                                   SizedBox(height: 16.h),
                                   controller.repeatedTextInput(
                                     label: 'Dish name', 

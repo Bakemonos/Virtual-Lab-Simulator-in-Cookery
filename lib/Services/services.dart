@@ -73,6 +73,22 @@ class ApiServices extends GetxController {
     }
   }
 
+  Future<ApiResponse> put(String endpoint, Map<String, dynamic> data) async {
+    debugPrint('\nENDPOINT : $apiKey/$endpoint\n');
+
+    final response = await http.put(
+      Uri.parse('$apiKey/$endpoint'),
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode(data),
+    );
+
+    if (response.statusCode == 200 || response.statusCode == 201) {
+      return ApiResponse.fromJson(jsonDecode(response.body));
+    } else {
+      throw Exception('POST failed: ${response.body}');
+    }
+  }
+
 
 
   //* CLOUDINARY ---------------------------------------------------------------------------------------------------------------------
@@ -106,6 +122,52 @@ class ApiServices extends GetxController {
     }
   }
 
+  //* UPDATE ---------------------------------------------------------------------------------------------------------------------
+  
+  //TODO 
+  Future<void> changePassword(BuildContext context) async {
+    controller.loader.value = true;
+    try {
+    
+      Map<String, dynamic> data = {
+        'lrn': controller.lrnController.text,
+      }; 
+
+      final response = await put('password/student/forgotpassword', data);
+
+      if(response.success! && context.mounted){
+        debugPrint('SUCCESS : ${response.message}');
+        if(context.mounted){
+          quickAlertDialog(
+            context: context,
+            type: QuickAlertType.success,
+            title: 'Change password Successful!',
+            message: response.message.toString(),
+            onConfirmBtnTap: (){
+              context.pop();
+              context.go(Routes.signIn);
+            }
+          );
+        }
+      }{
+        debugPrint('FAILED : ${response.message}');
+      }
+
+    } catch (e, t) {
+      controller.loader.value = false;
+      final errorMessage = helper.getErrorMessage(e);
+      debugPrint('Error: $errorMessage');
+      debugPrint('STACKTRACE: $t');
+      if (context.mounted) {
+        quickAlertDialog(
+          context: context,
+          type: QuickAlertType.error,
+          title: 'Change password Failed!',
+          message: errorMessage,
+        );
+      }
+    }
+  }
 
 
   //* CREATE ---------------------------------------------------------------------------------------------------------------------
@@ -385,6 +447,7 @@ class ApiServices extends GetxController {
       final response = await post('plating/create', data);
 
       if(response.success! && context.mounted){
+        if(context.mounted) await getProgress(context, controller.userData.value.id!);
         debugPrint('SUCCESS : ${response.message}');
         if(context.mounted){
           quickAlertDialog(
@@ -417,7 +480,6 @@ class ApiServices extends GetxController {
       }
     }
   }
-
 
 
   //* READ ---------------------------------------------------------------------------------------------------------------------

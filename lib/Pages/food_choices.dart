@@ -27,13 +27,28 @@ class _MyFoodChoicesPageState extends State<MyFoodChoicesPage> {
 
   List<String> get buttonStates {
     final progress = controller.progress.value;
-    String coc1State = progress.coc1 == "complete" ? "complete" : "playable";
-    String coc2State = progress.coc1 == "complete"
-      ? (progress.coc2 == "complete" ? "complete" : "playable") : "locked";
-    String coc3State = progress.coc2 == "complete"
-      ? (progress.coc3 == "complete" ? "complete" : "playable") : "locked";
+
+    String normalize(String? status) {
+      return status?.toLowerCase() ?? "";
+    }
+
+    final coc1Status = normalize(progress.coc1);
+    final coc2Status = normalize(progress.coc2);
+    final coc3Status = normalize(progress.coc3);
+
+    String coc1State = coc1Status == "completed" ? "complete" : "playable";
+
+    String coc2State = coc1Status == "completed"
+        ? (coc2Status == "completed" ? "complete" : "playable")
+        : "locked";
+
+    String coc3State = coc2Status == "completed"
+        ? (coc3Status == "completed" ? "complete" : "playable")
+        : "locked";
+
     return [coc1State, coc2State, coc3State];
   }
+
 
   @override
   Widget build(BuildContext context) {
