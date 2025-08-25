@@ -56,27 +56,18 @@ class _MyViewAchievementPageState extends State<MyViewAchievementPage> {
                                 child: Padding(
                                   padding: EdgeInsets.all(8.w),
                                   child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                     spacing: 4.h,
                                     children: [
                                       SizedBox(
                                         height: 100.h,
                                         width: 100.w,
                                         child: CachedNetworkImage(
-                                          imageUrl: 'https://res.cloudinary.com/dgvi2di6t/image/upload/v1753802663/beef_soup_ihgwhv.png',
+                                          imageUrl: dish.image,
                                           placeholder: (context, url) => ShimmerSkeletonLoader(),
                                           errorWidget: (context, url, error) => Icon(Icons.error),
                                           fit: BoxFit.contain,
                                         ),
-                                      ),
-                                      Row(
-                                        mainAxisAlignment: MainAxisAlignment.center,
-                                        crossAxisAlignment: CrossAxisAlignment.end,
-                                        children: [
-                                          Icon(Icons.star,color: darkBrown,size: 32.w),
-                                          Icon(Icons.star,color: darkBrown,size: 40.w),
-                                          Icon(Icons.star,color: darkBrown,size: 32.w),
-                                        ],
                                       ),
                                       MyText(text: dish.name, size: 24.sp,color: darkBrown),
                                     ],
@@ -102,13 +93,64 @@ class _MyViewAchievementPageState extends State<MyViewAchievementPage> {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     MyText(
-                                      text: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industrys standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum',
+                                      text: dish.name,
+                                      fontWeight: FontWeight.bold,
                                       color: textLight,
+                                      size: 18.sp,
                                     ),
+                                    SizedBox(height: 8.h),
+                                    MyText(
+                                      text: 'Ingredients:',
+                                      fontWeight: FontWeight.w600,
+                                      color: textLight,
+                                      size: 16.sp,
+                                    ),
+                                    ...dish.ingredients.map((ingredient) {
+                                      return Padding(
+                                        padding: EdgeInsets.symmetric(vertical: 4.h),
+                                        child: Column(
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: [
+                                            MyText(
+                                              text: '• ${ingredient.name}',
+                                              color: textLight,
+                                            ),
+                                            if (ingredient.actions.isNotEmpty)
+                                              Padding(
+                                                padding: EdgeInsets.only(left: 16.w, top: 2.h),
+                                                child: Column(
+                                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                                  children: ingredient.actions.map((action) {
+                                                    return MyText(
+                                                      text:
+                                                          '- ${action.action} (${action.status}) using ${action.tool}',
+                                                      color: textLight,
+                                                      size: 12.sp,
+                                                    );
+                                                  }).toList(),
+                                                ),
+                                              ),
+                                          ],
+                                        ),
+                                      );
+                                    }),
+                                    SizedBox(height: 16.h),
+                                    MyText(
+                                      text: 'Equipments:',
+                                      fontWeight: FontWeight.w600,
+                                      color: textLight,
+                                      size: 16.sp,
+                                    ),
+                                    if (dish.equipments.isEmpty)
+                                      MyText(text: '• None', color: textLight),
+                                    ...dish.equipments.map((equipment) {
+                                      return MyText(text: '• ${equipment.name}', color: textLight);
+                                    }),
                                   ],
                                 ),
                               ),
-                            ),
+                            )
+
                           ],
                         ),
                       ),

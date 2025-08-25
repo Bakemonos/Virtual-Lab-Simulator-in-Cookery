@@ -3,37 +3,37 @@ final List<Map<String, dynamic>> dishCombinationsCoc3 = [
   {
     'name': 'custard',
     'type': 'hot_dessert',
-    'contains': ['milk', 'eggs', 'sugar', 'vanilla'],
+    'contains': ['milk', 'egg', 'brown sugar', 'vanilla extract'],
     'image': 'https://res.cloudinary.com/dgvi2di6t/image/upload/v1755955370/hot_dessert_u5wwwa.png',
   },
   {
     'name': 'cake',
     'type': 'hot_dessert',
-    'contains': ['flour', 'eggs', 'sugar', 'butter_or_oil', 'baking_powder'],
+    'contains': ['plain flour', 'egg', 'brown sugar', 'butter', 'baking soda'],
     'image': 'https://res.cloudinary.com/dgvi2di6t/image/upload/v1755955370/hot_dessert_u5wwwa.png',
   },
   {
     'name': 'cookies',
     'type': 'hot_dessert',
-    'contains': ['flour', 'sugar', 'eggs', 'butter'],
+    'contains': ['plain flour', 'brown sugar', 'egg', 'butter'],
     'image': 'https://res.cloudinary.com/dgvi2di6t/image/upload/v1755955370/hot_dessert_u5wwwa.png',
   },
   {
     'name': 'tart base',
     'type': 'hot_dessert',
-    'contains': ['flour', 'butter', 'egg', 'fruit_topping'],
+    'contains': ['plain flour', 'butter', 'egg', 'berries'],
     'image': 'https://res.cloudinary.com/dgvi2di6t/image/upload/v1755955370/hot_dessert_u5wwwa.png',
   },
   {
     'name': 'crêpes',
     'type': 'hot_dessert',
-    'contains': ['flour', 'eggs', 'milk', 'butter'],
+    'contains': ['plain flour', 'egg', 'milk', 'butter'],
     'image': 'https://res.cloudinary.com/dgvi2di6t/image/upload/v1755955370/hot_dessert_u5wwwa.png',
   },
   {
     'name': 'chocolate pudding',
     'type': 'hot_dessert',
-    'contains': ['milk', 'cocoa', 'sugar', 'cornstarch'],
+    'contains': ['milk', 'cocoa powder', 'brown sugar', 'cornstarch'],
     'image': 'https://res.cloudinary.com/dgvi2di6t/image/upload/v1755955370/hot_dessert_u5wwwa.png',
   },
 
@@ -41,25 +41,25 @@ final List<Map<String, dynamic>> dishCombinationsCoc3 = [
   {
     'name': 'mousse',
     'type': 'cold_dessert',
-    'contains': ['cream', 'chocolate_or_fruit', 'eggs', 'gelatin'],
+    'contains': ['cream', 'dark chocolate', 'egg', 'gelatin'],
     'image': 'https://res.cloudinary.com/dgvi2di6t/image/upload/v1755955370/cold_dessert_jfpatw.png',
   },
   {
     'name': 'ice cream',
     'type': 'cold_dessert',
-    'contains': ['milk', 'cream', 'sugar', 'vanilla'],
+    'contains': ['milk', 'cream', 'brown sugar', 'vanilla extract'],
     'image': 'https://res.cloudinary.com/dgvi2di6t/image/upload/v1755955370/cold_dessert_jfpatw.png',
   },
   {
     'name': 'sorbet',
     'type': 'cold_dessert',
-    'contains': ['fruit', 'sugar', 'lemon_juice'],
+    'contains': ['berries', 'brown sugar', 'lemon'],
     'image': 'https://res.cloudinary.com/dgvi2di6t/image/upload/v1755955370/cold_dessert_jfpatw.png',
   },
   {
     'name': 'parfait',
     'type': 'cold_dessert',
-    'contains': ['cream', 'berries', 'vanilla', 'crumbled_cookies_or_sponge'],
+    'contains': ['cream', 'berries', 'vanilla extract', 'plain flour'],
     'image': 'https://res.cloudinary.com/dgvi2di6t/image/upload/v1755955370/cold_dessert_jfpatw.png',
   },
 ];

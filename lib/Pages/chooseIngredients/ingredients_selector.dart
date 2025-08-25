@@ -89,7 +89,7 @@ class _MyIngredientsSelectionPageState extends State<MyIngredientsSelectionPage>
                                   var data = controller.filteredIngredients[index];
                                   var isSelected = controller.selectedList[index];
 
-                                  return InkWell(
+                                  return Obx(()=> InkWell(
                                     onTap: controller.seconds.value == 0 ? (){
                                       debugPrint('Time out!!');
                                     } : () {
@@ -140,7 +140,7 @@ class _MyIngredientsSelectionPageState extends State<MyIngredientsSelectionPage>
                                         ),
                                       ],
                                     ),
-                                  );
+                                  ));
                                 },
                               ),
                             ),

@@ -99,8 +99,8 @@ class AppController extends GetxController {
   }
 
   //? TEXT CONTROLLER
-  final usernameController = TextEditingController(text: 'ricojay18');
-  final passwordController = TextEditingController(text: 'qweqweqwe');
+  final usernameController = TextEditingController();
+  final passwordController = TextEditingController();
   final firstnameController = TextEditingController();
   final lastnameController = TextEditingController();
   final lrnController = TextEditingController();
@@ -115,6 +115,7 @@ class AppController extends GetxController {
  
   //? USER INVENTORY DATA
   Rx<InventoryModel> typeInventory = InventoryModel.empty().obs;
+
 
   //? DISH
   Rx<SubmitedCocModel> selectedDish = SubmitedCocModel.empty().obs;

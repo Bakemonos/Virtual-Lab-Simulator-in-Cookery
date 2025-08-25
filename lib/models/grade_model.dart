@@ -12,7 +12,7 @@ class GradeModel {
   final int useOfGarnish;
   final int overallPresentation;
   final String comments;
-  final int averageScore;
+  final num averageScore;
   final int starRating;
 
   GradeModel({
@@ -48,7 +48,7 @@ class GradeModel {
       useOfGarnish: map['useOfGarnish'] ?? 0,
       overallPresentation: map['overallPresentation'] ?? 0,
       comments: map['comments'] ?? '',
-      averageScore: map['averageScore'] ?? 0,
+      averageScore: map['averageScore'] ?? 0.0,
       starRating: map['starRating'] ?? 0,
     );
   }
@@ -109,7 +109,7 @@ class GradeModel {
     int? useOfGarnish,
     int? overallPresentation,
     String? comments,
-    int? averageScore,
+    num? averageScore,
     int? starRating,
     int? v,
   }) {

@@ -37,6 +37,8 @@ class _MyEvaluatedCocState extends State<MyEvaluatedCoc> {
                   Obx((){
                     final data = controller.grade.value;
 
+                    // debugPrint(data.);
+
                     return Align(
                       alignment: Alignment.bottomCenter,
                       child: Container(
@@ -155,7 +157,7 @@ class _MyEvaluatedCocState extends State<MyEvaluatedCoc> {
                                               _buildScoreBox("Shape", data.shape),
                                               _buildScoreBox("Garnish", data.useOfGarnish),
                                               _buildScoreBox("Presentation", data.overallPresentation),
-                                              _buildScoreBox("Average Score", data.averageScore),
+                                              _buildScoreBox("Average Score", data.averageScore.toInt()),
                                               _buildScoreBox("Star Rating", data.starRating),
                                             ],
                                           ),

@@ -61,7 +61,7 @@ class _MySliderOptionPageState extends State<MySliderOptionPage> {
                 SizedBox(
                   height: 250.h,
                   child: Obx((){
-                    var submitted = controller.submittedCocList;
+                    final submitted = controller.submittedCocList;
                     if(controller.loader.value) {
                       return loader();
                     } 
@@ -153,15 +153,7 @@ class _MySliderOptionPageState extends State<MySliderOptionPage> {
                                                   fit: BoxFit.contain,
                                                 ),
                                               ),
-                                              Row(
-                                                mainAxisAlignment: MainAxisAlignment.center,
-                                                crossAxisAlignment: CrossAxisAlignment.end,
-                                                children: [ 
-                                                  Icon(Icons.star,color: darkBrown,size: 28.w),
-                                                  Icon(Icons.star,color: darkBrown,size: 36.w),
-                                                  Icon(Icons.star,color: darkBrown,size: 28.w),
-                                                ],
-                                              ),
+                                              
                                               MyText(text: item.name, size: 20.sp,color: darkBrown),
                                             ],
                                           ),
