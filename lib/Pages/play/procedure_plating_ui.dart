@@ -114,6 +114,7 @@ class _MyProcedurePlatingPageState extends State<MyProcedurePlatingPage> with Ti
                                             dragKey: 'submit',
                                           ),
                                           onDragStarted: () {
+                                            controller.changeToolToggle.value = false;
                                             controller.bagToggle.value = false;
                                           },
                                           feedback: SizedBox(
